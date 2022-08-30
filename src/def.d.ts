@@ -12,6 +12,17 @@ interface FindInTreeOptions {
     maxDepth?: number;
 }
 
+type LoggerFunction = (...messages: any[]) => void;
+interface Logger {
+    log: LoggerFunction,
+    info: LoggerFunction,
+    warn: LoggerFunction,
+    error: LoggerFunction,
+    time: LoggerFunction,
+    trace: LoggerFunction,
+    verbose: LoggerFunction,
+}
+
 // API object
 interface VendettaObject {
     patcher: {
@@ -28,6 +39,7 @@ interface VendettaObject {
         // TODO: Proper typing for common modules
         common: Object;
     }
+    logger: Logger
 }
 
 declare global {
