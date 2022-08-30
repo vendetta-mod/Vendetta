@@ -16,6 +16,7 @@
   "devDependencies": {
     "@types/react": "^18.0.18",
     "@types/react-dom": "^18.0.6",
+    "@types/react-native": "^0.69.6",
     "esbuild": "^0.15.6",
     "esbuild-plugin-alias": "^0.2.1",
     "redux": "^4.2.0",
@@ -24,5 +25,13 @@
   },
   "dependencies": {
     "spitroast": "^1.4.2"
-  }
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+        "ignoreMissing": [
+            "react",
+            "react-dom"
+        ]
+    }
+}
 }

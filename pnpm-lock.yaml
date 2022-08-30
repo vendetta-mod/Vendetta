@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@types/react': ^18.0.18
   '@types/react-dom': ^18.0.6
+  '@types/react-native': ^0.69.6
   esbuild: ^0.15.6
   esbuild-plugin-alias: ^0.2.1
   redux: ^4.2.0
@@ -16,6 +17,7 @@ dependencies:
 devDependencies:
   '@types/react': 18.0.18
   '@types/react-dom': 18.0.6
+  '@types/react-native': 0.69.6
   esbuild: 0.15.6
   esbuild-plugin-alias: 0.2.1
   redux: 4.2.0
@@ -46,6 +48,12 @@ packages:
 
   /@types/react-dom/18.0.6:
     resolution: {integrity: sha512-/5OFZgfIPSwy+YuIBP/FgJnQnsxhZhjjrnxudMddeblOouIodEQ75X14Rr4wGSG/bknL+Omy9iWlLo1u/9GzAA==}
+    dependencies:
+      '@types/react': 18.0.18
+    dev: true
+
+  /@types/react-native/0.69.6:
+    resolution: {integrity: sha512-jx1QdJT3CdQc42EpoIGu22F1wrPZjmC/CNkfR5sRs5GxloJzthuICK7CKqAGEo2SekPs+YYzhbzrJGi1IrG5Lg==}
     dependencies:
       '@types/react': 18.0.18
     dev: true
