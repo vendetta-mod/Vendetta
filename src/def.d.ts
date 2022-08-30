@@ -25,6 +25,8 @@ interface VendettaObject {
         findByPropsAll: PropsFinderAll;
         findByDisplayName: (name: string, defaultExp: boolean) => any;
         findByDisplayNameAll: (name: string, defaultExp: boolean) => any[];
+        // TODO: Proper typing for common modules
+        common: Object;
     }
 }
 
