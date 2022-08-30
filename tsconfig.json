@@ -1,0 +1,22 @@
+{
+    "include": ["src"],
+    "exclude": ["node_modules"],
+    "compilerOptions": {
+        "sourceMap": true,
+        "module": "ESNext",
+        "target": "ESNext",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "jsx": "react-native",
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "paths": {
+            "@/*": ["./src/*"],
+            "@lib": ["./src/lib"],
+            "@lib/*": ["./src/lib/*"],
+            "@metro": ["./src/lib/metro"],
+            "@metro/*": ["./src/lib/metro/*"]
+        }
+    }
+}
