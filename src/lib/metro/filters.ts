@@ -11,7 +11,7 @@ const filterModules =
         for (const mod in modules) {
             if (moduleBlacklist.includes(mod)) continue;
 
-            if (modules[mod].isInitialized) try {
+            if (!modules[mod].isInitialized) try {
                 __r(mod as any as number);
             } catch {
                 moduleBlacklist.push(mod);
@@ -25,7 +25,7 @@ const filterModules =
                 continue;
             }
 
-            if (module.default && filter(module.default)) {
+            if (module.default && module.__esModule && filter(module.default)) {
                 if (single) return module.default;
                 foundModules.push(module.default);
             }
@@ -45,7 +45,7 @@ export const find = filterModules(modules, true);
 export const findAll = filterModules(modules);
 
 const propsFilter = (props: (string | symbol)[]) => (m: any) => props.every((p) => m[p] !== undefined);
-const dNameFilter = (name: string, defaultExp: boolean) => (defaultExp ? (m: any) => m.displayName === name : (m: any) => m?.default?.displayName === name);
+const dNameFilter = (name: string, defaultExp: boolean) => (defaultExp ? (m: any) => m.name === name : (m: any) => m?.default?.name === name);
 
 export const findByProps: PropsFinder = (...props) => find(propsFilter(props));
 export const findByPropsAll: PropsFinderAll = (...props) => findAll(propsFilter(props));
