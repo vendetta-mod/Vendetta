@@ -1,9 +1,9 @@
-import { findByProps, findByPropsAll, find } from "@metro/filters";
+import { findByProps, find } from "@metro/filters";
 
 // Discord
 export const Constants = findByProps("API_HOST");
 export const channels = findByProps("getVoiceChannelId");
-export const [, i18n] = findByPropsAll("_requestedLocale");
+export const i18n = findByProps("Messages");
 
 // Flux
 export const Flux = findByProps("connectStores");
