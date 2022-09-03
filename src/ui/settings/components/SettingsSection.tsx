@@ -1,5 +1,5 @@
-import { findByProps } from "@metro/filters";
 import { React } from "@metro/common";
+import { findByProps } from "@metro/filters";
 
 const { FormRow, FormSection } = findByProps("FormSection");
 
@@ -11,9 +11,9 @@ export default function SettingsSection({ navigation }: SettingsSectionProps) {
     return ( 
         <FormSection key="Vendetta" title="Vendetta">
             <FormRow
-                label="About"
+                label="Settings"
                 trailing={FormRow.Arrow}
-                onPress={() => navigation.push("Vendetta")}
+                onPress={() => navigation.push("VendettaSettings")}
             />
         </FormSection>
     )

@@ -11,8 +11,8 @@ export default function initSettings() {
     const screensPatch = after("default", screensModule, (args, ret) => {
         return {
             ...ret,
-            Vendetta: {
-                title: "Vendetta",
+            VendettaSettings: {
+                title: "Vendetta Settings",
                 render: Settings
             }   
         }

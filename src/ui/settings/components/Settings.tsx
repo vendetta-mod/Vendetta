@@ -1,10 +1,17 @@
-import { React } from "@metro/common";
-import { ReactNative as RN } from "@metro/common";
+import { React, ReactNative as RN } from "@metro/common";
+import { findByProps } from "@metro/filters";
+
+const { FormRow, FormSection } = findByProps("FormSection");
 
 export default function Settings() {
     return ( 
-        <RN.View>
-            <RN.Text>Hello world!</RN.Text>
-        </RN.View>
+        <>
+            <FormSection title="Versions">
+                <FormRow 
+                    label="React"
+                    trailing={() => <RN.Text>{React.version}</RN.Text>}
+                />
+            </FormSection>
+        </>
     )
 }
