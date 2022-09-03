@@ -1,11 +1,14 @@
 import patcher from "@lib/patcher";
+import logger from "@lib/logger";
 import * as metro from "@metro/filters";
 import * as common from "@metro/common";
-import logger from "./lib/logger";
+import initSettings from "@ui/settings";
 
 let erroredOnLoad = false;
 
 try {
+    initSettings();
+
     window.vendetta = {
         patcher: { ...patcher },
         metro: { ...metro, common: common },
