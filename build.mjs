@@ -13,7 +13,7 @@ try {
         minify: true,
         bundle: true,
         format: "iife",
-        external: ["react"],
+        external: ["react", "react-native"],
         target: "esnext",
         plugins: [alias(aliases)],
         legalComments: "external",

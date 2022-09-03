@@ -11,7 +11,6 @@ export const FluxDispatcher = findByProps("_currentDispatchActionType");
 
 // React
 export const React = findByProps("createElement") as typeof import("react");
-export const ReactDOM = findByProps("hydrate") as typeof import("react-dom");
 export const ReactNative = findByProps("Text", "Image") as typeof import("react-native");
 
 // Redux
