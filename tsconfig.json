@@ -18,7 +18,9 @@
             "@metro": ["./src/lib/metro"],
             "@metro/*": ["./src/lib/metro/*"],
             "@ui": ["./src/ui"],
-            "@ui/*": ["./src/ui/*"]
+            "@ui/*": ["./src/ui/*"],
+            "@utils": ["./src/lib/utils"],
+            "@utils/*": ["./src/lib/utils/*"]
         }
     }
 }

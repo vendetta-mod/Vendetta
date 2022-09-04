@@ -1,11 +1,12 @@
 import * as _spitroast from "spitroast";
 
-type MetroModules = { [id: number]: any }
+type MetroModules = { [id: number]: any };
 
 // Helper types for API functions
 type PropIntellisense<P extends string | symbol> = Record<P, any> & Record<PropertyKey, any>;
 type PropsFinder = <T extends string | symbol>(...props: T[]) => PropIntellisense<T>;
 type PropsFinderAll = <T extends string | symbol>(...props: T[]) => PropIntellisense<T>[];
+type SearchFilter = (tree: any) => boolean;
 interface FindInTreeOptions {
     walkable?: string[];
     ignore?: string[];
@@ -39,7 +40,12 @@ interface VendettaObject {
         // TODO: Proper typing for common modules
         common: Object;
     }
-    logger: Logger
+    utils: {
+        copyText: (content: string) => void;
+        findInReactTree: (tree: { [key: string]: any }, filter: SearchFilter) => any;
+        findInTree: (tree: { [key: string]: any }, filter: SearchFilter, options: FindInTreeOptions) => any;
+    }
+    logger: Logger;
 }
 
 declare global {
