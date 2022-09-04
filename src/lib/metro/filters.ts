@@ -3,6 +3,9 @@ import { MetroModules, PropsFinder, PropsFinderAll } from "@/def";
 declare const __r: (moduleId: number) => any;
 const moduleBlacklist: string[] = [];
 
+let moment: any;
+let locale: any;
+
 const filterModules =
     (modules: MetroModules, single = false) =>
     (filter: (m: any) => boolean) => {
@@ -11,6 +14,12 @@ const filterModules =
         for (const mod in modules) {
             if (moduleBlacklist.includes(mod)) continue;
 
+            const module = modules[mod].publicModule.exports;
+
+            if (module && module["isMoment"]) moment = module;
+
+            // if (module && module.__proto__ && module.__proto__.updateMessagesForExperiment) locale = module;
+
             if (!modules[mod].isInitialized) try {
                 __r(mod as any as number);
             } catch {
@@ -18,10 +27,8 @@ const filterModules =
                 continue;
             }
 
-            const module = modules[mod].publicModule.exports;
-
             if (!module || module === window || module["no more null proxy"] === null) {
-                moduleBlacklist.push(module);
+                moduleBlacklist.push(mod);
                 continue;
             }
 
@@ -35,6 +42,8 @@ const filterModules =
                 else foundModules.push(module);
             }
         }
+
+        if (moment) moment.locale("en-gb");
         
         if (!single) return foundModules;
     };
