@@ -3,6 +3,7 @@ import { findByDisplayName } from "@metro/filters";
 import { after } from "@lib/patcher";
 import Settings from "./components/Settings";
 import SettingsSection from "./components/SettingsSection";
+import findInReactTree from "@/lib/utils/findInReactTree";
 
 const screensModule = findByDisplayName("getScreens", false);
 const settingsModule = findByDisplayName("UserSettingsOverviewWrapper", false);
@@ -20,7 +21,7 @@ export default function initSettings() {
 
     const settingsPatch = after("default", settingsModule, (args, _ret) => {
         settingsPatch();
-        const toPatch = _ret.props.children.find((i: any) => i.type && typeof i.type === "function");
+        const toPatch = findInReactTree(_ret.props.children, i => i.type && i.type.name === "UserSettingsOverview");
 
         // Upload logs button gone
         after("renderSupportAndAcknowledgements", toPatch.type.prototype, (args, { props: { children } }) => {
