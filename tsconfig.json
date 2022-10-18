@@ -16,7 +16,8 @@
             "@/*": ["src/*"],
             "@types": ["src/def.d.ts"],
             "@lib/*": ["src/lib/*"],
-            "@metro/*": ["src/lib/metro/*"]
+            "@metro/*": ["src/lib/metro/*"],
+            "@utils/*": ["src/lib/utils/*"]
         }
     }
 }

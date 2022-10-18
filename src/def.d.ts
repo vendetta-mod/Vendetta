@@ -18,6 +18,13 @@ interface Logger {
     verbose: LoggerFunction,
 }
 
+type SearchFilter = (tree: any) => boolean;
+interface FindInTreeOptions {
+    walkable?: string[];
+    ignore?: string[];
+    maxDepth?: number;
+}
+
 interface VendettaObject {
     patcher: {
         after: typeof _spitroast.after;
