@@ -27,12 +27,12 @@ for (const key in window.modules) {
     }
 }
 
-// Get the previous moment locale
-const previousLocale = moment?.locale();
-
 // Function to filter through modules
 export const filterModules = (modules: MetroModules, single = false) => (filter: (m: any) => boolean) => {
     const found = [];
+
+    // Get the previous moment locale
+    const previousLocale = moment?.locale();
 
     for (const key in modules) {
         const id = Number(key);
@@ -41,7 +41,7 @@ export const filterModules = (modules: MetroModules, single = false) => (filter:
         if (!modules[id].isInitialized) try {
             __r(id);
             // Set moment locale, sort of crappy fix but works I guess
-            if (previousLocale) moment.locale(previousLocale);
+            if (previousLocale && previousLocale !== moment.locale()) moment.locale(previousLocale);
         } catch {};
 
         if (!module) {
