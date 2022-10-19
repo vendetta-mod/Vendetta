@@ -1,7 +1,7 @@
 import { React } from "@metro/common";
-import { findByProps } from "@metro/filters";
+import { Forms } from "@ui/components";
 
-const { FormRow, FormSection } = findByProps("FormSection");
+const { FormRow, FormSection } = Forms;
 
 interface SettingsSectionProps {
     navigation: any;

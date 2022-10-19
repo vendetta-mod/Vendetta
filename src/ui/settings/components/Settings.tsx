@@ -1,8 +1,8 @@
 import { React, ReactNative as RN } from "@metro/common";
-import { findByProps } from "@metro/filters";
+import { Forms } from "@ui/components";
 import Version from "./Version";
 
-const { FormRow, FormSection, FormText } = findByProps("FormSection");
+const { FormRow, FormSection } = Forms;
 const hermesProps = window.HermesInternal.getRuntimeProperties();
 const rnVer = RN.Platform.constants.reactNativeVersion;
 
