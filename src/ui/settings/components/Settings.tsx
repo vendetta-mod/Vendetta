@@ -1,12 +1,15 @@
-import { React, ReactNative as RN } from "@metro/common";
+import { connectToDebugWS } from "@/lib/debug";
+import { AsyncStorage, React, ReactNative as RN } from "@metro/common";
 import { Forms } from "@ui/components";
 import Version from "./Version";
 
-const { FormRow, FormSection } = Forms;
+const { FormRow, FormSection, FormInput } = Forms;
 const hermesProps = window.HermesInternal.getRuntimeProperties();
 const rnVer = RN.Platform.constants.reactNativeVersion;
 
 export default function Settings() {
+    const [debuggerUrl, setDebuggerUrl] = React.useState("");
+
     const versions = [
         {
             label: "Discord",
@@ -33,11 +36,23 @@ export default function Settings() {
     return ( 
         <>
             {/* Why is there still a divider? */}
-            <FormSection title="Actions" android_noDivider>
+            <FormSection title="Debug" android_noDivider>
+                <FormInput 
+                    value={debuggerUrl}
+                    onChange={(v: string) => setDebuggerUrl(v)}
+                    title="DEBUGGER URL"
+                />
+            </FormSection>
+            <FormSection title="Actions">
                 <FormRow
                     label="Reload Discord"
                     trailing={FormRow.Arrow}
                     onPress={() => RN.NativeModules.BundleUpdaterManager.reload()}
+                />
+                <FormRow
+                    label="Connect to debug websocket"
+                    trailing={FormRow.Arrow}
+                    onPress={() => connectToDebugWS(debuggerUrl)}
                 />
             </FormSection>
             <FormSection title="Versions">

@@ -8,3 +8,6 @@ export const i18n = findByProps("Messages");
 // React
 export const React = findByProps("createElement") as typeof import("react");
 export const ReactNative = findByProps("Text", "Image") as typeof import("react-native");
+
+// AsyncStorage
+export const AsyncStorage = findByProps("setItem") as typeof import("@react-native-async-storage/async-storage").default;

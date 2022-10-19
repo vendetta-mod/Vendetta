@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@react-native-async-storage/async-storage': ^1.17.10
   '@types/react': ^18.0.21
   '@types/react-native': ^0.70.5
   esbuild: ^0.15.11
@@ -8,12 +9,15 @@ specifiers:
   redux: ^4.2.0
   spitroast: ^1.4.2
   typescript: ^4.8.4
+  valtio: ^1.7.4
   zustand: ^4.1.2
 
 dependencies:
   spitroast: 1.4.2
+  valtio: 1.7.4
 
 devDependencies:
+  '@react-native-async-storage/async-storage': 1.17.10
   '@types/react': 18.0.21
   '@types/react-native': 0.70.5
   esbuild: 0.15.11
@@ -48,6 +52,17 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@react-native-async-storage/async-storage/1.17.10:
+    resolution: {integrity: sha512-KrR021BmBLsA0TT1AAsfH16bHYy0MSbhdAeBAqpriak3GS1T2alFcdTUvn13p0ZW6FKRD6Bd3ryU2zhU/IYYJQ==}
+    peerDependencies:
+      react-native: ^0.0.0-0 || 0.60 - 0.70 || 1000.0.0
+    peerDependenciesMeta:
+      react-native:
+        optional: true
+    dependencies:
+      merge-options: 3.0.4
+    dev: true
 
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
@@ -289,6 +304,22 @@ packages:
       esbuild-windows-arm64: 0.15.11
     dev: true
 
+  /is-plain-obj/2.1.0:
+    resolution: {integrity: sha512-YWnfyRwxL/+SsrWYfOpUtz5b3YD+nyfkHvjbcanzk8zgyO4ASD67uVMRt8k5bM4lLMDnXfriRhOpemw+NfT1eA==}
+    engines: {node: '>=8'}
+    dev: true
+
+  /merge-options/3.0.4:
+    resolution: {integrity: sha512-2Sug1+knBjkaMsMgf1ctR1Ujx+Ayku4EdJN4Z+C2+JzoeF7A3OZ9KM2GY0CpQS51NR61LTurMJrRKPhSs3ZRTQ==}
+    engines: {node: '>=10'}
+    dependencies:
+      is-plain-obj: 2.1.0
+    dev: true
+
+  /proxy-compare/2.3.0:
+    resolution: {integrity: sha512-c3L2CcAi7f7pvlD0D7xsF+2CQIW8C3HaYx2Pfgq8eA4HAl3GAH6/dVYsyBbYF/0XJs2ziGLrzmz5fmzPm6A0pQ==}
+    dev: false
+
   /redux/4.2.0:
     resolution: {integrity: sha512-oSBmcKKIuIR4ME29/AeNUnl5L+hvBq7OaJWzaptTQJAntaPvxIJqfnjbaEiCzzaIz+XmVILfqAM3Ob0aXLPfjA==}
     dependencies:
@@ -316,7 +347,34 @@ packages:
     peerDependenciesMeta:
       react:
         optional: true
-    dev: true
+
+  /valtio/1.7.4:
+    resolution: {integrity: sha512-x8N7I7hfIlRHQyRe8cx3QJsEYdzMHb12HYUGIDjPruEwLrMpegvS8iZDk4PZ/i8HgeiOPF7Qr78Ke3HA1CGu9A==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      '@babel/helper-module-imports': '>=7.12'
+      '@babel/types': '>=7.13'
+      aslemammad-vite-plugin-macro: '>=1.0.0-alpha.1'
+      babel-plugin-macros: '>=3.0'
+      react: '>=16.8'
+      vite: '>=2.8.6'
+    peerDependenciesMeta:
+      '@babel/helper-module-imports':
+        optional: true
+      '@babel/types':
+        optional: true
+      aslemammad-vite-plugin-macro:
+        optional: true
+      babel-plugin-macros:
+        optional: true
+      react:
+        optional: true
+      vite:
+        optional: true
+    dependencies:
+      proxy-compare: 2.3.0
+      use-sync-external-store: 1.2.0
+    dev: false
 
   /zustand/4.1.2:
     resolution: {integrity: sha512-gcRaKchcxFPbImrBb/BKgujOhHhik9YhVpIeP87ETT7uokEe2Szu7KkuZ9ghjtD+/KKkcrRNktR2AiLXPIbKIQ==}
