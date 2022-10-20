@@ -2,8 +2,8 @@ import patcher from "@lib/patcher";
 import logger from "@lib/logger";
 import * as metro from "@metro/filters";
 import * as common from "@metro/common";
-import initSettings from "./ui/settings";
-import { patchLogHook } from "./lib/debug";
+import initSettings from "@ui/settings";
+import { patchLogHook } from "@lib/debug";
 
 console.log("Hello from Vendetta!");
 let erroredOnLoad = false;

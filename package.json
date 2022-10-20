@@ -24,8 +24,7 @@
         "zustand": "^4.1.2"
     },
     "dependencies": {
-        "spitroast": "^1.4.2",
-        "valtio": "^1.7.4"
+        "spitroast": "^1.4.2"
     },
     "pnpm": {
         "peerDependencyRules": {

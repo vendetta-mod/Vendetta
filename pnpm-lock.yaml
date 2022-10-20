@@ -9,12 +9,10 @@ specifiers:
   redux: ^4.2.0
   spitroast: ^1.4.2
   typescript: ^4.8.4
-  valtio: ^1.7.4
   zustand: ^4.1.2
 
 dependencies:
   spitroast: 1.4.2
-  valtio: 1.7.4
 
 devDependencies:
   '@react-native-async-storage/async-storage': 1.17.10
@@ -316,10 +314,6 @@ packages:
       is-plain-obj: 2.1.0
     dev: true
 
-  /proxy-compare/2.3.0:
-    resolution: {integrity: sha512-c3L2CcAi7f7pvlD0D7xsF+2CQIW8C3HaYx2Pfgq8eA4HAl3GAH6/dVYsyBbYF/0XJs2ziGLrzmz5fmzPm6A0pQ==}
-    dev: false
-
   /redux/4.2.0:
     resolution: {integrity: sha512-oSBmcKKIuIR4ME29/AeNUnl5L+hvBq7OaJWzaptTQJAntaPvxIJqfnjbaEiCzzaIz+XmVILfqAM3Ob0aXLPfjA==}
     dependencies:
@@ -347,34 +341,7 @@ packages:
     peerDependenciesMeta:
       react:
         optional: true
-
-  /valtio/1.7.4:
-    resolution: {integrity: sha512-x8N7I7hfIlRHQyRe8cx3QJsEYdzMHb12HYUGIDjPruEwLrMpegvS8iZDk4PZ/i8HgeiOPF7Qr78Ke3HA1CGu9A==}
-    engines: {node: '>=12.7.0'}
-    peerDependencies:
-      '@babel/helper-module-imports': '>=7.12'
-      '@babel/types': '>=7.13'
-      aslemammad-vite-plugin-macro: '>=1.0.0-alpha.1'
-      babel-plugin-macros: '>=3.0'
-      react: '>=16.8'
-      vite: '>=2.8.6'
-    peerDependenciesMeta:
-      '@babel/helper-module-imports':
-        optional: true
-      '@babel/types':
-        optional: true
-      aslemammad-vite-plugin-macro:
-        optional: true
-      babel-plugin-macros:
-        optional: true
-      react:
-        optional: true
-      vite:
-        optional: true
-    dependencies:
-      proxy-compare: 2.3.0
-      use-sync-external-store: 1.2.0
-    dev: false
+    dev: true
 
   /zustand/4.1.2:
     resolution: {integrity: sha512-gcRaKchcxFPbImrBb/BKgujOhHhik9YhVpIeP87ETT7uokEe2Szu7KkuZ9ghjtD+/KKkcrRNktR2AiLXPIbKIQ==}

@@ -1,5 +1,5 @@
 import { after } from "spitroast";
-import logger from "./logger";
+import logger from "@lib/logger";
 export let socket: WebSocket;
 
 let iLoveBundlers = eval;

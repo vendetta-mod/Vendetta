@@ -1,5 +1,5 @@
-import { connectToDebugWS } from "@/lib/debug";
-import { AsyncStorage, React, ReactNative as RN } from "@metro/common";
+import { connectToDebugWS } from "@lib/debug";
+import { React, ReactNative as RN } from "@metro/common";
 import { Forms } from "@ui/components";
 import Version from "./Version";
 
