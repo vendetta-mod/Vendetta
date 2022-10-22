@@ -13,7 +13,7 @@ export function connectToDebugWS(url: string) {
 
     socket.addEventListener("message", (message: any) => {
         try {
-            console.log(iLoveBundlers(message.data));
+            iLoveBundlers(message.data);
         } catch (e) {
             console.error(e);
         }
