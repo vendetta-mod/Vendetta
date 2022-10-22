@@ -1,4 +1,7 @@
 import * as _spitroast from "spitroast";
+import _React from "react";
+import _RN from "react-native";
+import _AsyncStorage from "@react-native-async-storage/async-storage";
 
 type MetroModules = { [id: number]: any };
 
@@ -9,13 +12,13 @@ type PropsFinderAll = <T extends string | symbol>(...props: T[]) => PropIntellis
 
 type LoggerFunction = (...messages: any[]) => void;
 interface Logger {
-    log: LoggerFunction,
-    info: LoggerFunction,
-    warn: LoggerFunction,
-    error: LoggerFunction,
-    time: LoggerFunction,
-    trace: LoggerFunction,
-    verbose: LoggerFunction,
+    log: LoggerFunction;
+    info: LoggerFunction;
+    warn: LoggerFunction;
+    error: LoggerFunction;
+    time: LoggerFunction;
+    trace: LoggerFunction;
+    verbose: LoggerFunction;
 }
 
 type SearchFilter = (tree: any) => boolean;
@@ -31,15 +34,21 @@ interface VendettaObject {
         before: typeof _spitroast.before;
         instead: typeof _spitroast.instead;
         unpatchAll: typeof _spitroast.unpatchAll;
-    }
+    };
     metro: {
         findByProps: PropsFinder;
         findByPropsAll: PropsFinderAll;
         findByDisplayName: (name: string, defaultExp: boolean) => any;
         findByDisplayNameAll: (name: string, defaultExp: boolean) => any[];
-        // TODO: Proper typing for common modules
-        common: Object;
-    }
+        common: {
+            constants: Object;
+            channels: Object;
+            i18n: Object;
+            React: typeof _React;
+            ReactNative: typeof _RN;
+            AsyncStorage: typeof _AsyncStorage;
+        };
+    };
     logger: Logger;
 }
 
