@@ -23,5 +23,5 @@ export default function patchAssets() {
 
 export const find = (filter: (a: any) => void): Asset | null | undefined => Object.values(all).find(filter);
 export const getAssetByName = (name: string): Asset => all[name];
-export const getAssetByID = (name: string): Asset => assetsModule.getAssetByID(name);
+export const getAssetByID = (id: number): Asset => assetsModule.getAssetByID(id);
 export const getAssetIDByName = (name: string) => all[name]?.id;

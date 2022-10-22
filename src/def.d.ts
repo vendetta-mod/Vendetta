@@ -63,7 +63,7 @@ interface VendettaObject {
             all: Assets;
             find: (filter: (a: any) => void) => Asset | null | undefined;
             getAssetByName: (name: string) => Asset;
-            getAssetByID: (name: string) => Asset;
+            getAssetByID: (id: number) => Asset;
             getAssetIDByName: (name: string) => number;
         }
     };
