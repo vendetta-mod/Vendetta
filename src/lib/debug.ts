@@ -1,4 +1,6 @@
 import { after } from "@lib/patcher";
+import { getAssetIDByName } from "@ui/assets";
+import { showToast } from "@ui/toasts";
 import logger from "@lib/logger";
 export let socket: WebSocket;
 
@@ -9,7 +11,14 @@ export function connectToDebugWS(url: string) {
         socket.close();
     }
 
+    if (url === "") {
+        showToast("Invalid debugger URL!", getAssetIDByName("Small"));
+        return;
+    }
+
     socket = new WebSocket(`ws://${url}`);
+
+    socket.addEventListener("open", () => showToast("Connected to debugger.", getAssetIDByName("Check")));
 
     socket.addEventListener("message", (message: any) => {
         try {
@@ -17,6 +26,11 @@ export function connectToDebugWS(url: string) {
         } catch (e) {
             console.error(e);
         }
+    });
+
+    socket.addEventListener("error", (err: any) => {
+        console.log(`Debugger error: ${err.message}`);
+        showToast("An error occurred with the debugger connection!", getAssetIDByName("Small"));
     });
 }
 
