@@ -28,6 +28,15 @@ interface FindInTreeOptions {
     maxDepth?: number;
 }
 
+interface Asset {
+    name: string;
+    id: number;
+}
+
+interface Assets {
+    [id: string]: Asset;
+}
+
 interface VendettaObject {
     patcher: {
         after: typeof _spitroast.after;
@@ -48,6 +57,15 @@ interface VendettaObject {
             ReactNative: typeof _RN;
             AsyncStorage: typeof _AsyncStorage;
         };
+    };
+    ui: {
+        assets: {
+            all: Assets;
+            find: (filter: (a: any) => void) => Asset | null | undefined;
+            getAssetByName: (name: string) => Asset;
+            getAssetByID: (name: string) => Asset;
+            getAssetIDByName: (name: string) => number;
+        }
     };
     logger: Logger;
 }
