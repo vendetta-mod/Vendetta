@@ -17,6 +17,7 @@ export default function patchAssets() {
             const asset = assetsModule.getAssetByID(id);
             if (!asset) break;
             if (all[asset.name]) continue;
+            all[asset.name] = { ...asset, id: id }
         };
     } catch {};
 }
