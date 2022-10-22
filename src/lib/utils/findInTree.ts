@@ -1,6 +1,6 @@
 /*
-  Disclaimer: https://github.com/Cordwood/Cordwood/blob/91c0b971bbf05e112927df75415df99fa105e1e7/src/lib/utils/findInTree.ts
- */
+    Disclaimer: https://github.com/Cordwood/Cordwood/blob/91c0b971bbf05e112927df75415df99fa105e1e7/src/lib/utils/findInTree.ts
+*/
 
 import { FindInTreeOptions, SearchFilter } from "@types";
 
