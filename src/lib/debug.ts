@@ -1,4 +1,4 @@
-import { after } from "spitroast";
+import { after } from "@lib/patcher";
 import logger from "@lib/logger";
 export let socket: WebSocket;
 
