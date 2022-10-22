@@ -15,6 +15,11 @@ export default function SettingsSection({ navigation }: SettingsSectionProps) {
                 trailing={FormRow.Arrow}
                 onPress={() => navigation.push("VendettaSettings")}
             />
+            <FormRow
+                label="Asset Browser"
+                trailing={FormRow.Arrow}
+                onPress={() => navigation.push("VendettaAssetBrowser")}
+            />
         </FormSection>
     )
 }

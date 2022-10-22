@@ -4,6 +4,7 @@ import { after } from "@lib/patcher";
 import findInReactTree from "@utils/findInReactTree";
 import Settings from "./components/Settings";
 import SettingsSection from "./components/SettingsSection";
+import AssetBrowser from "./components/AssetBrowser";
 
 const screensModule = findByDisplayName("getScreens", false);
 const settingsModule = findByDisplayName("UserSettingsOverviewWrapper", false);
@@ -15,7 +16,11 @@ export default function initSettings() {
             VendettaSettings: {
                 title: "Vendetta Settings",
                 render: Settings
-            }   
+            },
+            VendettaAssetBrowser: {
+                title: "Asset Browser",
+                render: AssetBrowser
+            }
         }
     });
 
