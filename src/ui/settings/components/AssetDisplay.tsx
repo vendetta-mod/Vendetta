@@ -1,6 +1,9 @@
 import { Asset } from "@types";
 import { React, ReactNative as RN } from "@metro/common";
+import { showToast } from "@ui/toasts";
+import { getAssetIDByName } from "@ui/assets";
 import { Forms } from "@ui/components";
+import copyText from "@lib/utils/copyText";
 
 interface AssetDisplayProps {
     asset: Asset;
@@ -20,6 +23,10 @@ export default function AssetDisplay({ asset }: AssetDisplayProps) {
         <FormRow
             label={`${asset.name} - ${asset.id}`}
             trailing={() => <RN.Image source={asset.id} style={styles.asset} />}
+            onPress={() => {
+                copyText(asset.name);
+                showToast("Copied asset name to clipboard.", getAssetIDByName("toast_copy_link"))
+            }}
         />
     )
 }

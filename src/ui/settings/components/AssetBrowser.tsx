@@ -16,7 +16,7 @@ export default function AssetBrowser() {
                 title="SEARCH"
             />
             <RN.FlatList
-                data={Object.values(all).filter(a => a.name.startsWith(searchName))}
+                data={Object.values(all).filter(a => a.name.includes(searchName))}
                 renderItem={({ item }) => (
                     <AssetDisplay asset={item} />
                 )}
