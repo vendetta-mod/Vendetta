@@ -2,8 +2,8 @@ import { React, i18n } from "@metro/common";
 import { findByDisplayName } from "@metro/filters";
 import { after } from "@lib/patcher";
 import findInReactTree from "@utils/findInReactTree";
-import Settings from "./components/Settings";
 import SettingsSection from "./components/SettingsSection";
+import General from "./components/General";
 import AssetBrowser from "./components/AssetBrowser";
 
 const screensModule = findByDisplayName("getScreens", false);
@@ -14,8 +14,8 @@ export default function initSettings() {
         return {
             ...ret,
             VendettaSettings: {
-                title: "Vendetta Settings",
-                render: Settings
+                title: "Vendetta",
+                render: General
             },
             VendettaAssetBrowser: {
                 title: "Asset Browser",
