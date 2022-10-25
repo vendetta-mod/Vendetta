@@ -8,30 +8,35 @@ import initSettings from "@ui/settings";
 import { patchLogHook } from "@lib/debug";
 
 console.log("Hello from Vendetta!");
-let erroredOnLoad = false;
 
-try {
-    initSettings();
-    patchAssets();
-    patchLogHook();
+async function init() {
+    let erroredOnLoad = false;
 
-    window.vendetta = {
-        patcher: patcher,
-        metro: { ...metro, common: common },
-        logger: logger,
-        ui: {
-            assets: {
-                all: all,
-                find: find,
-                getAssetByID: getAssetByID,
-                getAssetByName: getAssetByName,
-                getAssetIDByName: getAssetIDByName,
+    try {
+        initSettings();
+        patchAssets();
+        patchLogHook();
+    
+        window.vendetta = {
+            patcher: patcher,
+            metro: { ...metro, common: common },
+            logger: logger,
+            ui: {
+                assets: {
+                    all: all,
+                    find: find,
+                    getAssetByID: getAssetByID,
+                    getAssetByName: getAssetByName,
+                    getAssetIDByName: getAssetIDByName,
+                },
             },
-        },
-    };
-} catch (e: Error | any) {
-    erroredOnLoad = true;
-    alert(`Vendetta failed to initialize...\n${e.stack || e.toString()}`);
-}
+        };
+    } catch (e: Error | any) {
+        erroredOnLoad = true;
+        alert(`Vendetta failed to initialize...\n${e.stack || e.toString()}`);
+    }
+    
+    if (!erroredOnLoad) logger.log("Vendetta is ready!");
+};
 
-if (!erroredOnLoad) logger.log("Vendetta is ready!");
+init();
