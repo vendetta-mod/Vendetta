@@ -1,7 +1,7 @@
 import { React, ReactNative as RN } from "@metro/common";
 import { Forms } from "@ui/components";
 import { all } from "@ui/assets";
-import AssetDisplay from "./AssetDisplay";
+import AssetDisplay from "@ui/settings/components/AssetDisplay";
 
 const { FormInput } = Forms
 

@@ -3,7 +3,7 @@ import { DISCORD_SERVER, GITHUB } from "@lib/constants";
 import { connectToDebugWS } from "@lib/debug";
 import { getAssetIDByName } from "@ui/assets";
 import { Forms } from "@ui/components";
-import Version from "./Version";
+import Version from "@ui/settings/components/Version";
 
 const { FormRow, FormSection, FormInput } = Forms;
 const hermesProps = window.HermesInternal.getRuntimeProperties();
