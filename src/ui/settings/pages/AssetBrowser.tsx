@@ -3,7 +3,7 @@ import { Forms } from "@ui/components";
 import { all } from "@ui/assets";
 import AssetDisplay from "@ui/settings/components/AssetDisplay";
 
-const { FormInput } = Forms
+const { FormInput } = Forms;
 
 export default function AssetBrowser() {
     const [searchName, setSearchName] = React.useState("");
