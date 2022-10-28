@@ -50,22 +50,42 @@ interface VendettaObject {
         findByDisplayName: (name: string, defaultExp: boolean) => any;
         findByDisplayNameAll: (name: string, defaultExp: boolean) => any[];
         common: {
-            constants: Object;
-            channels: Object;
-            i18n: Object;
+            constants: PropIntellisense<"API_HOST">;
+            channels: PropIntellisense<"getVoiceChannelId">;
+            i18n: PropIntellisense<"Messages">;
+            url: PropIntellisense<"openURL">;
+            toasts: PropIntellisense<"open" | "close">;
             React: typeof _React;
             ReactNative: typeof _RN;
             AsyncStorage: typeof _AsyncStorage;
         };
     };
+    constants: {
+        DISCORD_SERVER: string;
+        GITHUB: string;
+    };
+    utils: {
+        copyText: (content: string) => void;
+        findInReactTree: (tree: { [key: string]: any }, filter: SearchFilter) => void;
+        findInTree: (tree: { [key: string]: any }, filter: SearchFilter, options: FindInTreeOptions) => any;
+    };
+    debug: {
+        connectToDebugger: (url: string) => void;
+    }
     ui: {
+        components: {
+            Forms: PropIntellisense<"FormSection">;
+        }
+        toasts: {
+            showToast: (content: string, asset: number) => void;
+        };
         assets: {
             all: Assets;
             find: (filter: (a: any) => void) => Asset | null | undefined;
             getAssetByName: (name: string) => Asset;
             getAssetByID: (id: number) => Asset;
             getAssetIDByName: (name: string) => number;
-        }
+        };
     };
     logger: Logger;
 }

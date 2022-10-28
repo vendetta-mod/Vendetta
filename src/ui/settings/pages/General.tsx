@@ -1,6 +1,6 @@
 import { React, ReactNative as RN, url } from "@metro/common";
 import { DISCORD_SERVER, GITHUB } from "@lib/constants";
-import { connectToDebugWS } from "@lib/debug";
+import { connectToDebugger } from "@lib/debug";
 import { getAssetIDByName } from "@ui/assets";
 import { Forms } from "@ui/components";
 import Version from "@ui/settings/components/Version";
@@ -62,7 +62,7 @@ export default function General() {
                     label="Connect to debug websocket"
                     leading={() => <FormRow.Icon source={getAssetIDByName("copy")} />}
                     trailing={FormRow.Arrow}
-                    onPress={() => connectToDebugWS(debuggerUrl)}
+                    onPress={() => connectToDebugger(debuggerUrl)}
                 />
                 <FormRow
                     label="Reload Discord"

@@ -25,7 +25,7 @@ export default function AssetDisplay({ asset }: AssetDisplayProps) {
             trailing={() => <RN.Image source={asset.id} style={styles.asset} />}
             onPress={() => {
                 copyText(asset.name);
-                showToast("Copied asset name to clipboard.", getAssetIDByName("toast_copy_link"))
+                showToast("Copied asset name to clipboard.", getAssetIDByName("toast_copy_link"));
             }}
         />
     )

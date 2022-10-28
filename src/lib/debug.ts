@@ -6,7 +6,7 @@ export let socket: WebSocket;
 
 let iLoveBundlers = eval;
 
-export function connectToDebugWS(url: string) {
+export function connectToDebugger(url: string) {
     if (socket !== undefined && socket.readyState !== WebSocket.CLOSED) {
         socket.close();
     }
