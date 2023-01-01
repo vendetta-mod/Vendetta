@@ -1,5 +1,5 @@
 import { Asset } from "@types";
-import { React, ReactNative as RN } from "@metro/common";
+import { ReactNative as RN } from "@metro/common";
 import { showToast } from "@ui/toasts";
 import { getAssetIDByName } from "@ui/assets";
 import { Forms } from "@ui/components";

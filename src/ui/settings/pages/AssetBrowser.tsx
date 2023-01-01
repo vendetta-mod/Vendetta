@@ -1,4 +1,4 @@
-import { React, ReactNative as RN } from "@metro/common";
+import { ReactNative as RN } from "@metro/common";
 import { Forms } from "@ui/components";
 import { all } from "@ui/assets";
 import AssetDisplay from "@ui/settings/components/AssetDisplay";

@@ -1,4 +1,4 @@
-import { React, ReactNative as RN, url } from "@metro/common";
+import { ReactNative as RN, url } from "@metro/common";
 import { DISCORD_SERVER, GITHUB } from "@lib/constants";
 import { connectToDebugger } from "@lib/debug";
 import { getAssetIDByName } from "@ui/assets";

@@ -1,9 +1,10 @@
-import { React, i18n } from "@metro/common";
+import { i18n } from "@metro/common";
 import { findByDisplayName } from "@metro/filters";
 import { after } from "@lib/patcher";
 import findInReactTree from "@utils/findInReactTree";
 import SettingsSection from "@ui/settings/components/SettingsSection";
 import General from "@ui/settings/pages/General";
+import Plugins from "@ui/settings/pages/Plugins";
 import AssetBrowser from "@ui/settings/pages/AssetBrowser";
 
 const screensModule = findByDisplayName("getScreens", false);

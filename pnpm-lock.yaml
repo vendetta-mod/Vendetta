@@ -6,6 +6,7 @@ specifiers:
   '@types/react-native': ^0.70.5
   esbuild: ^0.15.11
   esbuild-plugin-alias: ^0.2.1
+  esbuild-plugin-external-global: ^1.0.1
   redux: ^4.2.0
   spitroast: ^1.4.2
   typescript: ^4.8.4
@@ -20,6 +21,7 @@ devDependencies:
   '@types/react-native': 0.70.5
   esbuild: 0.15.11
   esbuild-plugin-alias: 0.2.1
+  esbuild-plugin-external-global: 1.0.1
   redux: 4.2.0
   typescript: 4.8.4
   zustand: 4.1.2
@@ -234,6 +236,10 @@ packages:
 
   /esbuild-plugin-alias/0.2.1:
     resolution: {integrity: sha512-jyfL/pwPqaFXyKnj8lP8iLk6Z0m099uXR45aSN8Av1XD4vhvQutxxPzgA2bTcAwQpa1zCXDcWOlhFgyP3GKqhQ==}
+    dev: true
+
+  /esbuild-plugin-external-global/1.0.1:
+    resolution: {integrity: sha512-NDzYHRoShpvLqNcrgV8ZQh61sMIFAry5KLTQV83BPG5iTXCCu7h72SCfJ97bW0GqtuqDD/1aqLbKinI/rNgUsg==}
     dev: true
 
   /esbuild-sunos-64/0.15.11:

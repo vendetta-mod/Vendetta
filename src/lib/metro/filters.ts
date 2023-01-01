@@ -2,7 +2,6 @@ import { MetroModules, PropsFinder, PropsFinderAll } from "@types";
 
 // Metro require
 declare const __r: (moduleId: number) => any;
-let moment: any;
 
 // Function to blacklist a module, preventing it from being searched again
 function blacklist(id: number) {
@@ -14,18 +13,22 @@ function blacklist(id: number) {
     })
 }
 
-// Blacklist any "bad-actor" modules
+// Blacklist any "bad-actor" modules, e.g. the dreaded null proxy, the window itself, or undefined modules
 for (const key in window.modules) {
     const id = Number(key);
     const module = window.modules[id].publicModule.exports;
-
-    if (!moment && module && module.isMoment) moment = module;
 
     if (!module || module === window || module["proxygone"] === null) {
         blacklist(id);
         continue;
     }
 }
+
+// Hoist React
+window.React = Object.values(window.modules).find(m => m.publicModule.exports.createElement).publicModule.exports;
+
+// Find moment
+let moment = Object.values(window.modules).find(m => m.publicModule.exports.isMoment).publicModule.exports;
 
 // Function to filter through modules
 export const filterModules = (modules: MetroModules, single = false) => (filter: (m: any) => boolean) => {
