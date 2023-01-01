@@ -1,5 +1,6 @@
 import { build } from "esbuild";
 import alias from "esbuild-plugin-alias";
+import esg from "esbuild-plugin-external-global";
 import fs from "fs/promises";
 import path from "path";
 
@@ -13,9 +14,13 @@ try {
         minify: true,
         bundle: true,
         format: "iife",
-        external: ["react", "react-native"],
         target: "esnext",
-        plugins: [alias(aliases)],
+        plugins: [
+            alias(aliases),
+            esg.externalGlobalPlugin({
+                "react": "window.React",
+            })
+        ],
         legalComments: "external",
     });
 

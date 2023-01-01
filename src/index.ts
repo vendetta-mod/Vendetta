@@ -19,10 +19,6 @@ async function init() {
     let erroredOnLoad = false;
 
     try {
-        initSettings();
-        patchAssets();
-        patchLogHook();
-    
         window.vendetta = {
             patcher: patcher,
             metro: { ...metro, common: { ...common } },
@@ -48,6 +44,10 @@ async function init() {
             },
             logger: logger,
         };
+
+        initSettings();
+        patchAssets();
+        patchLogHook();
     } catch (e: Error | any) {
         erroredOnLoad = true;
         alert(`Vendetta failed to initialize...\n${e.stack || e.toString()}`);
