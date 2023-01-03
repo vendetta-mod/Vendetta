@@ -2,8 +2,9 @@ import { ReactNative as RN, stylesheet } from "@metro/common";
 import { Forms } from "@ui/components";
 import { Plugin } from "@types";
 import { getAssetIDByName } from "@/ui/assets";
+import { startPlugin, stopPlugin } from "@/lib/plugins";
 
-const { FormRow, FormText, FormSwitch } = Forms;
+const { FormRow, FormSwitch } = Forms;
 
 const styles = stylesheet.createThemedStyleSheet({
     card: {
@@ -35,8 +36,9 @@ export default function PluginCard({ plugin }: PluginCardProps) {
                     <FormSwitch
                         value={plugin.enabled}
                         onValueChange={(v: boolean) => {
+                            alert(v);
+                            if (v) startPlugin(plugin.id); else stopPlugin(plugin.id);
                             setEnabled(v);
-                            plugin.enabled = enabled;
                         }}
                     />
                 }

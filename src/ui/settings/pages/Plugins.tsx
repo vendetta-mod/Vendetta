@@ -49,7 +49,7 @@ export default function Plugins() {
                 keyExtractor={item => item.id}
             />
             <RN.View style={styles.disclaimer}>
-                <FormText style={styles.disclaimerText}>Plugins are currently non-functional, but most of the infrastructure and UI is in place.</FormText>
+                <FormText style={styles.disclaimerText}>Plugins are currently non-permanent whilst I find a storage solution.</FormText>
             </RN.View>
         </>
     )
