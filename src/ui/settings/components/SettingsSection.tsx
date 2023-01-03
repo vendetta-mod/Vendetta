@@ -17,6 +17,12 @@ export default function SettingsSection({ navigation }: SettingsSectionProps) {
                 onPress={() => navigation.push("VendettaSettings")}
             />
             <FormRow
+                label="Plugins"
+                leading={() => <FormRow.Icon source={getAssetIDByName("debug")} />}
+                trailing={FormRow.Arrow}
+                onPress={() => navigation.push("VendettaPlugins")}
+            />
+            <FormRow
                 label="Asset Browser"
                 leading={() => <FormRow.Icon source={getAssetIDByName("grid")} />}
                 trailing={FormRow.Arrow}

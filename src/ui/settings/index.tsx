@@ -18,6 +18,10 @@ export default function initSettings() {
                 title: "Vendetta",
                 render: General,
             },
+            VendettaPlugins: {
+                title: "Plugins",
+                render: Plugins
+            },
             VendettaAssetBrowser: {
                 title: "Asset Browser",
                 render: AssetBrowser,

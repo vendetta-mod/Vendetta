@@ -37,6 +37,22 @@ interface Assets {
     [id: string]: Asset;
 }
 
+interface PluginManifest {
+    name: string;
+    description: string;
+    icon?: string;
+    author: string;
+}
+
+interface Plugin {
+    id: string;
+    manifest: PluginManifest;
+    enabled: boolean;
+    js: string;
+}
+
+type Indexable<Type> = { [index: string]: Type }
+
 interface VendettaObject {
     patcher: {
         after: typeof _spitroast.after;
@@ -91,9 +107,11 @@ interface VendettaObject {
 }
 
 declare global {
+    type React = typeof _React;
     interface Window {
         [key: PropertyKey]: any;
         modules: MetroModules;
         vendetta: VendettaObject;
+        React: typeof _React;
     }
 }
