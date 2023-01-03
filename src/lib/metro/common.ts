@@ -6,6 +6,7 @@ export const channels = findByProps("getVoiceChannelId");
 export const i18n = findByProps("Messages");
 export const url = findByProps("openURL");
 export const toasts = find(m => m.open && m.close && !m.startDrag && !m.init && !m.openReplay && !m.setAlwaysOnTop);
+export const stylesheet = findByProps("createThemedStyleSheet");
 
 // React
 export const React = findByProps("createElement") as typeof import("react");

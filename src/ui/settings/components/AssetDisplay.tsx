@@ -1,5 +1,5 @@
 import { Asset } from "@types";
-import { ReactNative as RN } from "@metro/common";
+import { ReactNative as RN, stylesheet } from "@metro/common";
 import { showToast } from "@ui/toasts";
 import { getAssetIDByName } from "@ui/assets";
 import { Forms } from "@ui/components";
@@ -11,7 +11,7 @@ interface AssetDisplayProps {
 
 const { FormRow } = Forms;
 
-const styles = RN.StyleSheet.create({
+const styles = stylesheet.createThemedStyleSheet({
     asset: {
         width: 32,
         height: 32,
