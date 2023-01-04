@@ -25,11 +25,14 @@ export async function fetchPlugin(url: string) {
 
     let pluginJs: string;
 
+    // TODO: Remove duplicate error if possible
     try {
         pluginJs = await (await fetch(new URL("plugin.js", url), { cache: "no-store" })).text()
     } catch {
-        throw new Error(`Failed to fetch JS for ${url}`)
+        throw new Error(`Failed to fetch JS for ${url}`);
     }
+
+    if (pluginJs.length === 0) throw new Error(`Failed to fetch JS for ${url}`);
 
     plugins[id] = {
         id: id,
@@ -39,16 +42,14 @@ export async function fetchPlugin(url: string) {
     };
 }
 
-// Bundlers don't like eval
-const theSystemHasBeenDestroyed = eval;
-
 export function evalPlugin(plugin: Plugin) {
     // TODO: Refactor to not depend on own window object
     const vendettaForPlugins = Object.assign({}, window.vendetta);
-    const pluginString = `(vendetta)=>{return ${plugin.js}}\n//# sourceURL=${plugin.id}`;
+    const pluginString = `vendetta=>{return ${plugin.js}}\n//# sourceURL=${plugin.id}`;
 
-    const ret = theSystemHasBeenDestroyed(pluginString)(vendettaForPlugins);
-    return typeof ret == "function" ? ret() : ret;
+    const raw = (0, eval)(pluginString)(vendettaForPlugins);
+    const ret = typeof raw == "function" ? raw() : raw;
+    return ret.default || ret;
 }
 
 export function startPlugin(id: string) {

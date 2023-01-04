@@ -36,7 +36,6 @@ export default function PluginCard({ plugin }: PluginCardProps) {
                     <FormSwitch
                         value={plugin.enabled}
                         onValueChange={(v: boolean) => {
-                            alert(v);
                             if (v) startPlugin(plugin.id); else stopPlugin(plugin.id);
                             setEnabled(v);
                         }}
