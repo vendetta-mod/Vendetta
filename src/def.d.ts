@@ -37,11 +37,22 @@ interface Assets {
     [id: string]: Asset;
 }
 
+interface PluginAuthor {
+    name: string;
+    id: string;
+}
+
+// See https://github.com/vendetta-mod/polymanifest
 interface PluginManifest {
     name: string;
     description: string;
-    icon?: string;
-    author: string;
+    authors: PluginAuthor[];
+    main: string;
+    hash: string;
+    // Vendor-specific field, contains our own data
+    vendetta: {
+        icon: string;
+    };
 }
 
 interface Plugin {

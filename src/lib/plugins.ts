@@ -27,7 +27,8 @@ export async function fetchPlugin(url: string) {
 
     // TODO: Remove duplicate error if possible
     try {
-        pluginJs = await (await fetch(new URL("plugin.js", url), { cache: "no-store" })).text()
+        // by polymanifest spec, plugins should always specify their main file, but just in case
+        pluginJs = await (await fetch(new URL(pluginManifest.main || "index.js", url), { cache: "no-store" })).text();
     } catch {
         throw new Error(`Failed to fetch JS for ${url}`);
     }

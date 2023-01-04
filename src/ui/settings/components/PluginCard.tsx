@@ -1,8 +1,8 @@
 import { ReactNative as RN, stylesheet } from "@metro/common";
 import { Forms } from "@ui/components";
 import { Plugin } from "@types";
-import { getAssetIDByName } from "@/ui/assets";
-import { startPlugin, stopPlugin } from "@/lib/plugins";
+import { getAssetIDByName } from "@ui/assets";
+import { startPlugin, stopPlugin } from "@lib/plugins";
 
 const { FormRow, FormSwitch } = Forms;
 
@@ -30,8 +30,8 @@ export default function PluginCard({ plugin }: PluginCardProps) {
         <RN.View style={styles.card}>
             <FormRow
                 style={styles.header}
-                label={`${plugin.manifest.name} by ${plugin.manifest.author}`}
-                leading={<FormRow.Icon source={getAssetIDByName(plugin.manifest.icon || "ic_application_command_24px")} />}
+                label={`${plugin.manifest.name} by ${plugin.manifest.authors.map(i => i.name).join(", ")}`}
+                leading={<FormRow.Icon source={getAssetIDByName(plugin.manifest.vendetta.icon || "ic_application_command_24px")} />}
                 trailing={
                     <FormSwitch
                         value={plugin.enabled}
