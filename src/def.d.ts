@@ -101,7 +101,8 @@ interface VendettaObject {
     }
     ui: {
         components: {
-            Forms: PropIntellisense<"FormSection">;
+            Forms: PropIntellisense<"Form" | "FormSection">;
+            General: PropIntellisense<"Button" | "Text" | "View">;
         }
         toasts: {
             showToast: (content: string, asset: number) => void;

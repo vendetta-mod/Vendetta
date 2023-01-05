@@ -1,10 +1,13 @@
 import { ReactNative as RN, stylesheet } from "@metro/common";
-import { Forms } from "@ui/components";
+import { Forms, General } from "@ui/components";
 import { Plugin } from "@types";
 import { getAssetIDByName } from "@ui/assets";
-import { startPlugin, stopPlugin } from "@lib/plugins";
+import { getSettings, startPlugin, stopPlugin } from "@lib/plugins";
+import { findByProps } from "@metro/filters";
 
 const { FormRow, FormSwitch } = Forms;
+const { TouchableOpacity, Image } = General;
+const navigation = findByProps("pushLazy");
 
 const styles = stylesheet.createThemedStyleSheet({
     card: {
@@ -16,6 +19,16 @@ const styles = stylesheet.createThemedStyleSheet({
         backgroundColor: stylesheet.ThemeColorMap.BACKGROUND_TERTIARY,
         borderTopLeftRadius: 5,
         borderTopRightRadius: 5,
+    },
+    actions: {
+        justifyContent: "flex-end",
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    icon: {
+        width: 22,
+        height: 22,
+        tintColor: stylesheet.ThemeColorMap.INTERACTIVE_NORMAL,
     }
 })
 
@@ -25,6 +38,7 @@ interface PluginCardProps {
 
 export default function PluginCard({ plugin }: PluginCardProps) {
     const [enabled, setEnabled] = React.useState(plugin.enabled);
+    const Settings = getSettings(plugin.id);
 
     return ( 
         <RN.View style={styles.card}>
@@ -44,6 +58,17 @@ export default function PluginCard({ plugin }: PluginCardProps) {
             />
             <FormRow
                 label={plugin.manifest.description}
+                trailing={
+                    <RN.View style={styles.actions}>
+                        {Settings && <TouchableOpacity
+                            onPress={() => {
+                                navigation.push(Settings);
+                            }}
+                        >
+                            <Image style={styles.icon} source={getAssetIDByName("settings")} />
+                        </TouchableOpacity>}
+                    </RN.View>
+                }
             />
         </RN.View>
     )

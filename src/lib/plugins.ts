@@ -4,6 +4,7 @@ import logger from "./logger";
 type EvaledPlugin = {
     onLoad?(): void;
     onUnload(): void;
+    settings: JSX.Element;
 };
 
 export const plugins: Indexable<Plugin> = {};
@@ -91,6 +92,8 @@ export function stopPlugin(id: string) {
     delete loadedPlugins[id];
     plugin.enabled = false;
 }
+
+export const getSettings = (id: string) => loadedPlugins[id]?.settings;
 
 // TODO: When startAllPlugins exists, return this so cleanup in index.ts is easier
 const stopAllPlugins = () => Object.keys(loadedPlugins).forEach(stopPlugin);
