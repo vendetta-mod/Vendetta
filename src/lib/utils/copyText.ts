@@ -1,6 +1,4 @@
-import { findByProps } from "@metro/filters";
-
-const clipboard = findByProps("setString", "getString");
+import { clipboard } from "@metro/common";
 
 export default function copyText(content: string) {
     try {

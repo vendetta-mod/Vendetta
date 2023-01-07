@@ -50,7 +50,7 @@ async function init() {
         patchLogHook();
     } catch (e: Error | any) {
         erroredOnLoad = true;
-        alert(`Vendetta failed to initialize...\n${e.stack || e.toString()}`);
+        alert(`Vendetta failed to initialize... ${e.stack || e.toString()}`);
     }
     
     if (!erroredOnLoad) logger.log("Vendetta is ready!");
