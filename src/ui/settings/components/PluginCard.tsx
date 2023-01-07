@@ -1,13 +1,12 @@
-import { ReactNative as RN, stylesheet } from "@metro/common";
+import { ReactNative as RN, stylesheet, navigation } from "@metro/common";
 import { Forms, General } from "@ui/components";
 import { Plugin } from "@types";
 import { getAssetIDByName } from "@ui/assets";
 import { getSettings, startPlugin, stopPlugin } from "@lib/plugins";
-import { findByProps } from "@metro/filters";
+import PluginSettings from "@ui/settings/components/PluginSettings";
 
 const { FormRow, FormSwitch } = Forms;
 const { TouchableOpacity, Image } = General;
-const navigation = findByProps("pushLazy");
 
 const styles = stylesheet.createThemedStyleSheet({
     card: {
@@ -62,7 +61,10 @@ export default function PluginCard({ plugin }: PluginCardProps) {
                     <RN.View style={styles.actions}>
                         {Settings && <TouchableOpacity
                             onPress={() => {
-                                navigation.push(Settings);
+                                navigation.push(PluginSettings, {
+                                    plugin: plugin,
+                                    children: Settings,
+                                });
                             }}
                         >
                             <Image style={styles.icon} source={getAssetIDByName("settings")} />
