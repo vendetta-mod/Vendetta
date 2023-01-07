@@ -24,11 +24,13 @@ for (const key in window.modules) {
     }
 }
 
+const basicFind = (prop: string) => Object.values(window.modules).find(m => m.publicModule.exports?.[prop]).publicModule.exports;
+
 // Hoist React
-window.React = Object.values(window.modules).find(m => m.publicModule.exports.createElement).publicModule.exports;
+window.React = basicFind("createElement");
 
 // Find moment
-let moment = Object.values(window.modules).find(m => m.publicModule.exports.isMoment).publicModule.exports;
+let moment = basicFind("isMoment");
 
 // Function to filter through modules
 export const filterModules = (modules: MetroModules, single = false) => (filter: (m: any) => boolean) => {
