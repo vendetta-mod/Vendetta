@@ -118,7 +118,8 @@ export function stopPlugin(id: string) {
 }
 
 export function removePlugin(id: string) {
-    stopPlugin(id);
+    const plugin = plugins[id];
+    if (plugin.enabled) stopPlugin(id);
     delete plugins[id];
 }
 
