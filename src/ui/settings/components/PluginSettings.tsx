@@ -13,7 +13,7 @@ const styles = stylesheet.createThemedStyleSheet({
         backgroundColor: stylesheet.ThemeColorMap.BACKGROUND_MOBILE_SECONDARY,
         flex: 1,
     },
-    cardStyle: {
+    card: {
         backgroundColor: stylesheet.ThemeColorMap.BACKGROUND_MOBILE_PRIMARY,
         color: stylesheet.ThemeColorMap.TEXT_NORMAL,
     },
@@ -48,7 +48,7 @@ export default function PluginSettings({ plugin, children }: PluginSettingsProps
                 screenOptions={{
                     cardOverlayEnabled: false,
                     cardShadowEnabled: false,
-                    cardStyle: styles.cardStyle,
+                    cardStyle: styles.card,
                     headerStyle: styles.header,
                     headerTitleContainerStyle: styles.headerTitleContainer,
                 }}
