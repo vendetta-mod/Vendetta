@@ -3,7 +3,7 @@ import { Forms } from "@ui/components";
 import { all } from "@ui/assets";
 import AssetDisplay from "@ui/settings/components/AssetDisplay";
 
-const { FormInput } = Forms;
+const { FormInput, FormDivider } = Forms;
 
 export default function AssetBrowser() {
     const [searchName, setSearchName] = React.useState("");
@@ -18,7 +18,10 @@ export default function AssetBrowser() {
             <RN.FlatList
                 data={Object.values(all).filter(a => a.name.includes(searchName))}
                 renderItem={({ item }) => (
-                    <AssetDisplay asset={item} />
+                    <>
+                        <AssetDisplay asset={item} />
+                        <FormDivider />
+                    </>
                 )}
                 keyExtractor={item => item.name}
             />

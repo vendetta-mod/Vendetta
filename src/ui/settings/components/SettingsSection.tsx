@@ -1,7 +1,7 @@
 import { Forms } from "@ui/components";
 import { getAssetIDByName } from "@ui/assets";
 
-const { FormRow, FormSection } = Forms;
+const { FormRow, FormSection, FormDivider } = Forms;
 
 interface SettingsSectionProps {
     navigation: any;
@@ -16,12 +16,14 @@ export default function SettingsSection({ navigation }: SettingsSectionProps) {
                 trailing={FormRow.Arrow}
                 onPress={() => navigation.push("VendettaSettings")}
             />
+            <FormDivider />
             <FormRow
                 label="Plugins"
                 leading={() => <FormRow.Icon source={getAssetIDByName("debug")} />}
                 trailing={FormRow.Arrow}
                 onPress={() => navigation.push("VendettaPlugins")}
             />
+            <FormDivider />
             <FormRow
                 label="Asset Browser"
                 leading={() => <FormRow.Icon source={getAssetIDByName("grid")} />}

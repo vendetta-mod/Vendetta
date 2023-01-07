@@ -5,7 +5,7 @@ import { getAssetIDByName } from "@ui/assets";
 import { Forms } from "@ui/components";
 import Version from "@ui/settings/components/Version";
 
-const { FormRow, FormSection, FormInput } = Forms;
+const { FormRow, FormSection, FormInput, FormDivider } = Forms;
 const hermesProps = window.HermesInternal.getRuntimeProperties();
 const rnVer = RN.Platform.constants.reactNativeVersion;
 
@@ -37,14 +37,14 @@ export default function General() {
 
     return ( 
         <RN.ScrollView>
-            {/* Why is there still a divider? */}
-            <FormSection title="Links" android_noDivider>
+            <FormSection title="Links">
                 <FormRow
                     label="Discord Server"
                     leading={() => <FormRow.Icon source={getAssetIDByName("Discord")} />}
                     trailing={FormRow.Arrow}
                     onPress={() => url.openURL(DISCORD_SERVER)}
                 />
+                <FormDivider />
                 <FormRow
                     label="GitHub"
                     leading={() => <FormRow.Icon source={getAssetIDByName("img_account_sync_github_white")} />}
@@ -58,12 +58,14 @@ export default function General() {
                     onChange={(v: string) => setDebuggerUrl(v)}
                     title="DEBUGGER URL"
                 />
+                <FormDivider />
                 <FormRow
                     label="Connect to debug websocket"
                     leading={() => <FormRow.Icon source={getAssetIDByName("copy")} />}
                     trailing={FormRow.Arrow}
                     onPress={() => connectToDebugger(debuggerUrl)}
                 />
+                <FormDivider />
                 <FormRow
                     label="Reload Discord"
                     leading={() => <FormRow.Icon source={getAssetIDByName("ic_message_retry")} />}
@@ -72,7 +74,12 @@ export default function General() {
                 />
             </FormSection>
             <FormSection title="Versions">
-                {versions.map((v) => <Version label={v.label} version={v.version} icon={v.icon} /> )}
+                {versions.map((v) => (
+                    <>
+                        <Version label={v.label} version={v.version} icon={v.icon} />
+                        <FormDivider />
+                    </>
+                ))}
             </FormSection>
         </RN.ScrollView>
     )
