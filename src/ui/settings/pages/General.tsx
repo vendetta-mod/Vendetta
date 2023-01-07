@@ -31,7 +31,7 @@ export default function General() {
         {
             label: "Hermes",
             version: `${hermesProps["OSS Release Version"]} ${hermesProps["Build"]} | Bytecode ${hermesProps["Bytecode Version"]}`,
-            icon: "ic_hammer_and_chisel_24px",
+            icon: "ic_badge_staff",
         },
     ];
 
