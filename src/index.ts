@@ -12,6 +12,7 @@ import { all, find, getAssetByID, getAssetByName, getAssetIDByName } from "@ui/a
 import patchAssets from "@ui/assets";
 import initSettings from "@ui/settings";
 import { connectToDebugger, patchLogHook } from "@lib/debug";
+import { initPlugins } from "@lib/plugins";
 
 console.log("Hello from Vendetta!");
 
@@ -48,6 +49,7 @@ async function init() {
         initSettings();
         patchAssets();
         patchLogHook();
+        initPlugins();
     } catch (e: Error | any) {
         erroredOnLoad = true;
         alert(`Vendetta failed to initialize... ${e.stack || e.toString()}`);

@@ -2,7 +2,8 @@ import { ReactNative as RN, stylesheet, navigation } from "@metro/common";
 import { Forms, General } from "@ui/components";
 import { Plugin } from "@types";
 import { getAssetIDByName } from "@ui/assets";
-import { getSettings, startPlugin, stopPlugin } from "@lib/plugins";
+import { getSettings, removePlugin, startPlugin, stopPlugin } from "@lib/plugins";
+import { showToast } from "@ui/toasts";
 import PluginSettings from "@ui/settings/components/PluginSettings";
 
 const { FormRow, FormSwitch } = Forms;
@@ -27,6 +28,7 @@ const styles = stylesheet.createThemedStyleSheet({
     icon: {
         width: 22,
         height: 22,
+        marginLeft: 5,
         tintColor: stylesheet.ThemeColorMap.INTERACTIVE_NORMAL,
     }
 })
@@ -37,7 +39,13 @@ interface PluginCardProps {
 
 export default function PluginCard({ plugin }: PluginCardProps) {
     const [enabled, setEnabled] = React.useState(plugin.enabled);
+    const [update, setUpdate] = React.useState(plugin.update);
+    const [removed, setRemoved] = React.useState(false);
     const Settings = getSettings(plugin.id);
+
+    // This is bad, but I don't think I have much choice - Beef
+    // Once the user re-renders the page, this is not taken into account anyway.
+    if (removed) return <></>;
 
     return ( 
         <RN.View style={styles.card}>
@@ -59,6 +67,23 @@ export default function PluginCard({ plugin }: PluginCardProps) {
                 label={plugin.manifest.description}
                 trailing={
                     <RN.View style={styles.actions}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                removePlugin(plugin.id);
+                                setRemoved(true);
+                            }}
+                        >
+                            <Image style={styles.icon} source={getAssetIDByName("ic_message_delete")} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                plugin.update = !plugin.update;
+                                setUpdate(plugin.update);
+                                showToast(`${plugin.update ? "Enabled" : "Disabled"} updates for ${plugin.manifest.name}.`, getAssetIDByName("toast_image_saved"));
+                            }}
+                        >
+                            <Image style={styles.icon} source={getAssetIDByName(plugin.update ? "Check" : "Small")} />
+                        </TouchableOpacity>
                         {Settings && <TouchableOpacity
                             onPress={() => {
                                 navigation.push(PluginSettings, {

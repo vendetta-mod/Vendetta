@@ -1,5 +1,6 @@
 import { Indexable, PluginManifest, Plugin } from "@types";
-import logger from "./logger";
+import { AsyncStorage } from "@metro/common";
+import logger from "@lib/logger";
 
 type EvaledPlugin = {
     onLoad?(): void;
@@ -7,21 +8,43 @@ type EvaledPlugin = {
     settings: JSX.Element;
 };
 
-export const plugins: Indexable<Plugin> = {};
+const proxyValidator = {
+    get(target: object, key: string | symbol): any {
+        const orig = Reflect.get(target, key);
+
+        if (typeof orig === "object" && orig !== null) {
+            return new Proxy(orig, proxyValidator);
+        } else {
+            return orig;
+        }
+    },
+
+    set(target: object, key: string | symbol, value: any) {
+        Reflect.set(target, key, value);
+        AsyncStorage.setItem("VENDETTA_PLUGINS", JSON.stringify(plugins));
+        return true;
+    },
+
+    deleteProperty(target: object, key: string | symbol) {
+        Reflect.deleteProperty(target, key);
+        AsyncStorage.setItem("VENDETTA_PLUGINS", JSON.stringify(plugins));
+        return true;
+    }
+}
+
+export const plugins: Indexable<Plugin> = new Proxy({}, proxyValidator);
 const loadedPlugins: Indexable<EvaledPlugin> = {};
 
-export async function fetchPlugin(url: string) {
-    if (!url.endsWith("/")) url += "/";
-
-    const id = url.split("://")[1];
-    if (typeof url !== "string" || url in plugins) throw new Error("Plugin ID invalid or taken");
+export async function fetchPlugin(id: string) {
+    if (!id.endsWith("/")) id += "/";
+    if (typeof id !== "string" || id in plugins) throw new Error("Plugin ID invalid or taken");
 
     let pluginManifest: PluginManifest;
 
     try {
-        pluginManifest = await (await fetch(new URL("manifest.json", url), { cache: "no-store" })).json();
+        pluginManifest = await (await fetch(new URL("manifest.json", id), { cache: "no-store" })).json();
     } catch {
-        throw new Error(`Failed to fetch manifest for ${url}`);
+        throw new Error(`Failed to fetch manifest for ${id}`);
     }
 
     let pluginJs: string;
@@ -29,17 +52,18 @@ export async function fetchPlugin(url: string) {
     // TODO: Remove duplicate error if possible
     try {
         // by polymanifest spec, plugins should always specify their main file, but just in case
-        pluginJs = await (await fetch(new URL(pluginManifest.main || "index.js", url), { cache: "no-store" })).text();
+        pluginJs = await (await fetch(new URL(pluginManifest.main || "index.js", id), { cache: "no-store" })).text();
     } catch {
-        throw new Error(`Failed to fetch JS for ${url}`);
+        throw new Error(`Failed to fetch JS for ${id}`);
     }
 
-    if (pluginJs.length === 0) throw new Error(`Failed to fetch JS for ${url}`);
+    if (pluginJs.length === 0) throw new Error(`Failed to fetch JS for ${id}`);
 
     plugins[id] = {
         id: id,
         manifest: pluginManifest,
         enabled: false,
+        update: true,
         js: pluginJs,
     };
 }
@@ -93,7 +117,26 @@ export function stopPlugin(id: string) {
     plugin.enabled = false;
 }
 
+export function removePlugin(id: string) {
+    stopPlugin(id);
+    delete plugins[id];
+}
+
 export const getSettings = (id: string) => loadedPlugins[id]?.settings;
 
-// TODO: When startAllPlugins exists, return this so cleanup in index.ts is easier
-const stopAllPlugins = () => Object.keys(loadedPlugins).forEach(stopPlugin);
+export const initPlugins = () => AsyncStorage.getItem("VENDETTA_PLUGINS").then(async function (v) {
+    if (!v) return;
+    const parsedPlugins: Indexable<Plugin> = JSON.parse(v);
+
+    for (let p of Object.keys(parsedPlugins)) {
+        const plugin = parsedPlugins[p]
+
+        if (parsedPlugins[p].update) {
+            await fetchPlugin(plugin.id);
+        } else {
+            plugins[p] = parsedPlugins[p];
+        }
+
+        if (parsedPlugins[p].enabled && plugins[p]) startPlugin(p);
+    }
+})

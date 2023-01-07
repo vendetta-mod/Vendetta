@@ -59,6 +59,7 @@ interface Plugin {
     id: string;
     manifest: PluginManifest;
     enabled: boolean;
+    update: boolean;
     js: string;
 }
 

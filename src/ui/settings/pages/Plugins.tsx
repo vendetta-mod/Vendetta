@@ -5,17 +5,7 @@ import { getAssetIDByName } from "@ui/assets";
 import { fetchPlugin, plugins } from "@lib/plugins";
 import PluginCard from "@ui/settings/components/PluginCard";
 
-const { FormInput, FormRow, FormText } = Forms;
-
-const styles = stylesheet.createThemedStyleSheet({
-    disclaimer: {
-        backgroundColor: stylesheet.ThemeColorMap.BACKGROUND_SECONDARY,
-        padding: 10
-    },
-    disclaimerText: {
-        textAlign: "center"
-    }
-})
+const { FormInput, FormRow } = Forms;
 
 export default function Plugins() {
     const [pluginUrl, setPluginUrl] = React.useState("");
@@ -48,9 +38,6 @@ export default function Plugins() {
                 renderItem={({ item }) => <PluginCard plugin={item} />}
                 keyExtractor={item => item.id}
             />
-            <RN.View style={styles.disclaimer}>
-                <FormText style={styles.disclaimerText}>Plugins are currently non-permanent whilst I find a storage solution.</FormText>
-            </RN.View>
         </>
     )
 }
