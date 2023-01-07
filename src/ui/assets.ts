@@ -1,8 +1,8 @@
-import { Asset, Assets } from "@types";
+import { Asset, Indexable, } from "@types";
 import { after } from "@lib/patcher";
 import { assets } from "@metro/common";
 
-export const all: Assets = {};
+export const all: Indexable<Asset> = {};
 
 export default function patchAssets() {
     try {

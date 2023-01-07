@@ -33,10 +33,6 @@ interface Asset {
     id: number;
 }
 
-interface Assets {
-    [id: string]: Asset;
-}
-
 interface PluginAuthor {
     name: string;
     id: string;
@@ -109,7 +105,7 @@ interface VendettaObject {
             showToast: (content: string, asset: number) => void;
         };
         assets: {
-            all: Assets;
+            all: Indexable<Asset>;
             find: (filter: (a: any) => void) => Asset | null | undefined;
             getAssetByName: (name: string) => Asset;
             getAssetByID: (id: number) => Asset;
