@@ -4,7 +4,7 @@ import { assets } from "@metro/common";
 
 export const all: Indexable<Asset> = {};
 
-export default function patchAssets() {
+export function patchAssets() {
     try {
         after("registerAsset", assets, (args: Asset[], id: number) => {
             const asset = args[0];

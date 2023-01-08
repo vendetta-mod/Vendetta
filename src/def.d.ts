@@ -112,6 +112,14 @@ interface VendettaObject {
             getAssetIDByName: (name: string) => number;
         };
     };
+    plugins: {
+        plugins: Indexable<Plugin>;
+        fetchPlugin: (id: string) => void;
+        evalPlugin: (id: string) => void;
+        stopPlugin: (id: string) => void;
+        removePlugin: (id: string) => void;
+        getSettings: (id: string) => JSX.Element;
+    }
     logger: Logger;
 }
 

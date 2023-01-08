@@ -8,11 +8,10 @@ import * as metro from "@metro/filters";
 import * as common from "@metro/common";
 import * as components from "@ui/components";
 import * as toasts from "@ui/toasts";
-import { all, find, getAssetByID, getAssetByName, getAssetIDByName } from "@ui/assets";
-import patchAssets from "@ui/assets";
+import { patchAssets, all, find, getAssetByID, getAssetByName, getAssetIDByName } from "@ui/assets";
 import initSettings from "@ui/settings";
 import { connectToDebugger, patchLogHook } from "@lib/debug";
-import { initPlugins } from "@lib/plugins";
+import { initPlugins, plugins, fetchPlugin, evalPlugin, stopPlugin, removePlugin, getSettings } from "@lib/plugins";
 
 console.log("Hello from Vendetta!");
 
@@ -42,6 +41,14 @@ async function init() {
                     getAssetByName: getAssetByName,
                     getAssetIDByName: getAssetIDByName,
                 },
+            },
+            plugins: {
+                plugins: plugins,
+                fetchPlugin: fetchPlugin,
+                evalPlugin: evalPlugin,
+                stopPlugin: stopPlugin,
+                removePlugin: removePlugin,
+                getSettings: getSettings
             },
             logger: logger,
         };
