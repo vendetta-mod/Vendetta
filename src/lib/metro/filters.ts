@@ -83,3 +83,4 @@ export const findByProps: PropsFinder = (...props) => find(propsFilter(props));
 export const findByPropsAll: PropsFinderAll = (...props) => findAll(propsFilter(props));
 export const findByDisplayName = (name: string, defaultExp = true) => find(dNameFilter(name, defaultExp));
 export const findByDisplayNameAll = (name: string, defaultExp = true) => findAll(dNameFilter(name, defaultExp));
+export const findByStoreName = (storeName: string) => find((m: any) => m.getName?.() === storeName);
