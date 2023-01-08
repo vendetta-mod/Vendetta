@@ -10,6 +10,7 @@ import * as components from "@ui/components";
 import * as toasts from "@ui/toasts";
 import { patchAssets, all, find, getAssetByID, getAssetByName, getAssetIDByName } from "@ui/assets";
 import initSettings from "@ui/settings";
+import { fixTheme } from "@ui/fixTheme";
 import { connectToDebugger, patchLogHook } from "@lib/debug";
 import { initPlugins, plugins, fetchPlugin, evalPlugin, stopPlugin, removePlugin, getSettings } from "@lib/plugins";
 
@@ -56,6 +57,7 @@ async function init() {
         initSettings();
         patchAssets();
         patchLogHook();
+        fixTheme();
         initPlugins();
     } catch (e: Error | any) {
         erroredOnLoad = true;
