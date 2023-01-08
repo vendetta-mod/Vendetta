@@ -4,8 +4,6 @@ import { showToast } from "@ui/toasts";
 import logger from "@lib/logger";
 export let socket: WebSocket;
 
-let iLoveBundlers = eval;
-
 export function connectToDebugger(url: string) {
     if (socket !== undefined && socket.readyState !== WebSocket.CLOSED) {
         socket.close();
@@ -22,7 +20,7 @@ export function connectToDebugger(url: string) {
 
     socket.addEventListener("message", (message: any) => {
         try {
-            iLoveBundlers(message.data);
+            (0, eval)(message.data);
         } catch (e) {
             console.error(e);
         }
