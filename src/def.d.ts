@@ -115,7 +115,7 @@ interface VendettaObject {
     plugins: {
         plugins: Indexable<Plugin>;
         fetchPlugin: (id: string) => void;
-        evalPlugin: (id: string) => void;
+        evalPlugin: (plugin: Plugin) => void;
         stopPlugin: (id: string) => void;
         removePlugin: (id: string) => void;
         getSettings: (id: string) => JSX.Element;
