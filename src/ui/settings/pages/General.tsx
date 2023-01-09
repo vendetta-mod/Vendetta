@@ -6,6 +6,7 @@ import { Forms } from "@ui/components";
 import Version from "@ui/settings/components/Version";
 
 const { FormRow, FormSection, FormInput, FormDivider } = Forms;
+const InfoDictionaryManager = RN.NativeModules.InfoDictionaryManager;
 const hermesProps = window.HermesInternal.getRuntimeProperties();
 const rnVer = RN.Platform.constants.reactNativeVersion;
 
@@ -15,7 +16,7 @@ export default function General() {
     const versions = [
         {
             label: "Discord",
-            version: RN.NativeModules.InfoDictionaryManager.Version,
+            version: `${InfoDictionaryManager.Version} (${InfoDictionaryManager.Build})`,
             icon: "Discord",
         },
         {
