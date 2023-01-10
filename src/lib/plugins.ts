@@ -1,6 +1,6 @@
 import { Indexable, PluginManifest, Plugin } from "@types";
-import { AsyncStorage } from "@metro/common";
 import logger from "@lib/logger";
+import createStorage from "./storage";
 
 type EvaledPlugin = {
     onLoad?(): void;
@@ -8,31 +8,19 @@ type EvaledPlugin = {
     settings: JSX.Element;
 };
 
-const proxyValidator = {
-    get(target: object, key: string | symbol): any {
-        const orig = Reflect.get(target, key);
+export const plugins = createStorage<Indexable<Plugin>>("VENDETTA_PLUGINS", async function(parsed) {
+    for (let p of Object.keys(parsed)) {
+        const plugin: Plugin = parsed[p];
 
-        if (typeof orig === "object" && orig !== null) {
-            return new Proxy(orig, proxyValidator);
+        if (parsed[p].update) {
+            await fetchPlugin(plugin.id);
         } else {
-            return orig;
+            plugins[p] = parsed[p];
         }
-    },
 
-    set(target: object, key: string | symbol, value: any) {
-        Reflect.set(target, key, value);
-        AsyncStorage.setItem("VENDETTA_PLUGINS", JSON.stringify(plugins));
-        return true;
-    },
-
-    deleteProperty(target: object, key: string | symbol) {
-        Reflect.deleteProperty(target, key);
-        AsyncStorage.setItem("VENDETTA_PLUGINS", JSON.stringify(plugins));
-        return true;
+        if (parsed[p].enabled && plugins[p]) startPlugin(p);
     }
-}
-
-export const plugins: Indexable<Plugin> = new Proxy({}, proxyValidator);
+});
 const loadedPlugins: Indexable<EvaledPlugin> = {};
 
 export async function fetchPlugin(id: string) {
@@ -124,20 +112,3 @@ export function removePlugin(id: string) {
 }
 
 export const getSettings = (id: string) => loadedPlugins[id]?.settings;
-
-export const initPlugins = () => AsyncStorage.getItem("VENDETTA_PLUGINS").then(async function (v) {
-    if (!v) return;
-    const parsedPlugins: Indexable<Plugin> = JSON.parse(v);
-
-    for (let p of Object.keys(parsedPlugins)) {
-        const plugin = parsedPlugins[p]
-
-        if (parsedPlugins[p].update) {
-            await fetchPlugin(plugin.id);
-        } else {
-            plugins[p] = parsedPlugins[p];
-        }
-
-        if (parsedPlugins[p].enabled && plugins[p]) startPlugin(p);
-    }
-})
