@@ -1,5 +1,6 @@
 import { Forms } from "@ui/components";
 import { getAssetIDByName } from "@ui/assets";
+import settings from "@/lib/settings";
 
 const { FormRow, FormSection, FormDivider } = Forms;
 
@@ -23,13 +24,17 @@ export default function SettingsSection({ navigation }: SettingsSectionProps) {
                 trailing={FormRow.Arrow}
                 onPress={() => navigation.push("VendettaPlugins")}
             />
-            <FormDivider />
-            <FormRow
-                label="Asset Browser"
-                leading={() => <FormRow.Icon source={getAssetIDByName("grid")} />}
-                trailing={FormRow.Arrow}
-                onPress={() => navigation.push("VendettaAssetBrowser")}
-            />
+            {settings.developerSettings && (
+                <>
+                    <FormDivider />
+                    <FormRow
+                        label="Developer"
+                        leading={() => <FormRow.Icon source={getAssetIDByName("ic_progress_wrench_24px")} />}
+                        trailing={FormRow.Arrow}
+                        onPress={() => navigation.push("VendettaDeveloper")}
+                    />
+                </>
+            )}
         </FormSection>
     )
 }

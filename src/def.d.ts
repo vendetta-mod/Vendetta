@@ -59,6 +59,11 @@ interface Plugin {
     js: string;
 }
 
+interface Settings {
+    debuggerUrl: string;
+    developerSettings: boolean;
+}
+
 type Indexable<Type> = { [index: string]: Type }
 
 interface VendettaObject {

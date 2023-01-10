@@ -11,7 +11,6 @@ export default function Plugins() {
     const [pluginUrl, setPluginUrl] = React.useState("");
     const [pluginList, setPluginList] = React.useState(plugins);
 
-
     return (
         <>
             <FormInput 

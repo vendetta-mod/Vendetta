@@ -1,17 +1,17 @@
 import { ReactNative as RN, url } from "@metro/common";
 import { DISCORD_SERVER, GITHUB } from "@lib/constants";
-import { connectToDebugger } from "@lib/debug";
 import { getAssetIDByName } from "@ui/assets";
 import { Forms } from "@ui/components";
 import Version from "@ui/settings/components/Version";
+import settings from "@lib/settings";
 
-const { FormRow, FormSection, FormInput, FormDivider } = Forms;
+const { FormRow, FormSection, FormDivider, FormSwitch } = Forms;
 const InfoDictionaryManager = RN.NativeModules.InfoDictionaryManager;
 const hermesProps = window.HermesInternal.getRuntimeProperties();
 const rnVer = RN.Platform.constants.reactNativeVersion;
 
 export default function General() {
-    const [debuggerUrl, setDebuggerUrl] = React.useState("");
+    const [devSettings, setDevSettings] = React.useState(settings.developerSettings || false);
 
     const versions = [
         {
@@ -41,37 +41,16 @@ export default function General() {
             <FormSection title="Links">
                 <FormRow
                     label="Discord Server"
-                    leading={() => <FormRow.Icon source={getAssetIDByName("Discord")} />}
+                    leading={<FormRow.Icon source={getAssetIDByName("Discord")} />}
                     trailing={FormRow.Arrow}
                     onPress={() => url.openURL(DISCORD_SERVER)}
                 />
                 <FormDivider />
                 <FormRow
                     label="GitHub"
-                    leading={() => <FormRow.Icon source={getAssetIDByName("img_account_sync_github_white")} />}
+                    leading={<FormRow.Icon source={getAssetIDByName("img_account_sync_github_white")} />}
                     trailing={FormRow.Arrow}
                     onPress={() => url.openURL(GITHUB)}
-                />
-            </FormSection>
-            <FormSection title="Debug">
-                <FormInput 
-                    value={debuggerUrl}
-                    onChange={(v: string) => setDebuggerUrl(v)}
-                    title="DEBUGGER URL"
-                />
-                <FormDivider />
-                <FormRow
-                    label="Connect to debug websocket"
-                    leading={() => <FormRow.Icon source={getAssetIDByName("copy")} />}
-                    trailing={FormRow.Arrow}
-                    onPress={() => connectToDebugger(debuggerUrl)}
-                />
-                <FormDivider />
-                <FormRow
-                    label="Reload Discord"
-                    leading={() => <FormRow.Icon source={getAssetIDByName("ic_message_retry")} />}
-                    trailing={FormRow.Arrow}
-                    onPress={() => RN.NativeModules.BundleUpdaterManager.reload()}
                 />
             </FormSection>
             <FormSection title="Versions">
@@ -81,6 +60,26 @@ export default function General() {
                         <FormDivider />
                     </>
                 ))}
+            </FormSection>
+            <FormSection title="Actions">
+                <FormRow
+                    label="Reload Discord"
+                    leading={<FormRow.Icon source={getAssetIDByName("ic_message_retry")} />}
+                    trailing={FormRow.Arrow}
+                    onPress={() => RN.NativeModules.BundleUpdaterManager.reload()}
+                />
+                <FormDivider />
+                <FormRow 
+                    label="Developer Settings"
+                    leading={<FormRow.Icon source={getAssetIDByName("ic_progress_wrench_24px")} />}
+                    trailing={<FormSwitch 
+                        value={devSettings}
+                        onValueChange={(v: boolean) => {
+                            settings.developerSettings = v;
+                            setDevSettings(v);
+                        }}
+                    />}
+                />
             </FormSection>
         </RN.ScrollView>
     )

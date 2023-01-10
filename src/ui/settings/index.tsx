@@ -5,7 +5,7 @@ import findInReactTree from "@utils/findInReactTree";
 import SettingsSection from "@ui/settings/components/SettingsSection";
 import General from "@ui/settings/pages/General";
 import Plugins from "@ui/settings/pages/Plugins";
-import AssetBrowser from "@ui/settings/pages/AssetBrowser";
+import Developer from "@ui/settings/pages/Developer";
 
 const screensModule = findByDisplayName("getScreens", false);
 const settingsModule = findByDisplayName("UserSettingsOverviewWrapper", false);
@@ -23,10 +23,10 @@ export default function initSettings() {
                 title: "Plugins",
                 render: Plugins
             },
-            VendettaAssetBrowser: {
-                title: "Asset Browser",
-                render: AssetBrowser,
-            },
+            VendettaDeveloper: {
+                title: "Developer",
+                render: Developer
+            }
         }
     });
 
