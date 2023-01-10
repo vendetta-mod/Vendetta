@@ -9,7 +9,6 @@ import logger from "@lib/logger";
 import AssetDisplay from "@ui/settings/components/AssetDisplay";
 
 const { FormSection, FormRow, FormInput, FormDivider } = Forms;
-const { connectToDevTools } = window.__vendetta_rdc;
 
 const styles = stylesheet.createThemedStyleSheet({
     search: {
@@ -45,13 +44,13 @@ export default function Developer() {
                     onPress={() => connectToDebugger(debuggerUrl)}
                 />
                 <FormDivider />
-                {connectToDevTools && <FormRow
+                {window.__vendetta_rdc && <FormRow
                     label="Connect to React DevTools"
                     leading={() => <FormRow.Icon source={getAssetIDByName("ic_badge_staff")} />}
                     trailing={FormRow.Arrow}
                     onPress={() => {
                         try {
-                            connectToDevTools({
+                            window.__vendetta_rdc?.connectToDevTools({
                                 host: debuggerUrl.split(":")[0],
                                 resolveRNStyle: RN.StyleSheet.flatten,
                             });
