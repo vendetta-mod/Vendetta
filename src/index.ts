@@ -13,6 +13,7 @@ import initSettings from "@ui/settings";
 import { fixTheme } from "@ui/fixTheme";
 import { connectToDebugger, patchLogHook } from "@lib/debug";
 import { plugins, fetchPlugin, evalPlugin, stopPlugin, removePlugin, getSettings } from "@lib/plugins";
+import settings from "@lib/settings";
 
 console.log("Hello from Vendetta!");
 
@@ -51,6 +52,7 @@ async function init() {
                 removePlugin: removePlugin,
                 getSettings: getSettings
             },
+            settings: settings,
             logger: logger,
         };
 

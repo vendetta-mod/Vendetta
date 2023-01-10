@@ -125,6 +125,7 @@ interface VendettaObject {
         removePlugin: (id: string) => void;
         getSettings: (id: string) => JSX.Element;
     }
+    settings: Settings;
     logger: Logger;
 }
 

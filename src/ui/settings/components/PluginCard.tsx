@@ -1,10 +1,9 @@
-import { ReactNative as RN, stylesheet, navigation } from "@metro/common";
+import { ReactNative as RN, stylesheet } from "@metro/common";
 import { Forms, General } from "@ui/components";
 import { Plugin } from "@types";
 import { getAssetIDByName } from "@ui/assets";
-import { getSettings, removePlugin, startPlugin, stopPlugin } from "@lib/plugins";
+import { removePlugin, startPlugin, stopPlugin, showSettings, getSettings } from "@lib/plugins";
 import { showToast } from "@ui/toasts";
-import PluginSettings from "@ui/settings/components/PluginSettings";
 
 const { FormRow, FormSwitch } = Forms;
 const { TouchableOpacity, Image } = General;
@@ -41,7 +40,6 @@ export default function PluginCard({ plugin }: PluginCardProps) {
     const [enabled, setEnabled] = React.useState(plugin.enabled);
     const [update, setUpdate] = React.useState(plugin.update);
     const [removed, setRemoved] = React.useState(false);
-    const Settings = getSettings(plugin.id);
 
     // This is bad, but I don't think I have much choice - Beef
     // Once the user re-renders the page, this is not taken into account anyway.
@@ -84,14 +82,7 @@ export default function PluginCard({ plugin }: PluginCardProps) {
                         >
                             <Image style={styles.icon} source={getAssetIDByName(plugin.update ? "Check" : "Small")} />
                         </TouchableOpacity>
-                        {Settings && <TouchableOpacity
-                            onPress={() => {
-                                navigation.push(PluginSettings, {
-                                    plugin: plugin,
-                                    children: Settings,
-                                });
-                            }}
-                        >
+                        {getSettings(plugin.id) && <TouchableOpacity onPress={() => showSettings(plugin)}>
                             <Image style={styles.icon} source={getAssetIDByName("settings")} />
                         </TouchableOpacity>}
                     </RN.View>

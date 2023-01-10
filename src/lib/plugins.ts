@@ -1,6 +1,8 @@
 import { Indexable, PluginManifest, Plugin } from "@types";
+import { navigation } from "@metro/common";
 import logger from "@lib/logger";
-import createStorage from "./storage";
+import createStorage from "@lib/storage";
+import PluginSettings from "@/ui/settings/components/PluginSettings";
 
 type EvaledPlugin = {
     onLoad?(): void;
@@ -58,7 +60,14 @@ export async function fetchPlugin(id: string) {
 
 export function evalPlugin(plugin: Plugin) {
     // TODO: Refactor to not depend on own window object
-    const vendettaForPlugins = Object.assign({}, window.vendetta);
+    const vendettaForPlugins = {
+        ...window.vendetta,
+        plugin: {
+            manifest: plugin.manifest,
+            storage: createStorage<Indexable<any>>(plugin.id),
+            showSettings: () => showSettings(plugin),
+        }
+    };
     const pluginString = `vendetta=>{return ${plugin.js}}\n//# sourceURL=${plugin.id}`;
 
     const raw = (0, eval)(pluginString)(vendettaForPlugins);
@@ -112,3 +121,13 @@ export function removePlugin(id: string) {
 }
 
 export const getSettings = (id: string) => loadedPlugins[id]?.settings;
+
+export function showSettings(plugin: Plugin) {
+    const settings = getSettings(plugin.id);
+    if (!settings) return logger.error(`Plugin ${plugin.id} is not loaded or has no settings`);
+
+    navigation.push(PluginSettings, {
+        plugin: plugin,
+        children: settings,
+    });
+}
