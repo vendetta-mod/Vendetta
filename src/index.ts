@@ -11,7 +11,7 @@ import * as toasts from "@ui/toasts";
 import { patchAssets, all, find, getAssetByID, getAssetByName, getAssetIDByName } from "@ui/assets";
 import initSettings from "@ui/settings";
 import { fixTheme } from "@ui/fixTheme";
-import { connectToDebugger, patchLogHook } from "@lib/debug";
+import { connectToDebugger, patchLogHook, versionHash } from "@lib/debug";
 import { plugins, fetchPlugin, evalPlugin, stopPlugin, removePlugin, getSettings } from "@lib/plugins";
 import settings from "@lib/settings";
 
@@ -54,12 +54,13 @@ async function init() {
             },
             settings: settings,
             logger: logger,
+            version: versionHash,
         };
 
-        initSettings();
-        patchAssets();
         patchLogHook();
+        patchAssets();
         fixTheme();
+        initSettings();
     } catch (e: Error | any) {
         erroredOnLoad = true;
         alert(`Vendetta failed to initialize... ${e.stack || e.toString()}`);

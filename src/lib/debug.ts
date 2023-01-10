@@ -1,3 +1,4 @@
+import { ReactNative as RN } from "@metro/common";
 import { after } from "@lib/patcher";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
@@ -40,4 +41,31 @@ export function patchLogHook() {
 
         logger.log(args[0]);
     });
+}
+
+export const versionHash = "__vendettaVersion";
+
+export function getDebugInfo(string: boolean = false) {
+    const InfoDictionaryManager = RN.NativeModules.InfoDictionaryManager;
+    const hermesProps = window.HermesInternal.getRuntimeProperties();
+    const rnVer = RN.Platform.constants.reactNativeVersion;
+
+    return {
+        vendetta: {
+            version: versionHash,
+        },
+        discord: {
+            version: InfoDictionaryManager.Version,
+            build: InfoDictionaryManager.Build,
+        },
+        react: {
+            version: React.version,
+            nativeVersion: `${rnVer.major || 0}.${rnVer.minor || 0}.${rnVer.patch || 0}`,
+        },
+        hermes: {
+            version: hermesProps["OSS Release Version"],
+            buildType: hermesProps["Build"],
+            bytecodeVersion: hermesProps["Bytecode Version"],
+        }
+    }
 }

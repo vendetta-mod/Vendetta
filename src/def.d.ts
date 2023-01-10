@@ -127,6 +127,7 @@ interface VendettaObject {
     }
     settings: Settings;
     logger: Logger;
+    version: string;
 }
 
 declare global {

@@ -2,36 +2,40 @@ import { ReactNative as RN, url } from "@metro/common";
 import { DISCORD_SERVER, GITHUB } from "@lib/constants";
 import { getAssetIDByName } from "@ui/assets";
 import { Forms } from "@ui/components";
+import { getDebugInfo } from "@lib/debug";
 import Version from "@ui/settings/components/Version";
 import settings from "@lib/settings";
 
-const { FormRow, FormSection, FormDivider, FormSwitch } = Forms;
-const InfoDictionaryManager = RN.NativeModules.InfoDictionaryManager;
-const hermesProps = window.HermesInternal.getRuntimeProperties();
-const rnVer = RN.Platform.constants.reactNativeVersion;
+const { FormRow, FormSwitchRow, FormSection, FormDivider } = Forms;
+const debugInfo = getDebugInfo()
 
 export default function General() {
     const [devSettings, setDevSettings] = React.useState(settings.developerSettings || false);
 
     const versions = [
         {
+            label: "Vendetta",
+            version: debugInfo.vendetta.version,
+            icon: "ic_progress_wrench_24px"
+        },
+        {
             label: "Discord",
-            version: `${InfoDictionaryManager.Version} (${InfoDictionaryManager.Build})`,
+            version: `${debugInfo.discord.version} (${debugInfo.discord.build})`,
             icon: "Discord",
         },
         {
             label: "React",
-            version: React.version,
+            version: debugInfo.react.version,
             icon: "ic_category_16px",
         },
         {
             label: "React Native",
-            version: `${rnVer.major || 0}.${rnVer.minor || 0}.${rnVer.patch || 0}`,
+            version: debugInfo.react.nativeVersion,
             icon: "mobile",
         },
         {
             label: "Hermes",
-            version: `${hermesProps["OSS Release Version"]} ${hermesProps["Build"]} | Bytecode ${hermesProps["Bytecode Version"]}`,
+            version: `${debugInfo.hermes.version} ${debugInfo.hermes.buildType} | Bytecode ${debugInfo.hermes.bytecodeVersion}`,
             icon: "ic_badge_staff",
         },
     ];
@@ -69,16 +73,14 @@ export default function General() {
                     onPress={() => RN.NativeModules.BundleUpdaterManager.reload()}
                 />
                 <FormDivider />
-                <FormRow 
+                <FormSwitchRow 
                     label="Developer Settings"
                     leading={<FormRow.Icon source={getAssetIDByName("ic_progress_wrench_24px")} />}
-                    trailing={<FormSwitch 
-                        value={devSettings}
-                        onValueChange={(v: boolean) => {
-                            settings.developerSettings = v;
-                            setDevSettings(v);
-                        }}
-                    />}
+                    value={devSettings}
+                    onValueChange={(v: boolean) => {
+                        settings.developerSettings = v;
+                        setDevSettings(v);
+                    }}
                 />
             </FormSection>
         </RN.ScrollView>

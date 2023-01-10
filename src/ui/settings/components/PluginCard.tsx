@@ -53,7 +53,7 @@ export default function PluginCard({ plugin }: PluginCardProps) {
                 leading={<FormRow.Icon source={getAssetIDByName(plugin.manifest.vendetta.icon || "ic_application_command_24px")} />}
                 trailing={
                     <FormSwitch
-                        value={plugin.enabled}
+                        value={enabled}
                         onValueChange={(v: boolean) => {
                             if (v) startPlugin(plugin.id); else stopPlugin(plugin.id);
                             setEnabled(v);
@@ -76,11 +76,11 @@ export default function PluginCard({ plugin }: PluginCardProps) {
                         <TouchableOpacity
                             onPress={() => {
                                 plugin.update = !plugin.update;
-                                setUpdate(plugin.update);
                                 showToast(`${plugin.update ? "Enabled" : "Disabled"} updates for ${plugin.manifest.name}.`, getAssetIDByName("toast_image_saved"));
+                                setUpdate(plugin.update);
                             }}
                         >
-                            <Image style={styles.icon} source={getAssetIDByName(plugin.update ? "Check" : "Small")} />
+                            <Image style={styles.icon} source={getAssetIDByName(update ? "Check" : "Small")} />
                         </TouchableOpacity>
                         {getSettings(plugin.id) && <TouchableOpacity onPress={() => showSettings(plugin)}>
                             <Image style={styles.icon} source={getAssetIDByName("settings")} />

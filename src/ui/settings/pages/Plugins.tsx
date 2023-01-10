@@ -12,7 +12,7 @@ export default function Plugins() {
     const [pluginList, setPluginList] = React.useState(plugins);
 
     return (
-        <>
+        <RN.View>
             <FormInput 
                 value={pluginUrl}
                 onChange={(v: string) => setPluginUrl(v)}
@@ -20,7 +20,7 @@ export default function Plugins() {
             />
             <FormRow
                 label="Install plugin"
-                leading={() => <FormRow.Icon source={getAssetIDByName("add_white")} />}
+                leading={<FormRow.Icon source={getAssetIDByName("add_white")} />}
                 trailing={FormRow.Arrow}
                 onPress={() => {
                         fetchPlugin(pluginUrl).then(() => {
@@ -37,6 +37,6 @@ export default function Plugins() {
                 renderItem={({ item }) => <PluginCard plugin={item} />}
                 keyExtractor={item => item.id}
             />
-        </>
+        </RN.View>
     )
 }
