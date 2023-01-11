@@ -35,8 +35,8 @@ export default function General() {
         },
         {
             label: "Hermes",
-            version: `${debugInfo.hermes.version} ${debugInfo.hermes.buildType} | Bytecode ${debugInfo.hermes.bytecodeVersion}`,
-            icon: "ic_badge_staff",
+            version: `${debugInfo.hermes.version} ${debugInfo.hermes.buildType} (Bytecode ${debugInfo.hermes.bytecodeVersion})`,
+            icon: "ic_server_security_24px",
         },
     ];
 
@@ -46,11 +46,11 @@ export default function General() {
             version: `${debugInfo.os.name} ${debugInfo.os.version}`,
             icon: "ic_cog_24px"
         },
-        ...(debugInfo.os.sdk ? [{
-            label: "Software Development Kit",
+        ...(debugInfo.os.sdk && [{
+            label: "SDK",
             version: debugInfo.os.sdk,
-            icon: "ic_cog_24px"
-        }] : []),
+            icon: "ic_profile_badge_verified_developer_color"
+        }]),
         {
             label: "Manufacturer",
             version: debugInfo.device.manufacturer,
@@ -67,7 +67,7 @@ export default function General() {
             icon: "ic_phonelink_24px"
         },
         {
-            label: RN.Platform.select({android: "Codename", ios: "Machine ID"})!,
+            label: RN.Platform.select({ android: "Codename", ios: "Machine ID" })!,
             version: debugInfo.device.codename,
             icon: "ic_compose_24px"
         }
