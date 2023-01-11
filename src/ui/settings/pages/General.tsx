@@ -46,11 +46,11 @@ export default function General() {
             version: `${debugInfo.os.name} ${debugInfo.os.version}`,
             icon: "ic_cog_24px"
         },
-        ...(debugInfo.os.sdk && [{
+        ...(debugInfo.os.sdk ? [{
             label: "SDK",
             version: debugInfo.os.sdk,
             icon: "ic_profile_badge_verified_developer_color"
-        }]),
+        }] : []),
         {
             label: "Manufacturer",
             version: debugInfo.device.manufacturer,
