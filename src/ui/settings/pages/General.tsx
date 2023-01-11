@@ -59,7 +59,7 @@ export default function General() {
         {
             label: "Brand",
             version: debugInfo.device.brand,
-            icon: "ic_megaphone_16px"
+            icon: "ic_settings_boost_24px"
         },
         {
             label: "Model",
