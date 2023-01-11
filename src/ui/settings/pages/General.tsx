@@ -65,6 +65,11 @@ export default function General() {
             label: "Model",
             version: debugInfo.device.model,
             icon: "ic_phonelink_24px"
+        },
+        {
+            label: RN.Platform.select({android: "Codename", ios: "Machine ID"})!,
+            version: debugInfo.device.codename,
+            icon: "ic_compose_24px"
         }
     ];
 

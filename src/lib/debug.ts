@@ -92,14 +92,16 @@ export function getDebugInfo(string: boolean = false) {
                     device: {
                         manufacturer: PlatformConstants.Manufacturer,
                         brand: PlatformConstants.Brand,
-                        model: PlatformConstants.Model
+                        model: PlatformConstants.Model,
+                        codename: DCDDeviceManager.device
                     }
                 },
                 ios: {
                     device: {
                         manufacturer: DCDDeviceManager.deviceManufacturer,
                         brand: DCDDeviceManager.deviceBrand,
-                        model: DCDDeviceManager.device
+                        model: DCDDeviceManager.deviceModel,
+                        codename: DCDDeviceManager.device
                     }
                 }
             }
