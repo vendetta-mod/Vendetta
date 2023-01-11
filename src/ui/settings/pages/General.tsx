@@ -40,6 +40,34 @@ export default function General() {
         },
     ];
 
+    const platformInfo = [
+        {
+            label: "Operating System",
+            version: `${debugInfo.os.name} ${debugInfo.os.version}`,
+            icon: "ic_cog_24px"
+        },
+        ...(debugInfo.os.sdk ? [{
+            label: "Software Development Kit",
+            version: debugInfo.os.sdk,
+            icon: "ic_cog_24px"
+        }] : []),
+        {
+            label: "Manufacturer",
+            version: debugInfo.device.manufacturer,
+            icon: "ic_hammer_and_chisel_24px"
+        },
+        {
+            label: "Brand",
+            version: debugInfo.device.brand,
+            icon: "ic_megaphone_16px"
+        },
+        {
+            label: "Model",
+            version: debugInfo.device.model,
+            icon: "ic_phonelink_24px"
+        }
+    ];
+
     return ( 
         <RN.ScrollView>
             <FormSection title="Links">
@@ -61,6 +89,14 @@ export default function General() {
                 {versions.map((v) => (
                     <>
                         <Version label={v.label} version={v.version} icon={v.icon} />
+                        <FormDivider />
+                    </>
+                ))}
+            </FormSection>
+            <FormSection title="Platform Info">
+                {platformInfo.map((p) => (
+                    <>
+                        <Version label={p.label} version={p.version} icon={p.icon} />
                         <FormDivider />
                     </>
                 ))}

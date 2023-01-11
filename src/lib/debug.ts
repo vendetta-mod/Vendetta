@@ -48,7 +48,9 @@ export const versionHash = "__vendettaVersion";
 export function getDebugInfo(string: boolean = false) {
     const InfoDictionaryManager = RN.NativeModules.InfoDictionaryManager;
     const hermesProps = window.HermesInternal.getRuntimeProperties();
-    const rnVer = RN.Platform.constants.reactNativeVersion;
+    const PlatformConstants = RN.Platform.constants;
+    const rnVer = PlatformConstants.reactNativeVersion;
+    const DCDDeviceManager = RN.NativeModules.DCDDeviceManager;
 
     return {
         vendetta: {
@@ -66,6 +68,41 @@ export function getDebugInfo(string: boolean = false) {
             version: hermesProps["OSS Release Version"],
             buildType: hermesProps["Build"],
             bytecodeVersion: hermesProps["Bytecode Version"],
-        }
+        },
+        ...RN.Platform.select(
+            {
+                android: {
+                    os: {
+                        name: "Android",
+                        version: PlatformConstants.Release,
+                        sdk: PlatformConstants.Version
+                    },
+                },
+                ios: {
+                    os: {
+                        name: PlatformConstants.systemName,
+                        version: PlatformConstants.osVersion
+                    },
+                }
+            }
+        )!,
+        ...RN.Platform.select(
+            {
+                android: {
+                    device: {
+                        manufacturer: PlatformConstants.Manufacturer,
+                        brand: PlatformConstants.Brand,
+                        model: PlatformConstants.Model
+                    }
+                },
+                ios: {
+                    device: {
+                        manufacturer: DCDDeviceManager.deviceManufacturer,
+                        brand: DCDDeviceManager.deviceBrand,
+                        model: DCDDeviceManager.device
+                    }
+                }
+            }
+        )!
     }
 }
