@@ -2,7 +2,7 @@ import { Indexable, PluginManifest, Plugin } from "@types";
 import { navigation } from "@metro/common";
 import logger from "@lib/logger";
 import createStorage from "@lib/storage";
-import PluginSettings from "@/ui/settings/components/PluginSettings";
+import Subpage from "@/ui/settings/components/Subpage";
 
 type EvaledPlugin = {
     onLoad?(): void;
@@ -126,8 +126,8 @@ export function showSettings(plugin: Plugin) {
     const settings = getSettings(plugin.id);
     if (!settings) return logger.error(`Plugin ${plugin.id} is not loaded or has no settings`);
 
-    navigation.push(PluginSettings, {
-        plugin: plugin,
+    navigation.push(Subpage, {
+        name: plugin.manifest.name,
         children: settings,
     });
 }

@@ -45,10 +45,11 @@ export function patchLogHook() {
 
 export const versionHash = "__vendettaVersion";
 
-export function getDebugInfo(string: boolean = false) {
+export function getDebugInfo() {
     const InfoDictionaryManager = RN.NativeModules.InfoDictionaryManager;
     const hermesProps = window.HermesInternal.getRuntimeProperties();
-    const PlatformConstants = RN.Platform.constants;
+    // TODO: Type 'any' removes errors, but is it sensible?
+    const PlatformConstants = RN.Platform.constants as any;
     const rnVer = PlatformConstants.reactNativeVersion;
     const DCDDeviceManager = RN.NativeModules.DCDDeviceManager;
 

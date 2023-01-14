@@ -24,6 +24,7 @@ for (const key in window.modules) {
     }
 }
 
+// Early find logic
 const basicFind = (prop: string) => Object.values(window.modules).find(m => m.publicModule.exports?.[prop]).publicModule.exports;
 
 // Hoist React
