@@ -15,8 +15,8 @@
     "license": "BSD-3-Clause",
     "devDependencies": {
         "@react-native-async-storage/async-storage": "^1.17.11",
-        "@types/react": "^18.0.26",
-        "@types/react-native": "~0.68.1",
+        "@types/react": "18.0.26",
+        "@types/react-native": "0.68.1",
         "esbuild": "^0.16.17",
         "esbuild-plugin-alias": "^0.2.1",
         "esbuild-plugin-external-global": "^1.0.1",
@@ -25,6 +25,9 @@
     },
     "dependencies": {
         "spitroast": "^1.4.2"
+    },
+    "resolutions": {
+        "@types/react": "18.0.26"
     },
     "pnpm": {
         "peerDependencyRules": {
