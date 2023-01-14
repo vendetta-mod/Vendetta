@@ -1,6 +1,6 @@
 import * as _spitroast from "spitroast";
 import _React from "react";
-import _RN from "react-native";
+import _RN, { PlatformConstants } from "react-native";
 import _AsyncStorage from "@react-native-async-storage/async-storage";
 
 type MetroModules = { [id: number]: any };
@@ -62,6 +62,24 @@ interface Plugin {
 interface Settings {
     debuggerUrl: string;
     developerSettings: boolean;
+}
+
+interface RNConstants extends PlatformConstants {
+    // Android
+    Version: number;
+    Release: string;
+    Serial: string;
+    Fingerprint: string;
+    Model: string;
+    Brand: string;
+    Manufacturer: string;
+    ServerHost?: string;
+
+    // iOS
+    forceTouchAvailable: boolean;
+    interfaceIdiom: string;
+    osVersion: string;
+    systemName: string;
 }
 
 type Indexable<Type> = { [index: string]: Type }

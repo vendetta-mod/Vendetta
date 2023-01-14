@@ -1,3 +1,4 @@
+import { RNConstants } from "@types";
 import { ReactNative as RN } from "@metro/common";
 import { after } from "@lib/patcher";
 import { getAssetIDByName } from "@ui/assets";
@@ -48,8 +49,7 @@ export const versionHash = "__vendettaVersion";
 export function getDebugInfo() {
     const InfoDictionaryManager = RN.NativeModules.InfoDictionaryManager;
     const hermesProps = window.HermesInternal.getRuntimeProperties();
-    // TODO: Type 'any' removes errors, but is it sensible?
-    const PlatformConstants = RN.Platform.constants as any;
+    const PlatformConstants = RN.Platform.constants as RNConstants;
     const rnVer = PlatformConstants.reactNativeVersion;
     const DCDDeviceManager = RN.NativeModules.DCDDeviceManager;
 
