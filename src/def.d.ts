@@ -1,6 +1,6 @@
 import * as _spitroast from "spitroast";
 import _React from "react";
-import _RN, { PlatformConstants } from "react-native";
+import _RN from "react-native";
 import _AsyncStorage from "@react-native-async-storage/async-storage";
 
 type MetroModules = { [id: number]: any };
@@ -64,7 +64,7 @@ interface Settings {
     developerSettings: boolean;
 }
 
-interface RNConstants extends PlatformConstants {
+interface RNConstants extends _RN.PlatformConstants {
     // Android
     Version: number;
     Release: string;
