@@ -4,6 +4,7 @@ import { Plugin } from "@types";
 import { getAssetIDByName } from "@ui/assets";
 import { removePlugin, startPlugin, stopPlugin, showSettings, getSettings } from "@lib/plugins";
 import { showToast } from "@ui/toasts";
+import copyText from "@lib/utils/copyText";
 
 const { FormRow, FormSwitch } = Forms;
 const { TouchableOpacity, Image } = General;
@@ -13,6 +14,7 @@ const styles = stylesheet.createThemedStyleSheet({
         backgroundColor: stylesheet.ThemeColorMap.BACKGROUND_SECONDARY,
         borderRadius: 5,
         margin: 10,
+        marginTop: 0,
     },
     header: {
         backgroundColor: stylesheet.ThemeColorMap.BACKGROUND_TERTIARY,
@@ -21,7 +23,7 @@ const styles = stylesheet.createThemedStyleSheet({
     },
     actions: {
         justifyContent: "flex-end",
-        flexDirection: "row",
+        flexDirection: "row-reverse",
         alignItems: "center",
     },
     icon: {
@@ -72,6 +74,14 @@ export default function PluginCard({ plugin }: PluginCardProps) {
                             }}
                         >
                             <Image style={styles.icon} source={getAssetIDByName("ic_message_delete")} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                copyText(plugin.id);
+                                showToast("Copied plugin URL to clipboard.", getAssetIDByName("toast_copy_link"));
+                            }}
+                        >
+                            <Image style={styles.icon} source={getAssetIDByName("copy")} />
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => {

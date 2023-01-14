@@ -1,32 +1,20 @@
-import { ReactNative as RN, stylesheet } from "@metro/common";
-import { Forms, Search } from "@ui/components";
+import { ReactNative as RN, navigation } from "@metro/common";
+import { Forms } from "@ui/components";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@/ui/toasts";
 import { connectToDebugger } from "@lib/debug";
-import { all } from "@ui/assets";
 import settings from "@lib/settings";
 import logger from "@lib/logger";
-import AssetDisplay from "@ui/settings/components/AssetDisplay";
+import Subpage from "@ui/settings/components/Subpage";
+import AssetBrowser from "@ui/settings/pages/AssetBrowser";
 
 const { FormSection, FormRow, FormInput, FormDivider } = Forms;
 
-const styles = stylesheet.createThemedStyleSheet({
-    search: {
-        margin: 0,
-        padding: 0,
-        paddingRight: 15,
-        paddingLeft: 15,
-        borderBottomWidth: 0,
-        backgroundColor: "none"
-    }
-})
-
 export default function Developer() {
     const [debuggerUrl, setDebuggerUrl] = React.useState(settings.debuggerUrl || "");
-    const [searchName, setSearchName] = React.useState("");
 
     return (
-        <RN.View>
+        <RN.View style={{ flex: 1 }}>
             <FormSection title="Debug">
                 <FormInput 
                     value={debuggerUrl}
@@ -40,14 +28,12 @@ export default function Developer() {
                 <FormRow
                     label="Connect to debug websocket"
                     leading={() => <FormRow.Icon source={getAssetIDByName("copy")} />}
-                    trailing={FormRow.Arrow}
                     onPress={() => connectToDebugger(debuggerUrl)}
                 />
                 <FormDivider />
                 {window.__vendetta_rdc && <FormRow
                     label="Connect to React DevTools"
                     leading={() => <FormRow.Icon source={getAssetIDByName("ic_badge_staff")} />}
-                    trailing={FormRow.Arrow}
                     onPress={() => {
                         try {
                             window.__vendetta_rdc?.connectToDevTools({
@@ -61,21 +47,15 @@ export default function Developer() {
                     }}
                 />}
             </FormSection>
-            <FormSection title="Assets">
-                <Search
-                    style={styles.search}
-                    onChangeText={(v: string) => setSearchName(v)}
-                    placeholder="Search..."
-                />
-                <RN.FlatList
-                    data={Object.values(all).filter(a => a.name.includes(searchName))}
-                    renderItem={({ item }) => (
-                        <>
-                            <AssetDisplay asset={item} />
-                            <FormDivider />
-                        </>
-                    )}
-                    keyExtractor={item => item.name}
+            <FormSection title="Other">
+                <FormRow
+                    label="Asset Browser"
+                    leading={() => <FormRow.Icon source={getAssetIDByName("ic_media_upload")} />}
+                    trailing={FormRow.Arrow}
+                    onPress={() => navigation.push(Subpage, {
+                        name: "Asset Browser",
+                        children: AssetBrowser,
+                    })}
                 />
             </FormSection>
         </RN.View>

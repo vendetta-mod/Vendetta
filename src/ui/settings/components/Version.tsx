@@ -15,8 +15,8 @@ export default function Version({ label, version, icon }: VersionProps) {
     return ( 
         <FormRow
             label={label}
-            leading={() => <FormRow.Icon source={getAssetIDByName(icon)} />}
-            trailing={() => <FormText>{version}</FormText>}
+            leading={<FormRow.Icon source={getAssetIDByName(icon)} />}
+            trailing={<FormText>{version}</FormText>}
             onPress={() => {
                 copyText(`${label} - ${version}`);
                 showToast("Copied version to clipboard.", getAssetIDByName("toast_copy_link"));

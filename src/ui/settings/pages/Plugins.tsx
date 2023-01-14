@@ -1,4 +1,4 @@
-import { ReactNative as RN, stylesheet } from "@metro/common";
+import { ReactNative as RN } from "@metro/common";
 import { Forms } from "@ui/components";
 import { showToast } from "@ui/toasts";
 import { getAssetIDByName } from "@ui/assets";
@@ -12,7 +12,7 @@ export default function Plugins() {
     const [pluginList, setPluginList] = React.useState(plugins);
 
     return (
-        <RN.View>
+        <RN.View style={{ flex: 1 }}>
             <FormInput 
                 value={pluginUrl}
                 onChange={(v: string) => setPluginUrl(v)}
@@ -20,8 +20,7 @@ export default function Plugins() {
             />
             <FormRow
                 label="Install plugin"
-                leading={<FormRow.Icon source={getAssetIDByName("add_white")} />}
-                trailing={FormRow.Arrow}
+                leading={<FormRow.Icon source={getAssetIDByName("ic_add_perk_24px")} />}
                 onPress={() => {
                         fetchPlugin(pluginUrl).then(() => {
                             setPluginUrl("");
@@ -33,6 +32,7 @@ export default function Plugins() {
                 }
             />
             <RN.FlatList
+                style={{ marginTop: 10 }}
                 data={Object.values(pluginList)}
                 renderItem={({ item }) => <PluginCard plugin={item} />}
                 keyExtractor={item => item.id}

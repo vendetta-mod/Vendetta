@@ -13,14 +13,14 @@ export default function SettingsSection({ navigation }: SettingsSectionProps) {
         <FormSection key="Vendetta" title="Vendetta">
             <FormRow
                 label="General"
-                leading={() => <FormRow.Icon source={getAssetIDByName("settings")} />}
+                leading={<FormRow.Icon source={getAssetIDByName("settings")} />}
                 trailing={FormRow.Arrow}
                 onPress={() => navigation.push("VendettaSettings")}
             />
             <FormDivider />
             <FormRow
                 label="Plugins"
-                leading={() => <FormRow.Icon source={getAssetIDByName("debug")} />}
+                leading={<FormRow.Icon source={getAssetIDByName("debug")} />}
                 trailing={FormRow.Arrow}
                 onPress={() => navigation.push("VendettaPlugins")}
             />
@@ -29,7 +29,7 @@ export default function SettingsSection({ navigation }: SettingsSectionProps) {
                     <FormDivider />
                     <FormRow
                         label="Developer"
-                        leading={() => <FormRow.Icon source={getAssetIDByName("ic_progress_wrench_24px")} />}
+                        leading={<FormRow.Icon source={getAssetIDByName("ic_progress_wrench_24px")} />}
                         trailing={FormRow.Arrow}
                         onPress={() => navigation.push("VendettaDeveloper")}
                     />

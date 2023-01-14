@@ -110,7 +110,6 @@ export default function General() {
                 <FormRow
                     label="Reload Discord"
                     leading={<FormRow.Icon source={getAssetIDByName("ic_message_retry")} />}
-                    trailing={FormRow.Arrow}
                     onPress={() => RN.NativeModules.BundleUpdaterManager.reload()}
                 />
                 <FormDivider />

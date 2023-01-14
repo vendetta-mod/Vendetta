@@ -1,10 +1,9 @@
-import { Plugin } from "@types";
 import { navigation, navigationStack, NavigationNative, stylesheet, constants } from "@metro/common";
 import { General } from "@ui/components";
 import { getAssetIDByName } from "@ui/assets";
 
-interface PluginSettingsProps {
-    plugin: Plugin;
+interface SubpageProps {
+    name: string;
     children: JSX.Element;
 }
 
@@ -39,11 +38,11 @@ const styles = stylesheet.createThemedStyleSheet({
 export const Settings = navigationStack.createStackNavigator();
 const { TouchableOpacity, Image } = General;
 
-export default function PluginSettings({ plugin, children }: PluginSettingsProps) {
+export default function Subpage({ name, children }: SubpageProps) {
     return (
         <NavigationNative.NavigationContainer>
             <Settings.Navigator
-                initialRouteName={plugin.manifest.name}
+                initialRouteName={name}
                 style={styles.container}
                 screenOptions={{
                     cardOverlayEnabled: false,
@@ -54,7 +53,7 @@ export default function PluginSettings({ plugin, children }: PluginSettingsProps
                 }}
             >
                 <Settings.Screen 
-                    name={plugin.manifest.name}
+                    name={name}
                     component={children}
                     options={{
                         headerTitleStyle: styles.headerTitle,

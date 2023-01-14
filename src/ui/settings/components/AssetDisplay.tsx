@@ -22,7 +22,7 @@ export default function AssetDisplay({ asset }: AssetDisplayProps) {
     return (
         <FormRow
             label={`${asset.name} - ${asset.id}`}
-            trailing={() => <RN.Image source={asset.id} style={styles.asset} />}
+            trailing={<RN.Image source={asset.id} style={styles.asset} />}
             onPress={() => {
                 copyText(asset.name);
                 showToast("Copied asset name to clipboard.", getAssetIDByName("toast_copy_link"));
