@@ -40,7 +40,7 @@ const { TouchableOpacity, Image } = General;
 
 export default function Subpage({ name, children }: SubpageProps) {
     return (
-        <NavigationNative.NavigationContainer>
+        <NavigationNative.NavigationContainer independent>
             <Settings.Navigator
                 initialRouteName={name}
                 style={styles.container}
