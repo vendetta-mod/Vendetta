@@ -7,7 +7,7 @@ export const i18n = findByProps("Messages");
 export const url = findByProps("openURL");
 export const toasts = find(m => m.open && m.close && !m.startDrag && !m.init && !m.openReplay && !m.setAlwaysOnTop);
 export const stylesheet = findByProps("createThemedStyleSheet");
-export const clipboard = findByProps("setString", "getString");
+export const clipboard = findByProps("setString", "getString", "hasString");
 export const assets = findByProps("registerAsset");
 export const navigation = findByProps("pushLazy");
 export const navigationStack = findByProps("createStackNavigator");
