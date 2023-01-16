@@ -46,8 +46,8 @@ interface PluginManifest {
     main: string;
     hash: string;
     // Vendor-specific field, contains our own data
-    vendetta: {
-        icon: string;
+    vendetta?: {
+        icon?: string;
     };
 }
 

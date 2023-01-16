@@ -52,7 +52,7 @@ export default function PluginCard({ plugin }: PluginCardProps) {
             <FormRow
                 style={styles.header}
                 label={`${plugin.manifest.name} by ${plugin.manifest.authors.map(i => i.name).join(", ")}`}
-                leading={<FormRow.Icon source={getAssetIDByName(plugin.manifest.vendetta.icon || "ic_application_command_24px")} />}
+                leading={<FormRow.Icon source={getAssetIDByName(plugin.manifest.vendetta?.icon || "ic_application_command_24px")} />}
                 trailing={
                     <FormSwitch
                         value={plugin.enabled}
