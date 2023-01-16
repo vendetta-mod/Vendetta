@@ -1,7 +1,6 @@
 import * as _spitroast from "spitroast";
 import _React from "react";
 import _RN from "react-native";
-import _AsyncStorage from "@react-native-async-storage/async-storage";
 
 type MetroModules = { [id: number]: any };
 
@@ -104,7 +103,6 @@ interface VendettaObject {
             toasts: PropIntellisense<"open" | "close">;
             React: typeof _React;
             ReactNative: typeof _RN;
-            AsyncStorage: typeof _AsyncStorage;
         };
     };
     constants: {
