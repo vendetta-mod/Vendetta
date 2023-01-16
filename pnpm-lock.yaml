@@ -4,7 +4,6 @@ overrides:
   '@types/react': 18.0.26
 
 specifiers:
-  '@react-native-async-storage/async-storage': ^1.17.11
   '@types/react': 18.0.26
   '@types/react-native': 0.68.1
   esbuild: ^0.16.17
@@ -18,7 +17,6 @@ dependencies:
   spitroast: 1.4.2
 
 devDependencies:
-  '@react-native-async-storage/async-storage': 1.17.11
   '@types/react': 18.0.26
   '@types/react-native': 0.68.1
   esbuild: 0.16.17
@@ -227,17 +225,6 @@ packages:
     dev: true
     optional: true
 
-  /@react-native-async-storage/async-storage/1.17.11:
-    resolution: {integrity: sha512-bzs45n5HNcDq6mxXnSsOHysZWn1SbbebNxldBXCQs8dSvF8Aor9KCdpm+TpnnGweK3R6diqsT8lFhX77VX0NFw==}
-    peerDependencies:
-      react-native: ^0.0.0-0 || 0.60 - 0.71 || 1000.0.0
-    peerDependenciesMeta:
-      react-native:
-        optional: true
-    dependencies:
-      merge-options: 3.0.4
-    dev: true
-
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
     dev: true
@@ -308,22 +295,10 @@ packages:
       '@esbuild/win32-x64': 0.16.17
     dev: true
 
-  /is-plain-obj/2.1.0:
-    resolution: {integrity: sha512-YWnfyRwxL/+SsrWYfOpUtz5b3YD+nyfkHvjbcanzk8zgyO4ASD67uVMRt8k5bM4lLMDnXfriRhOpemw+NfT1eA==}
-    engines: {node: '>=8'}
-    dev: true
-
   /magic-string/0.25.9:
     resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
     dependencies:
       sourcemap-codec: 1.4.8
-    dev: true
-
-  /merge-options/3.0.4:
-    resolution: {integrity: sha512-2Sug1+knBjkaMsMgf1ctR1Ujx+Ayku4EdJN4Z+C2+JzoeF7A3OZ9KM2GY0CpQS51NR61LTurMJrRKPhSs3ZRTQ==}
-    engines: {node: '>=10'}
-    dependencies:
-      is-plain-obj: 2.1.0
     dev: true
 
   /sourcemap-codec/1.4.8:

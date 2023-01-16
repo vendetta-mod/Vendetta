@@ -1,4 +1,5 @@
 import { MetroModules, PropsFinder, PropsFinderAll } from "@types";
+import { moment } from "@metro/hoist";
 
 // Metro require
 declare const __r: (moduleId: number) => any;
@@ -23,15 +24,6 @@ for (const key in window.modules) {
         continue;
     }
 }
-
-// Early find logic
-const basicFind = (prop: string) => Object.values(window.modules).find(m => m.publicModule.exports?.[prop]).publicModule.exports;
-
-// Hoist React
-window.React = basicFind("createElement");
-
-// Find moment
-let moment = basicFind("isMoment");
 
 // Function to filter through modules
 export const filterModules = (modules: MetroModules, single = false) => (filter: (m: any) => boolean) => {

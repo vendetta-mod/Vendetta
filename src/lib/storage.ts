@@ -1,5 +1,9 @@
 import { Indexable } from "@types";
-import { AsyncStorage } from "@metro/common";
+import { ReactNative as RN } from "@metro/hoist";
+
+// Discord's custom special storage sauce
+// TODO: Type this
+const MMKVManager = RN.NativeModules.MMKVManager;
 
 // TODO: React hook?
 // TODO: Clean up types, if necessary
@@ -19,18 +23,18 @@ export default function createStorage<T>(storeName: string, onRestore?: (parsed:
     
         set(target: object, key: string | symbol, value: any) {
             Reflect.set(target, key, value);
-            AsyncStorage.setItem(storeName, JSON.stringify(internalStore));
+            MMKVManager.setItem(storeName, JSON.stringify(internalStore));
             return true;
         },
     
         deleteProperty(target: object, key: string | symbol) {
             Reflect.deleteProperty(target, key);
-            AsyncStorage.setItem(storeName, JSON.stringify(internalStore));
+            MMKVManager.setItem(storeName, JSON.stringify(internalStore));
             return true;
         }
     }
 
-    AsyncStorage.getItem(storeName).then(async function (v) {
+    MMKVManager.getItem(storeName).then(async function (v: any) {
         if (!v) return;
         const parsed: T & Indexable<any> = JSON.parse(v);
 

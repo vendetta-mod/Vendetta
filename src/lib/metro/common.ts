@@ -18,8 +18,5 @@ export const Flux = findByProps("connectStores");
 export const FluxDispatcher = findByProps("_currentDispatchActionType");
 
 // React
-export const React = findByProps("createElement") as typeof import("react");
-export const ReactNative = findByProps("Text", "Image") as typeof import("react-native");
-
-// AsyncStorage
-export const AsyncStorage = findByProps("setItem") as typeof import("@react-native-async-storage/async-storage").default;
+export const React = window.React as typeof import("react");
+export { ReactNative } from "@metro/hoist";
