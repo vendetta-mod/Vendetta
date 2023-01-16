@@ -81,6 +81,40 @@ interface RNConstants extends _RN.PlatformConstants {
     systemName: string;
 }
 
+/**
+ * A key-value storage based upon `SharedPreferences` on Android.
+ *
+ * These types are based on Android though everything should be the same between
+ * platforms.
+ */
+interface MMKVManager {
+    /**
+     * Get the value for the given `key`, or null
+     * @param key The key to fetch
+     */
+    getItem: (key: string) => Promise<string | null>;
+    /**
+     * Deletes the value for the given `key`
+     * @param key The key to delete
+    */
+    removeItem: (key: string) => void;
+    /**
+     * Sets the value of `key` to `value`
+     */
+    setItem: (key: string, value: string) => void;
+    /**
+     * Goes through every item in storage and returns it, excluding the
+     * keys specified in `exclude`.
+     * @param exclude A list of items to exclude from result
+     */
+    refresh: (exclude: string[]) => Promise<Record<string, string>>;
+    /**
+     * You will be murdered if you use this function.
+     * Clears ALL of Discord's settings.
+     */
+    clear: () => void;
+}
+
 type Indexable<Type> = { [index: string]: Type }
 
 interface VendettaObject {
