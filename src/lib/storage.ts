@@ -2,7 +2,6 @@ import { Indexable, MMKVManager } from "@types";
 import { ReactNative as RN } from "@metro/hoist";
 
 // Discord's custom special storage sauce
-// TODO: Type this
 const MMKVManager = RN.NativeModules.MMKVManager as MMKVManager;
 
 // TODO: React hook?
