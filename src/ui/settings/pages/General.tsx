@@ -1,4 +1,4 @@
-import { ReactNative as RN, url } from "@metro/common";
+import { ReactNative as RN, url, invites } from "@metro/common";
 import { DISCORD_SERVER, GITHUB } from "@lib/constants";
 import { getAssetIDByName } from "@ui/assets";
 import { Forms } from "@ui/components";
@@ -7,7 +7,7 @@ import Version from "@ui/settings/components/Version";
 import settings from "@lib/settings";
 
 const { FormRow, FormSwitchRow, FormSection, FormDivider } = Forms;
-const debugInfo = getDebugInfo()
+const debugInfo = getDebugInfo();
 
 export default function General() {
     const [devSettings, setDevSettings] = React.useState(settings.developerSettings || false);
@@ -73,14 +73,14 @@ export default function General() {
         }
     ];
 
-    return ( 
+    return (
         <RN.ScrollView>
             <FormSection title="Links">
                 <FormRow
                     label="Discord Server"
                     leading={<FormRow.Icon source={getAssetIDByName("Discord")} />}
                     trailing={FormRow.Arrow}
-                    onPress={() => url.openURL(DISCORD_SERVER)}
+                    onPress={() => invites.acceptInviteAndTransitionToInviteChannel({ inviteKey: DISCORD_SERVER })}
                 />
                 <FormDivider />
                 <FormRow
@@ -113,7 +113,7 @@ export default function General() {
                     onPress={() => RN.NativeModules.BundleUpdaterManager.reload()}
                 />
                 <FormDivider />
-                <FormSwitchRow 
+                <FormSwitchRow
                     label="Developer Settings"
                     leading={<FormRow.Icon source={getAssetIDByName("ic_progress_wrench_24px")} />}
                     value={devSettings}

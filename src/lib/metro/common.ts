@@ -9,6 +9,7 @@ export const toasts = find(m => m.open && m.close && !m.startDrag && !m.init && 
 export const stylesheet = findByProps("createThemedStyleSheet");
 export const clipboard = findByProps("setString", "getString", "hasString");
 export const assets = findByProps("registerAsset");
+export const invites = findByProps("acceptInviteAndTransitionToInviteChannel");
 export const navigation = findByProps("pushLazy");
 export const navigationStack = findByProps("createStackNavigator");
 export const NavigationNative = findByProps("NavigationContainer");
