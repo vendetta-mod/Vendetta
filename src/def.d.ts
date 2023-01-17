@@ -108,7 +108,7 @@ interface VendettaObject {
         };
     };
     constants: {
-        DISCORD_SERVER_INVITE_KEY: string;
+        DISCORD_SERVER: string;
         GITHUB: string;
     };
     utils: {
