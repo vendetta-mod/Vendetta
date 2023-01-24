@@ -10,7 +10,7 @@ after("getBuiltInCommands", BuiltInCommands, (args, res) => {
 	return res.concat(commands)
 })
 
-export function registerCommand(command: ApplicationCommand): string {
+export function registerCommand(command: ApplicationCommand): () => void {
 	// Get built in commands
 	const builtInCommands = BuiltInCommands.getBuiltInCommands(1, true, false)
 	builtInCommands.sort(function (a: ApplicationCommand, b: ApplicationCommand) { return parseInt(b.id!) - parseInt(a.id!) })
@@ -24,10 +24,10 @@ export function registerCommand(command: ApplicationCommand): string {
 	commands.push(command)
 
 	// Return command id so it can be unregistered
-	return command.id
+	return () => unregisterCommand(command.id!)
 }
 
-export function unregisterCommand(id: string) {
+function unregisterCommand(id: string) {
 	// Filter out the custom command with the id given
 	commands = commands.filter((command) => command.id !== id)
 }

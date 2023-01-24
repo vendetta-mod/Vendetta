@@ -236,8 +236,7 @@ interface VendettaObject {
         getSettings: (id: string) => JSX.Element;
     };
     commands: {
-        registerCommand: (command: ApplicationCommand) => string;
-        unregisterCommand: (id: string) => void;
+        registerCommand: (command: ApplicationCommand) => () => void;
     };
     settings: Settings;
     logger: Logger;

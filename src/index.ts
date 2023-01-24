@@ -14,7 +14,7 @@ import { fixTheme } from "@ui/fixTheme";
 import { connectToDebugger, patchLogHook, versionHash } from "@lib/debug";
 import { plugins, fetchPlugin, evalPlugin, stopPlugin, removePlugin, getSettings } from "@lib/plugins";
 import settings from "@lib/settings";
-import { registerCommand, unregisterCommand } from "./lib/commands";
+import { registerCommand } from "./lib/commands";
 
 console.log("Hello from Vendetta!");
 
@@ -54,8 +54,7 @@ async function init() {
                 getSettings: getSettings
             },
             commands: {
-                registerCommand: registerCommand,
-                unregisterCommand: unregisterCommand
+                registerCommand: registerCommand
             },
             settings: settings,
             logger: logger,
