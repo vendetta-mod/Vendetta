@@ -51,10 +51,10 @@ async function init() {
                 evalPlugin: evalPlugin,
                 stopPlugin: stopPlugin,
                 removePlugin: removePlugin,
-                getSettings: getSettings
+                getSettings: getSettings,
             },
             commands: {
-                registerCommand: registerCommand
+                registerCommand: registerCommand,
             },
             settings: settings,
             logger: logger,

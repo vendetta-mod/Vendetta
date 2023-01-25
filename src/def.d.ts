@@ -81,7 +81,7 @@ export enum ApplicationCommandInputType {
     BUILT_IN_TEXT,
     BUILT_IN_INTEGRATION,
     BOT,
-    PLACEHOLDER
+    PLACEHOLDER,
 }
 
 export interface ApplicationCommandOption {
@@ -104,13 +104,13 @@ export enum ApplicationCommandOptionType {
     ROLE,
     MENTIONABLE,
     NUMBER,
-    ATTACHMENT
+    ATTACHMENT,
 }
 
 export enum ApplicationCommandType {
     CHAT = 1,
     USER,
-    MESSAGE
+    MESSAGE,
 }
 
 export interface CommandContext {
