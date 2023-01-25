@@ -63,6 +63,66 @@ interface Settings {
     developerSettings: boolean;
 }
 
+export interface ApplicationCommand {
+    description: string;
+    name: string;
+    options: ApplicationCommandOption[];
+    execute: (args: any[], ctx: CommandContext) => CommandResult | void | Promise<CommandResult> | Promise<void>;
+    id?: string;
+    applicationId: string;
+    displayName: string;
+    displayDescription: string;
+    inputType: ApplicationCommandInputType;
+    type: ApplicationCommandType;
+}
+
+export enum ApplicationCommandInputType {
+    BUILT_IN,
+    BUILT_IN_TEXT,
+    BUILT_IN_INTEGRATION,
+    BOT,
+    PLACEHOLDER,
+}
+
+export interface ApplicationCommandOption {
+    name: string;
+    description: string;
+    required?: boolean;
+    type: ApplicationCommandOptionType;
+    displayName: string;
+    displayDescription: string;
+}
+
+export enum ApplicationCommandOptionType {
+    SUB_COMMAND = 1,
+    SUB_COMMAND_GROUP,
+    STRING,
+    INTEGER,
+    BOOLEAN,
+    USER,
+    CHANNEL,
+    ROLE,
+    MENTIONABLE,
+    NUMBER,
+    ATTACHMENT,
+}
+
+export enum ApplicationCommandType {
+    CHAT = 1,
+    USER,
+    MESSAGE,
+}
+
+export interface CommandContext {
+    channel: any;
+    guild: any;
+}
+
+export interface CommandResult {
+    content: string;
+    tts?: boolean;
+}
+
 interface RNConstants extends _RN.PlatformConstants {
     // Android
     Version: number;
@@ -174,7 +234,10 @@ interface VendettaObject {
         stopPlugin: (id: string) => void;
         removePlugin: (id: string) => void;
         getSettings: (id: string) => JSX.Element;
-    }
+    };
+    commands: {
+        registerCommand: (command: ApplicationCommand) => () => void;
+    };
     settings: Settings;
     logger: Logger;
     version: string;

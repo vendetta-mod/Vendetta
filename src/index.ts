@@ -14,6 +14,7 @@ import { fixTheme } from "@ui/fixTheme";
 import { connectToDebugger, patchLogHook, versionHash } from "@lib/debug";
 import { plugins, fetchPlugin, evalPlugin, stopPlugin, removePlugin, getSettings } from "@lib/plugins";
 import settings from "@lib/settings";
+import { registerCommand } from "./lib/commands";
 
 console.log("Hello from Vendetta!");
 
@@ -50,7 +51,10 @@ async function init() {
                 evalPlugin: evalPlugin,
                 stopPlugin: stopPlugin,
                 removePlugin: removePlugin,
-                getSettings: getSettings
+                getSettings: getSettings,
+            },
+            commands: {
+                registerCommand: registerCommand,
             },
             settings: settings,
             logger: logger,
@@ -65,7 +69,7 @@ async function init() {
         erroredOnLoad = true;
         alert(`Vendetta failed to initialize... ${e.stack || e.toString()}`);
     }
-    
+
     if (!erroredOnLoad) logger.log("Vendetta is ready!");
 };
 
