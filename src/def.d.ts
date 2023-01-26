@@ -1,6 +1,7 @@
 import * as _spitroast from "spitroast";
 import _React from "react";
 import _RN from "react-native";
+import { Events } from "./lib/emitter";
 
 type MetroModules = { [id: number]: any };
 
@@ -176,6 +177,28 @@ interface MMKVManager {
 }
 
 type Indexable<Type> = { [index: string]: Type }
+
+type EmitterEvent = (keyof typeof Events) & string;
+
+interface EmitterListenerData {
+	path: string[];
+	value?: any;
+}
+
+type EmitterListener = (
+	event: EmitterEvent,
+	data: EmitterListenerData | any
+) => any;
+
+type EmitterListeners = Indexable<Set<EmitterListener>>;
+
+interface Emitter {
+    listeners: EmitterListeners;
+    on: (event: EmitterEvent, listener: EmitterListener) => void;
+    off: (event: EmitterEvent, listener: EmitterListener) => void;
+    once: (event: EmitterEvent, listener: EmitterListener) => void;
+    emit: (event: EmitterEvent, data: EmitterListenerData) => void;
+}
 
 interface VendettaObject {
     patcher: {

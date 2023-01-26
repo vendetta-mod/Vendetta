@@ -1,48 +1,63 @@
-import { Indexable, MMKVManager } from "@types";
+import { Emitter, MMKVManager } from "@types";
 import { ReactNative as RN } from "@metro/hoist";
+import createEmitter from "./emitter";
 
-// Discord's custom special storage sauce
 const MMKVManager = RN.NativeModules.MMKVManager as MMKVManager;
 
-// TODO: React hook?
-// TODO: Clean up types, if necessary
-export default function createStorage<T>(storeName: string, onRestore?: (parsed: T) => void): T {
-    const internalStore: Indexable<any> = {};
+function createProxy(target: any): { proxy: any, emitter: Emitter } {
+  const emitter = createEmitter();
 
-    const proxyValidator = {
-        get(target: object, key: string | symbol): any {
-            const orig = Reflect.get(target, key);
-    
-            if (typeof orig === "object" && orig !== null) {
-                return new Proxy(orig, proxyValidator);
-            } else {
-                return orig;
-            }
-        },
-    
-        set(target: object, key: string | symbol, value: any) {
-            Reflect.set(target, key, value);
-            MMKVManager.setItem(storeName, JSON.stringify(internalStore));
-            return true;
-        },
-    
-        deleteProperty(target: object, key: string | symbol) {
-            Reflect.deleteProperty(target, key);
-            MMKVManager.setItem(storeName, JSON.stringify(internalStore));
-            return true;
+  function createProxy(target: any, path: string[]): any {
+    return new Proxy(target, {
+      get(target, prop: string) {
+        const newPath = [...path, prop];
+        const value = target[prop];
+
+        if (value !== undefined && value !== null) {
+          emitter.emit("GET", {
+            path: newPath,
+            value,
+          });
+          if (typeof value === "object") {
+            return createProxy(value, newPath);
+          }
+          return value;
         }
-    }
 
-    MMKVManager.getItem(storeName).then(async function (v) {
-        if (!v) return;
-        const parsed: T & Indexable<any> = JSON.parse(v);
+        return createProxy((target[prop] = {}), newPath);
+      },
 
-        if (onRestore && typeof onRestore === "function") {
-            onRestore(parsed);
-        } else {
-            for (let p of Object.keys(parsed)) internalStore[p] = parsed[p];
-        }
-    })
+      set(target, prop: string, value) {
+        target[prop] = value;
+        emitter.emit("SET", {
+          path: [...path, prop],
+          value
+        });
+        // we do not care about success, if this actually does fail we have other problems
+        return true;
+      },
 
-    return new Proxy(internalStore, proxyValidator) as T;
+      deleteProperty(target, prop: string) {
+        const success = delete target[prop];
+        if (success) emitter.emit("DEL", { 
+          path: [...path, prop],
+        });
+        return success;
+      },
+    });
+  }
+
+  return {
+    proxy: createProxy(target, []),
+    emitter,
+  }
+}
+
+export async function createStorage<T>(storeName: string): Promise<Awaited<T>> {
+  const data = JSON.parse(await MMKVManager.getItem(storeName) ?? "{}");
+  const { proxy, emitter } = createProxy(data);
+
+  emitter.on("SET", () => MMKVManager.setItem(storeName, JSON.stringify(proxy)));
+
+  return proxy;
 }
