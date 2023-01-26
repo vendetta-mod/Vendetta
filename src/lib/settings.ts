@@ -1,4 +1,6 @@
-import createStorage from "@lib/storage";
+import { createStorage } from "@lib/storage";
 import { Settings } from "@types";
 
-export default createStorage<Settings>("VENDETTA_SETTINGS");
+let settings;
+createStorage<Settings>("VENDETTA_SETTINGS").then((s) => (settings = s));
+export default settings;
