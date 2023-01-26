@@ -4,7 +4,7 @@ import createEmitter from "./emitter";
 
 const MMKVManager = RN.NativeModules.MMKVManager as MMKVManager;
 
-function createProxy(target: any): { proxy: any, emitter: Emitter } {
+export function createProxy(target: any = {}): { proxy: any, emitter: Emitter } {
   const emitter = createEmitter();
 
   function createProxy(target: any, path: string[]): any {
