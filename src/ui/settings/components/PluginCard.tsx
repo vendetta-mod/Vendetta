@@ -4,7 +4,6 @@ import { Plugin } from "@types";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
 import { removePlugin, startPlugin, stopPlugin, showSettings, getSettings } from "@lib/plugins";
-import { useProxy } from "@lib/storage";
 import copyText from "@lib/utils/copyText";
 
 const { FormRow, FormSwitch } = Forms;
@@ -40,6 +39,10 @@ interface PluginCardProps {
 }
 
 export default function PluginCard({ plugin }: PluginCardProps) {
+    const [removed, setRemoved] = React.useState(false);
+    // This is needed because of React™
+    if (removed) return null;
+
     return ( 
         <RN.View style={styles.card}>
             <FormRow
@@ -62,6 +65,7 @@ export default function PluginCard({ plugin }: PluginCardProps) {
                         <TouchableOpacity
                             onPress={() => {
                                 removePlugin(plugin.id);
+                                setRemoved(true);
                             }}
                         >
                             <Image style={styles.icon} source={getAssetIDByName("ic_message_delete")} />
