@@ -10,7 +10,16 @@ type EvaledPlugin = {
     settings: JSX.Element;
 };
 
-export const plugins = wrapSync(createStorage<Indexable<Plugin>>("VENDETTA_PLUGINS"));
+export const plugins = wrapSync(createStorage<Indexable<Plugin>>("VENDETTA_PLUGINS").then(async function (store) {
+    for (let p of Object.keys(store)) {
+        const plugin: Plugin = store[p];
+
+        if (store[p].update) await fetchPlugin(plugin.id);
+        if (store[p].enabled && plugins[p]) startPlugin(p);
+    }
+
+    return store;
+}));
 const loadedPlugins: Indexable<EvaledPlugin> = {};
 
 export async function fetchPlugin(id: string) {
