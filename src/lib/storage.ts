@@ -23,10 +23,13 @@ export function createProxy(target: any = {}): { proxy: any, emitter: Emitter } 
             path: newPath,
             value,
           });
+          if (typeof value === "object") {
+            return createProxy(value, newPath);
+          }
           return value;
         }
 
-        return createProxy((target[prop] = {}), newPath);
+        return value;
       },
 
       set(target, prop: string, value) {
