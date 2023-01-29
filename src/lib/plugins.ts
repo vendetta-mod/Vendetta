@@ -15,7 +15,7 @@ export const plugins = wrapSync(createStorage<Indexable<Plugin>>("VENDETTA_PLUGI
         const plugin: Plugin = store[p];
 
         if (store[p].update) await fetchPlugin(plugin.id);
-        if (store[p].enabled && plugins[p]) startPlugin(p);
+        if (store[p].enabled && plugins[p]) await startPlugin(p);
     }
 
     return store;
@@ -55,13 +55,14 @@ export async function fetchPlugin(id: string) {
     };
 }
 
-export function evalPlugin(plugin: Plugin) {
+export async function evalPlugin(plugin: Plugin) {
     // TODO: Refactor to not depend on own window object
     const vendettaForPlugins = {
         ...window.vendetta,
         plugin: {
             manifest: plugin.manifest,
-            storage: createStorage<Indexable<any>>(plugin.id),
+            // Wrapping this with wrapSync is NOT an option.
+            storage: await createStorage<Indexable<any>>(plugin.id),
             showSettings: () => showSettings(plugin),
         }
     };
@@ -72,12 +73,12 @@ export function evalPlugin(plugin: Plugin) {
     return ret.default || ret;
 }
 
-export function startPlugin(id: string) {
+export async function startPlugin(id: string) {
     const plugin = plugins[id];
     if (!plugin) throw new Error("Attempted to start non-existent plugin");
 
     try {
-        const pluginRet: EvaledPlugin = evalPlugin(plugin);
+        const pluginRet: EvaledPlugin = await evalPlugin(plugin);
         loadedPlugins[id] = pluginRet;
         pluginRet.onLoad?.();
         plugin.enabled = true;
