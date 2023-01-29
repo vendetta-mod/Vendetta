@@ -1,8 +1,8 @@
 import { Indexable, PluginManifest, Plugin } from "@types";
 import { navigation } from "@metro/common";
+import { createStorage, wrapSync } from "@lib/storage";
 import logger from "@lib/logger";
-import createStorage from "@lib/storage";
-import Subpage from "@/ui/settings/components/Subpage";
+import Subpage from "@ui/settings/components/Subpage";
 
 type EvaledPlugin = {
     onLoad?(): void;
@@ -10,19 +10,7 @@ type EvaledPlugin = {
     settings: JSX.Element;
 };
 
-export const plugins = createStorage<Indexable<Plugin>>("VENDETTA_PLUGINS", async function(parsed) {
-    for (let p of Object.keys(parsed)) {
-        const plugin: Plugin = parsed[p];
-
-        if (parsed[p].update) {
-            await fetchPlugin(plugin.id);
-        } else {
-            plugins[p] = parsed[p];
-        }
-
-        if (parsed[p].enabled && plugins[p]) startPlugin(p);
-    }
-});
+export const plugins = wrapSync(createStorage<Indexable<Plugin>>("VENDETTA_PLUGINS"));
 const loadedPlugins: Indexable<EvaledPlugin> = {};
 
 export async function fetchPlugin(id: string) {

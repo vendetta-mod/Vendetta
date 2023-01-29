@@ -2,8 +2,9 @@ import { ReactNative as RN, stylesheet } from "@metro/common";
 import { Forms, General } from "@ui/components";
 import { Plugin } from "@types";
 import { getAssetIDByName } from "@ui/assets";
-import { removePlugin, startPlugin, stopPlugin, showSettings, getSettings } from "@lib/plugins";
 import { showToast } from "@ui/toasts";
+import { removePlugin, startPlugin, stopPlugin, showSettings, getSettings } from "@lib/plugins";
+import { useProxy } from "@lib/storage";
 import copyText from "@lib/utils/copyText";
 
 const { FormRow, FormSwitch } = Forms;
@@ -39,14 +40,6 @@ interface PluginCardProps {
 }
 
 export default function PluginCard({ plugin }: PluginCardProps) {
-    const [enabled, setEnabled] = React.useState(plugin.enabled);
-    const [update, setUpdate] = React.useState(plugin.update);
-    const [removed, setRemoved] = React.useState(false);
-
-    // This is bad, but I don't think I have much choice - Beef
-    // Once the user re-renders the page, this is not taken into account anyway.
-    if (removed) return <></>;
-
     return ( 
         <RN.View style={styles.card}>
             <FormRow
@@ -58,7 +51,6 @@ export default function PluginCard({ plugin }: PluginCardProps) {
                         value={plugin.enabled}
                         onValueChange={(v: boolean) => {
                             if (v) startPlugin(plugin.id); else stopPlugin(plugin.id);
-                            setEnabled(v);
                         }}
                     />
                 }
@@ -70,7 +62,6 @@ export default function PluginCard({ plugin }: PluginCardProps) {
                         <TouchableOpacity
                             onPress={() => {
                                 removePlugin(plugin.id);
-                                setRemoved(true);
                             }}
                         >
                             <Image style={styles.icon} source={getAssetIDByName("ic_message_delete")} />
@@ -87,7 +78,6 @@ export default function PluginCard({ plugin }: PluginCardProps) {
                             onPress={() => {
                                 plugin.update = !plugin.update;
                                 showToast(`${plugin.update ? "Enabled" : "Disabled"} updates for ${plugin.manifest.name}.`, getAssetIDByName("toast_image_saved"));
-                                setUpdate(plugin.update);
                             }}
                         >
                             <Image style={styles.icon} source={getAssetIDByName(plugin.update ? "Check" : "Small")} />

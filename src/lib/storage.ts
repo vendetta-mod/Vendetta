@@ -81,8 +81,18 @@ export function useProxy<T>(storage: T): T {
 export async function createStorage<T>(storeName: string): Promise<Awaited<T>> {
   const data = JSON.parse(await MMKVManager.getItem(storeName) ?? "{}");
   const { proxy, emitter } = createProxy(data);
-
+  
   emitter.on("SET", () => MMKVManager.setItem(storeName, JSON.stringify(proxy)));
 
   return proxy;
+}
+
+export function wrapSync<T extends Promise<any>>(store: T): Awaited<T> {
+    let awaited: any = undefined;
+    store.then((v) => (awaited = v));
+    return new Proxy({} as Awaited<T>, {
+        get: (target, prop) => Reflect.get(awaited ?? target, prop),
+        set: (target, prop, value) => Reflect.set(awaited ?? target, prop, value),
+        has: (target, prop) => Reflect.has(awaited ?? target, prop),
+    });
 }

@@ -3,14 +3,15 @@ import { DISCORD_SERVER, GITHUB } from "@lib/constants";
 import { getAssetIDByName } from "@ui/assets";
 import { Forms } from "@ui/components";
 import { getDebugInfo } from "@lib/debug";
-import Version from "@ui/settings/components/Version";
+import { useProxy } from "@lib/storage";
 import settings from "@lib/settings";
+import Version from "@ui/settings/components/Version";
 
 const { FormRow, FormSwitchRow, FormSection, FormDivider } = Forms;
 const debugInfo = getDebugInfo();
 
 export default function General() {
-    const [devSettings, setDevSettings] = React.useState(settings.developerSettings || false);
+    useProxy(settings);
 
     const versions = [
         {
@@ -116,10 +117,9 @@ export default function General() {
                 <FormSwitchRow
                     label="Developer Settings"
                     leading={<FormRow.Icon source={getAssetIDByName("ic_progress_wrench_24px")} />}
-                    value={devSettings}
+                    value={settings.developerSettings}
                     onValueChange={(v: boolean) => {
                         settings.developerSettings = v;
-                        setDevSettings(v);
                     }}
                 />
             </FormSection>
