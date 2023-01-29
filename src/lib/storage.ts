@@ -23,9 +23,6 @@ export function createProxy(target: any = {}): { proxy: any, emitter: Emitter } 
             path: newPath,
             value,
           });
-          if (typeof value === "object") {
-            return createProxy(value, newPath);
-          }
           return value;
         }
 
@@ -73,7 +70,7 @@ export function useProxy<T>(storage: T): T {
       emitter.off("SET", listener);
       emitter.off("DEL", listener);
     }
-  }, [])
+  }, []);
 
   return storage;
 }
@@ -81,7 +78,7 @@ export function useProxy<T>(storage: T): T {
 export async function createStorage<T>(storeName: string): Promise<Awaited<T>> {
   const data = JSON.parse(await MMKVManager.getItem(storeName) ?? "{}");
   const { proxy, emitter } = createProxy(data);
-  
+
   emitter.on("SET", () => MMKVManager.setItem(storeName, JSON.stringify(proxy)));
 
   return proxy;
