@@ -82,7 +82,9 @@ export async function createStorage<T>(storeName: string): Promise<Awaited<T>> {
   const data = JSON.parse(await MMKVManager.getItem(storeName) ?? "{}");
   const { proxy, emitter } = createProxy(data);
 
-  emitter.on("SET", () => MMKVManager.setItem(storeName, JSON.stringify(proxy)));
+  const handler = () => MMKVManager.setItem(storeName, JSON.stringify(proxy));
+  emitter.on("SET", handler);
+  emitter.on("DEL", handler);
 
   return proxy;
 }
