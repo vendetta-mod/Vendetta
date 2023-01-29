@@ -1,8 +1,8 @@
 import { Indexable, PluginManifest, Plugin } from "@types";
 import { navigation } from "@metro/common";
+import { createStorage, wrapSync } from "@lib/storage";
 import logger from "@lib/logger";
-import createStorage from "@lib/storage";
-import Subpage from "@/ui/settings/components/Subpage";
+import Subpage from "@ui/settings/components/Subpage";
 
 type EvaledPlugin = {
     onLoad?(): void;
@@ -10,19 +10,16 @@ type EvaledPlugin = {
     settings: JSX.Element;
 };
 
-export const plugins = createStorage<Indexable<Plugin>>("VENDETTA_PLUGINS", async function(parsed) {
-    for (let p of Object.keys(parsed)) {
-        const plugin: Plugin = parsed[p];
+export const plugins = wrapSync(createStorage<Indexable<Plugin>>("VENDETTA_PLUGINS").then(async function (store) {
+    for (let p of Object.keys(store)) {
+        const plugin: Plugin = store[p];
 
-        if (parsed[p].update) {
-            await fetchPlugin(plugin.id);
-        } else {
-            plugins[p] = parsed[p];
-        }
-
-        if (parsed[p].enabled && plugins[p]) startPlugin(p);
+        if (store[p].update) await fetchPlugin(plugin.id);
+        if (store[p].enabled && plugins[p]) await startPlugin(p);
     }
-});
+
+    return store;
+}));
 const loadedPlugins: Indexable<EvaledPlugin> = {};
 
 export async function fetchPlugin(id: string) {
@@ -58,13 +55,14 @@ export async function fetchPlugin(id: string) {
     };
 }
 
-export function evalPlugin(plugin: Plugin) {
+export async function evalPlugin(plugin: Plugin) {
     // TODO: Refactor to not depend on own window object
     const vendettaForPlugins = {
         ...window.vendetta,
         plugin: {
             manifest: plugin.manifest,
-            storage: createStorage<Indexable<any>>(plugin.id),
+            // Wrapping this with wrapSync is NOT an option.
+            storage: await createStorage<Indexable<any>>(plugin.id),
             showSettings: () => showSettings(plugin),
         }
     };
@@ -75,12 +73,12 @@ export function evalPlugin(plugin: Plugin) {
     return ret.default || ret;
 }
 
-export function startPlugin(id: string) {
+export async function startPlugin(id: string) {
     const plugin = plugins[id];
     if (!plugin) throw new Error("Attempted to start non-existent plugin");
 
     try {
-        const pluginRet: EvaledPlugin = evalPlugin(plugin);
+        const pluginRet: EvaledPlugin = await evalPlugin(plugin);
         loadedPlugins[id] = pluginRet;
         pluginRet.onLoad?.();
         plugin.enabled = true;

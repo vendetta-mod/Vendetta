@@ -1,6 +1,7 @@
 import { Forms } from "@ui/components";
 import { getAssetIDByName } from "@ui/assets";
-import settings from "@/lib/settings";
+import { useProxy } from "@lib/storage";
+import settings from "@lib/settings";
 
 const { FormRow, FormSection, FormDivider } = Forms;
 
@@ -9,6 +10,8 @@ interface SettingsSectionProps {
 }
 
 export default function SettingsSection({ navigation }: SettingsSectionProps) {
+    useProxy(settings);
+
     return ( 
         <FormSection key="Vendetta" title="Vendetta">
             <FormRow

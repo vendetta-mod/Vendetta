@@ -1,4 +1,4 @@
-import createStorage from "@lib/storage";
+import { createStorage, wrapSync } from "@lib/storage";
 import { Settings } from "@types";
 
-export default createStorage<Settings>("VENDETTA_SETTINGS");
+export default wrapSync(createStorage<Settings>("VENDETTA_SETTINGS"));

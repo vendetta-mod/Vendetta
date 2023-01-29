@@ -1,48 +1,101 @@
-import { Indexable, MMKVManager } from "@types";
+import { Emitter, MMKVManager } from "@types";
 import { ReactNative as RN } from "@metro/hoist";
+import createEmitter from "./emitter";
 
-// Discord's custom special storage sauce
 const MMKVManager = RN.NativeModules.MMKVManager as MMKVManager;
 
-// TODO: React hook?
-// TODO: Clean up types, if necessary
-export default function createStorage<T>(storeName: string, onRestore?: (parsed: T) => void): T {
-    const internalStore: Indexable<any> = {};
+const emitterSymbol = Symbol("emitter accessor");
 
-    const proxyValidator = {
-        get(target: object, key: string | symbol): any {
-            const orig = Reflect.get(target, key);
-    
-            if (typeof orig === "object" && orig !== null) {
-                return new Proxy(orig, proxyValidator);
-            } else {
-                return orig;
-            }
-        },
-    
-        set(target: object, key: string | symbol, value: any) {
-            Reflect.set(target, key, value);
-            MMKVManager.setItem(storeName, JSON.stringify(internalStore));
-            return true;
-        },
-    
-        deleteProperty(target: object, key: string | symbol) {
-            Reflect.deleteProperty(target, key);
-            MMKVManager.setItem(storeName, JSON.stringify(internalStore));
-            return true;
+export function createProxy(target: any = {}): { proxy: any, emitter: Emitter } {
+  const emitter = createEmitter();
+
+  function createProxy(target: any, path: string[]): any {
+    return new Proxy(target, {
+      get(target, prop: string) {
+        if ((prop as unknown) === emitterSymbol)
+          return emitter;
+
+        const newPath = [...path, prop];
+        const value: any = target[prop];
+
+        if (value !== undefined && value !== null) {
+          emitter.emit("GET", {
+            path: newPath,
+            value,
+          });
+          if (typeof value === "object") {
+            return createProxy(value, newPath);
+          }
+          return value;
         }
+
+        return value;
+      },
+
+      set(target, prop: string, value) {
+        target[prop] = value;
+        emitter.emit("SET", {
+          path: [...path, prop],
+          value
+        });
+        // we do not care about success, if this actually does fail we have other problems
+        return true;
+      },
+
+      deleteProperty(target, prop: string) {
+        const success = delete target[prop];
+        if (success) emitter.emit("DEL", { 
+          path: [...path, prop],
+        });
+        return success;
+      },
+    });
+  }
+
+  return {
+    proxy: createProxy(target, []),
+    emitter,
+  }
+}
+
+export function useProxy<T>(storage: T): T {
+  const emitter = (storage as any)[emitterSymbol] as Emitter;
+
+  const [, forceUpdate] = React.useReducer((n) => ~n, 0);
+
+  React.useEffect(() => {
+    const listener = () => forceUpdate();
+
+    emitter.on("SET", listener);
+    emitter.on("DEL", listener);
+
+    return () => {
+      emitter.off("SET", listener);
+      emitter.off("DEL", listener);
     }
+  }, []);
 
-    MMKVManager.getItem(storeName).then(async function (v) {
-        if (!v) return;
-        const parsed: T & Indexable<any> = JSON.parse(v);
+  return storage;
+}
 
-        if (onRestore && typeof onRestore === "function") {
-            onRestore(parsed);
-        } else {
-            for (let p of Object.keys(parsed)) internalStore[p] = parsed[p];
-        }
-    })
+export async function createStorage<T>(storeName: string): Promise<Awaited<T>> {
+  const data = JSON.parse(await MMKVManager.getItem(storeName) ?? "{}");
+  const { proxy, emitter } = createProxy(data);
 
-    return new Proxy(internalStore, proxyValidator) as T;
+  const handler = () => MMKVManager.setItem(storeName, JSON.stringify(proxy));
+  emitter.on("SET", handler);
+  emitter.on("DEL", handler);
+
+  return proxy;
+}
+
+export function wrapSync<T extends Promise<any>>(store: T): Awaited<T> {
+    let awaited: any = undefined;
+    store.then((v) => (awaited = v));
+    return new Proxy(
+      {} as Awaited<T>,
+      Object.fromEntries(Object.getOwnPropertyNames(Reflect)
+        // @ts-expect-error
+        .map((k) => [k, (t: T, ...a: any[]) => Reflect[k](awaited ?? t, ...a)])),
+    );
 }
