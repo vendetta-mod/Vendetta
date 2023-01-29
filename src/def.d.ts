@@ -261,6 +261,12 @@ interface VendettaObject {
     commands: {
         registerCommand: (command: ApplicationCommand) => () => void;
     };
+    storage: {
+        createProxy<T>(target: T): { proxy: T, emitter: Emitter };
+        useProxy<T>(storage: T): T;
+        createStorage<T>(storeName: string): Promise<Awaited<T>>;
+        wrapSync<T extends Promise<any>>(store: T): Awaited<T>;
+    };
     settings: Settings;
     logger: Logger;
     version: string;
