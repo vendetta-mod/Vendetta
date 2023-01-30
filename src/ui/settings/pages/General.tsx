@@ -35,8 +35,8 @@ export default function General() {
             icon: "mobile",
         },
         {
-            label: "Hermes",
-            version: `${debugInfo.hermes.version} ${debugInfo.hermes.buildType} (Bytecode ${debugInfo.hermes.bytecodeVersion})`,
+            label: "Bytecode",
+            version: debugInfo.hermes.bytecodeVersion,
             icon: "ic_server_security_24px",
         },
     ];
@@ -55,7 +55,7 @@ export default function General() {
         {
             label: "Manufacturer",
             version: debugInfo.device.manufacturer,
-            icon: "ic_hammer_and_chisel_24px"
+            icon: "ic_badge_staff"
         },
         {
             label: "Brand",
@@ -75,8 +75,8 @@ export default function General() {
     ];
 
     return (
-        <RN.ScrollView>
-            <FormSection title="Links">
+        <RN.ScrollView style={{ flex: 1 }}>
+            <FormSection title="Links" titleStyleType="no_border">
                 <FormRow
                     label="Discord Server"
                     leading={<FormRow.Icon source={getAssetIDByName("Discord")} />}

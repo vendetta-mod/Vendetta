@@ -16,17 +16,17 @@ const styles = stylesheet.createThemedStyleSheet({
 });
 
 export default function AssetBrowser() {
-    const [searchName, setSearchName] = React.useState("");
+    const [search, setSearch] = React.useState("");
 
     return (
         <RN.View style={{ flex: 1 }}>
             <Search
                 style={styles.search}
-                onChangeText={(v: string) => setSearchName(v)}
-                placeholder="Search..."
+                onChangeText={(v: string) => setSearch(v)}
+                placeholder="Search"
             />
             <RN.FlatList
-                data={Object.values(all).filter(a => a.name.includes(searchName))}
+                data={Object.values(all).filter(a => a.name.includes(search) || a.id.toString() === search)}
                 renderItem={({ item }) => (
                     <>
                         <AssetDisplay asset={item} />

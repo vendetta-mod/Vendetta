@@ -15,13 +15,12 @@ export default function Developer() {
     useProxy(settings);
 
     return (
-        <RN.View style={{ flex: 1 }}>
-            <FormSection title="Debug">
+        <RN.ScrollView style={{ flex: 1 }}>
+            <FormSection title="Debug" titleStyleType="no_border">
                 <FormInput 
                     value={settings.debuggerUrl}
-                    onChange={(v: string) => {
-                        settings.debuggerUrl = v;
-                    }}
+                    onChange={(v: string) => settings.debuggerUrl = v}
+                    placeholder="127.0.0.1:9090"
                     title="DEBUGGER URL"
                 />
                 <FormDivider />
@@ -41,6 +40,7 @@ export default function Developer() {
                                 resolveRNStyle: RN.StyleSheet.flatten,
                             });
                         } catch(e) {
+                            // TODO: Check if this ever actually catches anything
                             logger.error("Failed to connect to React DevTools!", e);
                             showToast("Failed to connect to React DevTools!", getAssetIDByName("Small"));
                         }
@@ -58,6 +58,6 @@ export default function Developer() {
                     })}
                 />
             </FormSection>
-        </RN.View>
+        </RN.ScrollView>
     )
 }

@@ -47,11 +47,18 @@ export function patchLogHook() {
 export const versionHash = "__vendettaVersion";
 
 export function getDebugInfo() {
+    // Discord
     const InfoDictionaryManager = RN.NativeModules.InfoDictionaryManager;
+    const DCDDeviceManager = RN.NativeModules.DCDDeviceManager;
+
+    // Hermes
     const hermesProps = window.HermesInternal.getRuntimeProperties();
+    const hermesVer = hermesProps["OSS Release Version"];
+    const padding = "for RN ";
+
+    // RN
     const PlatformConstants = RN.Platform.constants as RNConstants;
     const rnVer = PlatformConstants.reactNativeVersion;
-    const DCDDeviceManager = RN.NativeModules.DCDDeviceManager;
 
     return {
         vendetta: {
@@ -63,10 +70,10 @@ export function getDebugInfo() {
         },
         react: {
             version: React.version,
-            nativeVersion: `${rnVer.major || 0}.${rnVer.minor || 0}.${rnVer.patch || 0}`,
+            nativeVersion: hermesVer.startsWith(padding) ? hermesVer.substring(padding.length) : `${rnVer.major}.${rnVer.minor}.${rnVer.patch}`,
         },
         hermes: {
-            version: hermesProps["OSS Release Version"],
+            version: hermesVer,
             buildType: hermesProps["Build"],
             bytecodeVersion: hermesProps["Bytecode Version"],
         },

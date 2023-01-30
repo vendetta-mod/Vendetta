@@ -17,11 +17,12 @@ export default function Plugins() {
             <FormInput 
                 value={pluginUrl}
                 onChange={(v: string) => setPluginUrl(v)}
+                placeholder="https://example.com/"
                 title="PLUGIN URL"
             />
             <FormRow
                 label="Install plugin"
-                leading={<FormRow.Icon source={getAssetIDByName("ic_add_perk_24px")} />}
+                leading={<FormRow.Icon source={getAssetIDByName("ic_add_18px")} />}
                 onPress={() => {
                         fetchPlugin(pluginUrl).then(() => {
                             setPluginUrl("");
