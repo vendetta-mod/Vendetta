@@ -266,6 +266,7 @@ interface VendettaObject {
         useProxy<T>(storage: T): T;
         createStorage<T>(storeName: string): Promise<Awaited<T>>;
         wrapSync<T extends Promise<any>>(store: T): Awaited<T>;
+        awaitSyncWrapper(store: any): Promise<void>;
     };
     settings: Settings;
     logger: Logger;
