@@ -272,6 +272,12 @@ interface VendettaObject {
     version: string;
 }
 
+interface VendettaPluginObject {
+    manifest: PluginManifest,
+    storage: Indexable<any>,
+    showSettings: () => void,
+}
+
 declare global {
     type React = typeof _React;
     interface Window {
