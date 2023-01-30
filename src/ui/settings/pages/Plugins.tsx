@@ -34,6 +34,7 @@ export default function Plugins() {
             />
             <RN.FlatList
                 style={{ marginTop: 10 }}
+                contentContainerStyle={{ paddingBottom: 38 }}
                 data={Object.values(plugins)}
                 renderItem={({ item }) => <PluginCard plugin={item} />}
                 keyExtractor={item => item.id}
