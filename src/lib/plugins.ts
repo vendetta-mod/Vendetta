@@ -1,6 +1,6 @@
 import { Indexable, PluginManifest, Plugin } from "@types";
 import { navigation } from "@metro/common";
-import { createStorage, wrapSync } from "@lib/storage";
+import { awaitSyncWrapper, createStorage, wrapSync } from "@lib/storage";
 import logger from "@lib/logger";
 import Subpage from "@ui/settings/components/Subpage";
 
@@ -10,16 +10,7 @@ type EvaledPlugin = {
     settings: JSX.Element;
 };
 
-export const plugins = wrapSync(createStorage<Indexable<Plugin>>("VENDETTA_PLUGINS").then(async function (store) {
-    for (let p of Object.keys(store)) {
-        const plugin: Plugin = store[p];
-
-        if (plugin.update) await fetchPlugin(plugin.id, false);
-        if (plugin.enabled && plugins[p]) await startPlugin(p);
-    }
-
-    return store;
-}));
+export const plugins = wrapSync(createStorage<Indexable<Plugin>>("VENDETTA_PLUGINS"));
 const loadedPlugins: Indexable<EvaledPlugin> = {};
 
 export async function fetchPlugin(id: string, enabled = true) {
@@ -118,6 +109,15 @@ export function removePlugin(id: string) {
     const plugin = plugins[id];
     if (plugin.enabled) stopPlugin(id);
     delete plugins[id];
+}
+
+export async function initializePlugins() {
+    await awaitSyncWrapper(plugins);
+
+    const allIds = Object.keys(plugins);
+    await Promise.allSettled(allIds.map((pl) => fetchPlugin(pl, false)));
+    for (const pl of allIds.filter((pl) => plugins[pl].enabled))
+        startPlugin(pl);
 }
 
 export const getSettings = (id: string) => loadedPlugins[id]?.settings;

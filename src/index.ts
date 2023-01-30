@@ -13,7 +13,7 @@ import { patchAssets, all, find, getAssetByID, getAssetByName, getAssetIDByName 
 import initSettings from "@ui/settings";
 import { fixTheme } from "@ui/fixTheme";
 import { connectToDebugger, patchLogHook, versionHash } from "@lib/debug";
-import { plugins, fetchPlugin, evalPlugin, stopPlugin, removePlugin, getSettings } from "@lib/plugins";
+import { plugins, fetchPlugin, evalPlugin, stopPlugin, removePlugin, getSettings, initializePlugins } from "@lib/plugins";
 import settings from "@lib/settings";
 import { registerCommand } from "@lib/commands";
 
@@ -66,6 +66,7 @@ async function init() {
         patchLogHook();
         patchAssets();
         fixTheme();
+        initializePlugins();
         initSettings();
     } catch (e: Error | any) {
         erroredOnLoad = true;
