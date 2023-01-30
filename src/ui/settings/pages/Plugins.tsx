@@ -3,7 +3,7 @@ import { Forms } from "@ui/components";
 import { showToast } from "@ui/toasts";
 import { getAssetIDByName } from "@ui/assets";
 import { useProxy } from "@lib/storage";
-import { plugins, fetchPlugin } from "@lib/plugins";
+import { plugins, fetchPlugin, startPlugin } from "@lib/plugins";
 import PluginCard from "@ui/settings/components/PluginCard";
 
 const { FormInput, FormRow } = Forms;

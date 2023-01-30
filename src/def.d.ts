@@ -1,7 +1,7 @@
 import * as _spitroast from "spitroast";
 import _React from "react";
 import _RN from "react-native";
-import { Events } from "./lib/emitter";
+import { Events } from "@lib/emitter";
 
 type MetroModules = { [id: number]: any };
 
@@ -64,7 +64,7 @@ interface Settings {
     developerSettings: boolean;
 }
 
-export interface ApplicationCommand {
+interface ApplicationCommand {
     description: string;
     name: string;
     options: ApplicationCommandOption[];
@@ -77,7 +77,7 @@ export interface ApplicationCommand {
     type: ApplicationCommandType;
 }
 
-export enum ApplicationCommandInputType {
+declare enum ApplicationCommandInputType {
     BUILT_IN,
     BUILT_IN_TEXT,
     BUILT_IN_INTEGRATION,
@@ -85,7 +85,7 @@ export enum ApplicationCommandInputType {
     PLACEHOLDER,
 }
 
-export interface ApplicationCommandOption {
+interface ApplicationCommandOption {
     name: string;
     description: string;
     required?: boolean;
@@ -94,7 +94,7 @@ export interface ApplicationCommandOption {
     displayDescription: string;
 }
 
-export enum ApplicationCommandOptionType {
+declare enum ApplicationCommandOptionType {
     SUB_COMMAND = 1,
     SUB_COMMAND_GROUP,
     STRING,
@@ -108,18 +108,18 @@ export enum ApplicationCommandOptionType {
     ATTACHMENT,
 }
 
-export enum ApplicationCommandType {
+declare enum ApplicationCommandType {
     CHAT = 1,
     USER,
     MESSAGE,
 }
 
-export interface CommandContext {
+interface CommandContext {
     channel: any;
     guild: any;
 }
 
-export interface CommandResult {
+interface CommandResult {
     content: string;
     tts?: boolean;
 }
@@ -252,7 +252,7 @@ interface VendettaObject {
     };
     plugins: {
         plugins: Indexable<Plugin>;
-        fetchPlugin: (id: string) => void;
+        fetchPlugin: (id: string, enabled: boolean) => void;
         evalPlugin: (plugin: Plugin) => void;
         stopPlugin: (id: string) => void;
         removePlugin: (id: string) => void;

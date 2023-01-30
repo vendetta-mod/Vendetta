@@ -14,15 +14,15 @@ export const plugins = wrapSync(createStorage<Indexable<Plugin>>("VENDETTA_PLUGI
     for (let p of Object.keys(store)) {
         const plugin: Plugin = store[p];
 
-        if (store[p].update) await fetchPlugin(plugin.id);
-        if (store[p].enabled && plugins[p]) await startPlugin(p);
+        if (plugin.update) await fetchPlugin(plugin.id, false);
+        if (plugin.enabled && plugins[p]) await startPlugin(p);
     }
 
     return store;
 }));
 const loadedPlugins: Indexable<EvaledPlugin> = {};
 
-export async function fetchPlugin(id: string) {
+export async function fetchPlugin(id: string, enabled = true) {
     if (!id.endsWith("/")) id += "/";
     if (typeof id !== "string" || id in plugins) throw new Error("Plugin ID invalid or taken");
 
@@ -53,6 +53,8 @@ export async function fetchPlugin(id: string) {
         update: true,
         js: pluginJs,
     };
+
+    if (enabled) await startPlugin(id);
 }
 
 export async function evalPlugin(plugin: Plugin) {
