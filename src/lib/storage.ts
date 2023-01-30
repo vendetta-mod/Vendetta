@@ -5,6 +5,7 @@ import createEmitter from "./emitter";
 const MMKVManager = RN.NativeModules.MMKVManager as MMKVManager;
 
 const emitterSymbol = Symbol("emitter accessor");
+const syncAwaitSymbol = Symbol("wrapSync promise accessor");
 
 export function createProxy(target: any = {}): { proxy: any, emitter: Emitter } {
   const emitter = createEmitter();
@@ -91,11 +92,25 @@ export async function createStorage<T>(storeName: string): Promise<Awaited<T>> {
 
 export function wrapSync<T extends Promise<any>>(store: T): Awaited<T> {
     let awaited: any = undefined;
-    store.then((v) => (awaited = v));
-    return new Proxy(
-      {} as Awaited<T>,
-      Object.fromEntries(Object.getOwnPropertyNames(Reflect)
+
+    const awaitQueue: (() => void)[] = [];
+    const awaitInit = (cb: () => void) => (awaited ? cb() : awaitQueue.push(cb));
+
+    store.then((v) => {
+      awaited = v;
+      awaitQueue.forEach((cb) => cb());
+    });
+
+    return new Proxy({} as Awaited<T>, {
+      ...Object.fromEntries(Object.getOwnPropertyNames(Reflect)
         // @ts-expect-error
         .map((k) => [k, (t: T, ...a: any[]) => Reflect[k](awaited ?? t, ...a)])),
-    );
+      get(target, prop, recv) {
+        if (prop === syncAwaitSymbol)
+          return awaitInit;
+        return Reflect.get(awaited ?? target, prop, recv);
+      }
+    });
 }
+
+export const awaitSyncWrapper = (store: any) => new Promise<void>((res) => store[syncAwaitSymbol](res));
