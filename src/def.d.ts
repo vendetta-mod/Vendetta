@@ -209,8 +209,8 @@ interface VendettaObject {
     metro: {
         findByProps: PropsFinder;
         findByPropsAll: PropsFinderAll;
-        findByDisplayName: (name: string, defaultExp: boolean) => any;
-        findByDisplayNameAll: (name: string, defaultExp: boolean) => any[];
+        findByDisplayName: (name: string, defaultExp?: boolean) => any;
+        findByDisplayNameAll: (name: string, defaultExp?: boolean) => any[];
         common: {
             constants: PropIntellisense<"API_HOST">;
             channels: PropIntellisense<"getVoiceChannelId">;
