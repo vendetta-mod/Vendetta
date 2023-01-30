@@ -15,7 +15,7 @@ export default function Developer() {
     useProxy(settings);
 
     return (
-        <RN.ScrollView style={{ flex: 1 }}>
+        <RN.ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 38 }}>
             <FormSection title="Debug" titleStyleType="no_border">
                 <FormInput 
                     value={settings.debuggerUrl}
