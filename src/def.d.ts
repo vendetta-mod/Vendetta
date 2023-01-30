@@ -1,7 +1,6 @@
 import * as _spitroast from "spitroast";
 import _React from "react";
 import _RN from "react-native";
-import { Events } from "@lib/emitter";
 
 type MetroModules = { [id: number]: any };
 
@@ -178,7 +177,7 @@ interface MMKVManager {
 
 type Indexable<Type> = { [index: string]: Type }
 
-type EmitterEvent = (keyof typeof Events) & string;
+type EmitterEvent = "SET" | "GET" | "DEL";
 
 interface EmitterListenerData {
 	path: string[];
