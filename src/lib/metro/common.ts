@@ -7,7 +7,7 @@ export const i18n = findByProps("Messages");
 export const url = findByProps("openURL");
 export const toasts = find(m => m.open && m.close && !m.startDrag && !m.init && !m.openReplay && !m.setAlwaysOnTop);
 export const stylesheet = findByProps("createThemedStyleSheet");
-export const clipboard = findByProps("setString", "getString", "hasString");
+export const clipboard = findByProps("setString", "getString", "hasString") as typeof import("@react-native-clipboard/clipboard").default;
 export const assets = findByProps("registerAsset");
 export const invites = findByProps("acceptInviteAndTransitionToInviteChannel");
 export const navigation = findByProps("pushLazy");
