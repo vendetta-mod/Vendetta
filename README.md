@@ -31,7 +31,7 @@ I ([Beef](https://github.com/Beefers)) develop Vendetta entirely on my rooted Pi
     ```
     adb reverse tcp:4040 tcp:4040
     ```
-    <sup>You can replace the first `4040` with any port of your choosing, as long as the second port is **always** `4040`.</sup>
+    <sup>You can replace the second `4040` with any port of your choosing, as long as the first port is **always** `4040`.</sup>
 
 5. Build Vendetta's code:
     ```
