@@ -1,3 +1,4 @@
+import { NavigationNative } from "@metro/common";
 import { Forms } from "@ui/components";
 import { getAssetIDByName } from "@ui/assets";
 import { useProxy } from "@lib/storage";
@@ -5,11 +6,8 @@ import settings from "@lib/settings";
 
 const { FormRow, FormSection, FormDivider } = Forms;
 
-interface SettingsSectionProps {
-    navigation: any;
-}
-
-export default function SettingsSection({ navigation }: SettingsSectionProps) {
+export default function SettingsSection() {
+    const navigation = NavigationNative.useNavigation();
     useProxy(settings);
 
     return ( 

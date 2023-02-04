@@ -4,6 +4,8 @@ import { awaitSyncWrapper, createStorage, wrapSync } from "@lib/storage";
 import logger from "@lib/logger";
 import Subpage from "@ui/settings/components/Subpage";
 
+// TODO: Properly implement hash-based updating
+
 type EvaledPlugin = {
     onLoad?(): void;
     onUnload(): void;
@@ -20,7 +22,7 @@ export async function fetchPlugin(id: string, enabled = true) {
     let pluginManifest: PluginManifest;
 
     try {
-        pluginManifest = await (await fetch(new URL("manifest.json", id), { cache: "no-store" })).json();
+        pluginManifest = await (await fetch(id + "manifest.json", { cache: "no-store" })).json();
     } catch {
         throw new Error(`Failed to fetch manifest for ${id}`);
     }
@@ -30,7 +32,7 @@ export async function fetchPlugin(id: string, enabled = true) {
     // TODO: Remove duplicate error if possible
     try {
         // by polymanifest spec, plugins should always specify their main file, but just in case
-        pluginJs = await (await fetch(new URL(pluginManifest.main || "index.js", id), { cache: "no-store" })).text();
+        pluginJs = await (await fetch(id + (pluginManifest.main || "index.js"), { cache: "no-store" })).text();
     } catch {
         throw new Error(`Failed to fetch JS for ${id}`);
     }
@@ -49,7 +51,6 @@ export async function fetchPlugin(id: string, enabled = true) {
 }
 
 export async function evalPlugin(plugin: Plugin) {
-    // TODO: Refactor to not depend on own window object
     const vendettaForPlugins = {
         ...window.vendetta,
         plugin: {
@@ -89,7 +90,7 @@ export async function startPlugin(id: string) {
     }
 }
 
-export function stopPlugin(id: string) {
+export function stopPlugin(id: string, disable = true) {
     const plugin = plugins[id];
     const pluginRet = loadedPlugins[id];
     if (!plugin) throw new Error("Attempted to stop non-existent plugin");
@@ -102,7 +103,7 @@ export function stopPlugin(id: string) {
     }
 
     delete loadedPlugins[id];
-    plugin.enabled = false;
+    disable && (plugin.enabled = false);
 }
 
 export function removePlugin(id: string) {
@@ -111,14 +112,17 @@ export function removePlugin(id: string) {
     delete plugins[id];
 }
 
-export async function initializePlugins() {
+export async function initPlugins() {
     await awaitSyncWrapper(plugins);
 
     const allIds = Object.keys(plugins);
     await Promise.allSettled(allIds.map((pl) => fetchPlugin(pl, false)));
-    for (const pl of allIds.filter((pl) => plugins[pl].enabled))
-        startPlugin(pl);
+    for (const pl of allIds.filter((pl) => plugins[pl].enabled)) startPlugin(pl);
+
+    return stopAllPlugins;
 }
+
+const stopAllPlugins = () => Object.keys(plugins).forEach(p => stopPlugin(p, false));
 
 export const getSettings = (id: string) => loadedPlugins[id]?.settings;
 

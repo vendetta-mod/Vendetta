@@ -26,7 +26,7 @@ for (const key in window.modules) {
 }
 
 // Function to filter through modules
-export const filterModules = (modules: MetroModules, single = false) => (filter: (m: any) => boolean) => {
+const filterModules = (modules: MetroModules, single = false) => (filter: (m: any) => boolean) => {
     const found = [];
 
     // Get the previous moment locale
@@ -53,7 +53,7 @@ export const filterModules = (modules: MetroModules, single = false) => (filter:
                 found.push(module.default);
             }
 
-            if(filter(module)) {
+            if (filter(module)) {
                 if (single) return module;
                 else found.push(module);
             }

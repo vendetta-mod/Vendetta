@@ -3,10 +3,15 @@ import { findByProps } from "@metro/filters";
 import { after } from "@lib/patcher";
 
 const commandsModule = findByProps("getBuiltInCommands")
-
 let commands: ApplicationCommand[] = [];
 
-after("getBuiltInCommands", commandsModule, (args, res) => res.concat(commands));
+export function patchCommands() {
+    const unpatch = after("getBuiltInCommands", commandsModule, (args, res) => res.concat(commands));
+    return () => {
+        commands = [];
+        unpatch();
+    }
+}
 
 export function registerCommand(command: ApplicationCommand): () => void {
 	// Get built in commands

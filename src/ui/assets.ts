@@ -1,23 +1,23 @@
-import { Asset, Indexable, } from "@types";
+import { Asset, Indexable } from "@types";
 import { after } from "@lib/patcher";
 import { assets } from "@metro/common";
 
 export const all: Indexable<Asset> = {};
 
 export function patchAssets() {
-    try {
-        after("registerAsset", assets, (args: Asset[], id: number) => {
-            const asset = args[0];
-            all[asset.name] = { ...asset, id: id };
-        });
+    const unpatch = after("registerAsset", assets, (args: Asset[], id: number) => {
+        const asset = args[0];
+        all[asset.name] = { ...asset, id: id };
+    });
 
-        for (let id = 1; ; id++) {
-            const asset = assets.getAssetByID(id);
-            if (!asset) break;
-            if (all[asset.name]) continue;
-            all[asset.name] = { ...asset, id: id };
-        };
-    } catch {};
+    for (let id = 1; ; id++) {
+        const asset = assets.getAssetByID(id);
+        if (!asset) break;
+        if (all[asset.name]) continue;
+        all[asset.name] = { ...asset, id: id };
+    };
+
+    return unpatch;
 }
 
 export const find = (filter: (a: any) => void): Asset | null | undefined => Object.values(all).find(filter);

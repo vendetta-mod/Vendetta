@@ -1,79 +1,37 @@
-import patcher from "@lib/patcher";
-import logger from "@lib/logger";
-import copyText from "@utils/copyText";
-import findInReactTree from "@utils/findInReactTree";
-import findInTree from "@utils/findInTree";
-import * as constants from "@lib/constants";
-import * as metro from "@metro/filters";
-import * as common from "@metro/common";
-import * as components from "@ui/components";
-import * as toasts from "@ui/toasts";
-import * as storage from "@lib/storage";
-import { patchAssets, all, find, getAssetByID, getAssetByName, getAssetIDByName } from "@ui/assets";
+import { patchLogHook } from "@lib/debug";
+import { patchCommands } from "@lib/commands";
+import { initPlugins } from "@lib/plugins";
+import { patchAssets } from "@ui/assets";
 import initSettings from "@ui/settings";
-import { fixTheme } from "@ui/fixTheme";
-import { connectToDebugger, patchLogHook, versionHash } from "@lib/debug";
-import { plugins, fetchPlugin, evalPlugin, stopPlugin, removePlugin, getSettings, initializePlugins } from "@lib/plugins";
-import settings from "@lib/settings";
-import { registerCommand } from "@lib/commands";
+import fixTheme from "@ui/fixTheme";
+import windowObject from "@lib/windowObject";
+import logger from "@lib/logger";
 
+// This logs in the native logging implementation, e.g. logcat
 console.log("Hello from Vendetta!");
 
 async function init() {
-    let erroredOnLoad = false;
-
     try {
-        window.vendetta = {
-            patcher: patcher,
-            metro: { ...metro, common: { ...common } },
-            constants: { ...constants },
-            utils: {
-                copyText: copyText,
-                findInReactTree: findInReactTree,
-                findInTree: findInTree,
-            },
-            debug: {
-                connectToDebugger: connectToDebugger,
-            },
-            ui: {
-                components: { ...components },
-                toasts: { ...toasts },
-                assets: {
-                    all: all,
-                    find: find,
-                    getAssetByID: getAssetByID,
-                    getAssetByName: getAssetByName,
-                    getAssetIDByName: getAssetIDByName,
-                },
-            },
-            plugins: {
-                plugins: plugins,
-                fetchPlugin: fetchPlugin,
-                evalPlugin: evalPlugin,
-                stopPlugin: stopPlugin,
-                removePlugin: removePlugin,
-                getSettings: getSettings,
-            },
-            commands: {
-                registerCommand: registerCommand,
-            },
-            storage: { ...storage },
-            settings: settings,
-            logger: logger,
-            version: versionHash,
-        };
+        // Load everything in parallel
+        const unloads = await Promise.all([
+            patchLogHook(),
+            patchAssets(),
+            patchCommands(),
+            fixTheme(),
+            initSettings(),
+        ]);
 
-        patchLogHook();
-        patchAssets();
-        fixTheme();
-        initializePlugins();
-        initSettings();
-    } catch (e: Error | any) {
-        erroredOnLoad = true;
+        // Assign window object
+        window.vendetta = await windowObject(unloads);
+
+        // Once done, load plugins
+        unloads.push(await initPlugins());
+
+        // We good :)
+        logger.log("Vendetta is ready!");
+    } catch (e: any) {
         alert(`Vendetta failed to initialize... ${e.stack || e.toString()}`);
     }
-
-    if (!erroredOnLoad) logger.log("Vendetta is ready!");
 };
 
 init();

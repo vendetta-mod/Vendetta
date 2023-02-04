@@ -18,7 +18,7 @@ function override() {
     FluxDispatcher.unsubscribe("I18N_LOAD_START", override);
 }
 
-export function fixTheme() {
+export default function fixTheme() {
     try {
         if (ThemeStore) FluxDispatcher.subscribe("I18N_LOAD_START", override);
     } catch(e) {

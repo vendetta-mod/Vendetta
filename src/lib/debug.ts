@@ -34,14 +34,16 @@ export function connectToDebugger(url: string) {
     });
 }
 
-export function patchLogHook() {
-    after("nativeLoggingHook", globalThis, (args, ret) => {
-        if (socket?.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({ message: args[0], level: args[1] }));
-        }
-
+export function patchLogHook() { 
+    const unpatch = after("nativeLoggingHook", globalThis, (args) => {
+        if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ message: args[0], level: args[1] }));
         logger.log(args[0]);
     });
+
+    return () => {
+        socket && socket.close();
+        unpatch();
+    }
 }
 
 export const versionHash = "__vendettaVersion";
