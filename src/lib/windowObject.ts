@@ -2,10 +2,6 @@ import { VendettaObject } from "@types";
 import patcher from "@lib/patcher";
 import logger from "@lib/logger";
 import settings from "@lib/settings";
-import copyText from "@utils/copyText";
-import findInReactTree from "@utils/findInReactTree";
-import findInTree from "@utils/findInTree";
-import unfreeze from "@utils/unfreeze";
 import * as constants from "@lib/constants";
 import * as debug from "@lib/debug";
 import * as plugins from "@lib/plugins";
@@ -16,6 +12,7 @@ import * as common from "@metro/common";
 import * as components from "@ui/components";
 import * as toasts from "@ui/toasts";
 import * as assets from "@ui/assets";
+import * as utils from "@utils";
 
 function without<T extends Record<string, any>>(object: T, ...keys: string[]) {
     const cloned = { ...object };
@@ -28,13 +25,8 @@ export default async function windowObject(unloads: any[]): Promise<VendettaObje
     return {
         patcher: without(patcher, "unpatchAll"),
         metro: { ...metro, common: { ...common } },
-        constants: { ...constants },
-        utils: {
-            copyText,
-            findInReactTree,
-            findInTree,
-            unfreeze,
-        },
+        constants,
+        utils,
         debug: without(debug, "versionHash", "patchLogHook"),
         ui: {
             components,
