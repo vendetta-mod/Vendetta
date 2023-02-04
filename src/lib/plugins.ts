@@ -1,9 +1,7 @@
 import { Indexable, PluginManifest, Plugin } from "@types";
-import { navigation } from "@metro/common";
 import { awaitSyncWrapper, createStorage, wrapSync } from "@lib/storage";
 import safeFetch from "@utils/safeFetch";
 import logger from "@lib/logger";
-import Subpage from "@ui/settings/components/Subpage";
 
 // TODO: Properly implement hash-based updating
 
@@ -58,7 +56,6 @@ export async function evalPlugin(plugin: Plugin) {
             manifest: plugin.manifest,
             // Wrapping this with wrapSync is NOT an option.
             storage: await createStorage<Indexable<any>>(plugin.id),
-            showSettings: () => showSettings(plugin),
         }
     };
     const pluginString = `vendetta=>{return ${plugin.js}}\n//# sourceURL=${plugin.id}`;
@@ -126,13 +123,3 @@ export async function initPlugins() {
 const stopAllPlugins = () => Object.keys(plugins).forEach(p => stopPlugin(p, false));
 
 export const getSettings = (id: string) => loadedPlugins[id]?.settings;
-
-export function showSettings(plugin: Plugin) {
-    const settings = getSettings(plugin.id);
-    if (!settings) return logger.error(`Plugin ${plugin.id} is not loaded or has no settings`);
-
-    navigation.push(Subpage, {
-        name: plugin.manifest.name,
-        children: settings,
-    });
-}

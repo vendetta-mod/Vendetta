@@ -289,7 +289,6 @@ interface VendettaObject {
 interface VendettaPluginObject {
     manifest: PluginManifest,
     storage: Indexable<any>,
-    showSettings: () => void,
 }
 
 declare global {

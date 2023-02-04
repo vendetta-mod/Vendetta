@@ -1,4 +1,4 @@
-import { ReactNative as RN, navigation } from "@metro/common";
+import { ReactNative as RN, NavigationNative } from "@metro/common";
 import { Forms } from "@ui/components";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
@@ -6,12 +6,11 @@ import { connectToDebugger } from "@lib/debug";
 import { useProxy } from "@lib/storage";
 import settings from "@lib/settings";
 import logger from "@lib/logger";
-import Subpage from "@ui/settings/components/Subpage";
-import AssetBrowser from "@ui/settings/pages/AssetBrowser";
 
 const { FormSection, FormRow, FormInput, FormDivider } = Forms;
 
 export default function Developer() {
+    const navigation = NavigationNative.useNavigation();
     useProxy(settings);
 
     return (
@@ -52,10 +51,7 @@ export default function Developer() {
                     label="Asset Browser"
                     leading={<FormRow.Icon source={getAssetIDByName("ic_media_upload")} />}
                     trailing={FormRow.Arrow}
-                    onPress={() => navigation.push(Subpage, {
-                        name: "Asset Browser",
-                        children: AssetBrowser,
-                    })}
+                    onPress={() => navigation.push("VendettaAssetBrowser")}
                 />
             </FormSection>
         </RN.ScrollView>

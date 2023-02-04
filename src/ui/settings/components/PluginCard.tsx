@@ -1,10 +1,10 @@
-import { ReactNative as RN, stylesheet } from "@metro/common";
+import { ReactNative as RN, stylesheet, NavigationNative } from "@metro/common";
 import { Forms, General } from "@ui/components";
 import { Plugin } from "@types";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
-import { removePlugin, startPlugin, stopPlugin, showSettings, getSettings } from "@lib/plugins";
-import copyText from "@lib/utils/copyText";
+import { removePlugin, startPlugin, stopPlugin, getSettings } from "@lib/plugins";
+import copyText from "@utils/copyText";
 
 const { FormRow, FormSwitch } = Forms;
 const { TouchableOpacity, Image } = General;
@@ -39,6 +39,8 @@ interface PluginCardProps {
 }
 
 export default function PluginCard({ plugin }: PluginCardProps) {
+    const settings = getSettings(plugin.id);
+    const navigation = NavigationNative.useNavigation();
     const [removed, setRemoved] = React.useState(false);
     // This is needed because of React™
     if (removed) return null;
@@ -86,7 +88,10 @@ export default function PluginCard({ plugin }: PluginCardProps) {
                         >
                             <Image style={styles.icon} source={getAssetIDByName(plugin.update ? "Check" : "Small")} />
                         </TouchableOpacity>
-                        {getSettings(plugin.id) && <TouchableOpacity onPress={() => showSettings(plugin)}>
+                        {settings && <TouchableOpacity onPress={() => navigation.push("VendettaCustomPage", {
+                            title: plugin.manifest.name,
+                            render: settings,
+                        })}>
                             <Image style={styles.icon} source={getAssetIDByName("settings")} />
                         </TouchableOpacity>}
                     </RN.View>
