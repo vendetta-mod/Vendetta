@@ -5,6 +5,7 @@ import settings from "@lib/settings";
 import copyText from "@utils/copyText";
 import findInReactTree from "@utils/findInReactTree";
 import findInTree from "@utils/findInTree";
+import unfreeze from "@utils/unfreeze";
 import * as constants from "@lib/constants";
 import * as debug from "@lib/debug";
 import * as plugins from "@lib/plugins";
@@ -29,9 +30,10 @@ export default async function windowObject(unloads: any[]): Promise<VendettaObje
         metro: { ...metro, common: { ...common } },
         constants: { ...constants },
         utils: {
-            copyText: copyText,
-            findInReactTree: findInReactTree,
-            findInTree: findInTree,
+            copyText,
+            findInReactTree,
+            findInTree,
+            unfreeze,
         },
         debug: without(debug, "versionHash", "patchLogHook"),
         ui: {

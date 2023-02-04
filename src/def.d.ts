@@ -235,6 +235,7 @@ interface VendettaObject {
         copyText: (content: string) => void;
         findInReactTree: (tree: { [key: string]: any }, filter: SearchFilter) => void;
         findInTree: (tree: { [key: string]: any }, filter: SearchFilter, options: FindInTreeOptions) => any;
+        unfreeze: (obj: object) => object;
     };
     debug: {
         connectToDebugger: (url: string) => void;
