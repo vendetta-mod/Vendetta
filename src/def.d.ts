@@ -204,7 +204,6 @@ interface VendettaObject {
         after: typeof _spitroast.after;
         before: typeof _spitroast.before;
         instead: typeof _spitroast.instead;
-        unpatchAll: typeof _spitroast.unpatchAll;
     };
     metro: {
         findByProps: PropsFinder;
@@ -217,6 +216,13 @@ interface VendettaObject {
             i18n: PropIntellisense<"Messages">;
             url: PropIntellisense<"openURL">;
             toasts: PropIntellisense<"open" | "close">;
+            stylesheet: PropIntellisense<"createThemedStyleSheet">;
+            clipboard: PropIntellisense<"setString" | "getString" | "hasString">;
+            assets: PropIntellisense<"registerAsset">;
+            invites: PropIntellisense<"acceptInviteAndTransitionToInviteChannel">;
+            navigation: PropIntellisense<"pushLazy">;
+            navigationStack: PropIntellisense<"createStackNavigator">;
+            NavigationNative: PropIntellisense<"NavigationContainer">;
             React: typeof _React;
             ReactNative: typeof _RN;
         };
@@ -232,11 +238,14 @@ interface VendettaObject {
     };
     debug: {
         connectToDebugger: (url: string) => void;
+        // TODO: Type output?
+        getDebugInfo: () => void;
     }
     ui: {
         components: {
             Forms: PropIntellisense<"Form" | "FormSection">;
             General: PropIntellisense<"Button" | "Text" | "View">;
+            Search: _React.Component;
         }
         toasts: {
             showToast: (content: string, asset: number) => void;
@@ -253,7 +262,7 @@ interface VendettaObject {
         plugins: Indexable<Plugin>;
         fetchPlugin: (id: string, enabled: boolean) => void;
         evalPlugin: (plugin: Plugin) => void;
-        stopPlugin: (id: string) => void;
+        stopPlugin: (id: string, disable: boolean) => void;
         removePlugin: (id: string) => void;
         getSettings: (id: string) => JSX.Element;
     };
@@ -270,6 +279,7 @@ interface VendettaObject {
     settings: Settings;
     logger: Logger;
     version: string;
+    unload: () => void;
 }
 
 interface VendettaPluginObject {
