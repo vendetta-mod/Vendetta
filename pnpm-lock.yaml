@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@react-native-clipboard/clipboard': ^1.10.0
   '@types/react': 18.0.27
   '@types/react-native': 0.70.6
   esbuild: ^0.17.5
@@ -14,6 +15,7 @@ dependencies:
   spitroast: 1.4.2
 
 devDependencies:
+  '@react-native-clipboard/clipboard': 1.10.0
   '@types/react': 18.0.27
   '@types/react-native': 0.70.6
   esbuild: 0.17.5
@@ -221,6 +223,18 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@react-native-clipboard/clipboard/1.10.0:
+    resolution: {integrity: sha512-1L+I0vmeUJgMi8MnNsqI00391/RFLkmmxj9qAuOS2madpvce/oNqJb8Pwk2Fc/uxIJSxOckTpq+dQwyPU6s+7w==}
+    peerDependencies:
+      react: '>=16.0'
+      react-native: '>=0.57.0'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-native:
+        optional: true
+    dev: true
 
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}

@@ -14,6 +14,7 @@
     "author": "Beef",
     "license": "BSD-3-Clause",
     "devDependencies": {
+        "@react-native-clipboard/clipboard": "1.10.0",
         "@types/react": "18.0.27",
         "@types/react-native": "0.70.6",
         "esbuild": "^0.17.5",
