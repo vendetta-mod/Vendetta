@@ -220,6 +220,7 @@ interface VendettaObject {
             clipboard: PropIntellisense<"setString" | "getString" | "hasString">;
             assets: PropIntellisense<"registerAsset">;
             invites: PropIntellisense<"acceptInviteAndTransitionToInviteChannel">;
+            commands: PropIntellisense<"getBuiltInCommands">;
             navigation: PropIntellisense<"pushLazy">;
             navigationStack: PropIntellisense<"createStackNavigator">;
             NavigationNative: PropIntellisense<"NavigationContainer">;

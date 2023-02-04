@@ -5,6 +5,7 @@ import { findByProps, findByStoreName } from "@metro/filters";
 import { FluxDispatcher } from "@metro/common";
 import logger from "@lib/logger";
 
+// TODO: Move these to common modules?
 const ThemeManager = findByProps("updateTheme", "overrideTheme");
 const AMOLEDThemeManager = findByProps("setAMOLEDThemeEnabled");
 const ThemeStore = findByStoreName("ThemeStore");

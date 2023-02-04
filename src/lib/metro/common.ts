@@ -10,6 +10,7 @@ export const stylesheet = findByProps("createThemedStyleSheet");
 export const clipboard = findByProps("setString", "getString", "hasString");
 export const assets = findByProps("registerAsset");
 export const invites = findByProps("acceptInviteAndTransitionToInviteChannel");
+export const commands = findByProps("getBuiltInCommands");
 export const navigation = findByProps("pushLazy");
 export const navigationStack = findByProps("createStackNavigator");
 export const NavigationNative = findByProps("NavigationContainer");

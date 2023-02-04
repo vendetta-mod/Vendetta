@@ -1,8 +1,7 @@
 import { ApplicationCommand } from "@types";
-import { findByProps } from "@metro/filters";
+import { commands as commandsModule } from "@metro/common";
 import { after } from "@lib/patcher";
 
-const commandsModule = findByProps("getBuiltInCommands")
 let commands: ApplicationCommand[] = [];
 
 export function patchCommands() {
