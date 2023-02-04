@@ -14,19 +14,16 @@
     "author": "Beef",
     "license": "BSD-3-Clause",
     "devDependencies": {
-        "@types/react": "18.0.26",
-        "@types/react-native": "0.68.1",
-        "esbuild": "^0.16.17",
+        "@types/react": "18.0.27",
+        "@types/react-native": "0.70.6",
+        "esbuild": "^0.17.5",
         "esbuild-plugin-alias": "^0.2.1",
         "esbuild-plugin-external-global": "^1.0.1",
         "esbuild-plugin-replace": "^1.3.0",
-        "typescript": "^4.9.4"
+        "typescript": "^4.9.5"
     },
     "dependencies": {
         "spitroast": "^1.4.2"
-    },
-    "resolutions": {
-        "@types/react": "18.0.26"
     },
     "pnpm": {
         "peerDependencyRules": {
