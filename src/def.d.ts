@@ -1,7 +1,7 @@
 import * as _spitroast from "spitroast";
 import _React from "react";
 import _RN from "react-native";
-import Clipboard from "@react-native-clipboard/clipboard";
+import _Clipboard from "@react-native-clipboard/clipboard";
 
 type MetroModules = { [id: number]: any };
 
@@ -218,7 +218,7 @@ interface VendettaObject {
             url: PropIntellisense<"openURL">;
             toasts: PropIntellisense<"open" | "close">;
             stylesheet: PropIntellisense<"createThemedStyleSheet">;
-            clipboard: typeof Clipboard;
+            clipboard: typeof _Clipboard;
             assets: PropIntellisense<"registerAsset">;
             invites: PropIntellisense<"acceptInviteAndTransitionToInviteChannel">;
             navigation: PropIntellisense<"pushLazy">;
