@@ -1,6 +1,7 @@
 import { Indexable, PluginManifest, Plugin } from "@types";
 import { navigation } from "@metro/common";
 import { awaitSyncWrapper, createStorage, wrapSync } from "@lib/storage";
+import safeFetch from "@utils/safeFetch";
 import logger from "@lib/logger";
 import Subpage from "@ui/settings/components/Subpage";
 
@@ -22,7 +23,7 @@ export async function fetchPlugin(id: string, enabled = true) {
     let pluginManifest: PluginManifest;
 
     try {
-        pluginManifest = await (await fetch(id + "manifest.json", { cache: "no-store" })).json();
+        pluginManifest = await (await safeFetch(id + "manifest.json", { cache: "no-store" })).json();
     } catch {
         throw new Error(`Failed to fetch manifest for ${id}`);
     }
@@ -32,7 +33,7 @@ export async function fetchPlugin(id: string, enabled = true) {
     // TODO: Remove duplicate error if possible
     try {
         // by polymanifest spec, plugins should always specify their main file, but just in case
-        pluginJs = await (await fetch(id + (pluginManifest.main || "index.js"), { cache: "no-store" })).text();
+        pluginJs = await (await safeFetch(id + (pluginManifest.main || "index.js"), { cache: "no-store" })).text();
     } catch {
         throw new Error(`Failed to fetch JS for ${id}`);
     }
