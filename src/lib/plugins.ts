@@ -120,6 +120,6 @@ export async function initPlugins() {
     return stopAllPlugins;
 }
 
-const stopAllPlugins = () => Object.keys(plugins).forEach(p => stopPlugin(p, false));
+const stopAllPlugins = () => Object.keys(loadedPlugins).forEach(p => stopPlugin(p, false));
 
 export const getSettings = (id: string) => loadedPlugins[id]?.settings;
