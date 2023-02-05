@@ -242,8 +242,22 @@ interface StorageBackend {
 }
 
 interface LoaderConfig {
-    loadFromLocal: boolean;
+    customLoadUrl: {
+        enabled: boolean;
+        url: string;
+    };
     loadReactDevTools: boolean;
+}
+
+interface LoaderIdentity {
+    name: string;
+    features: {
+        loaderConfig?: boolean;
+        devtools?: {
+            prop: string;
+            version: string;
+        }
+    }
 }
 
 interface VendettaObject {
@@ -347,5 +361,6 @@ declare global {
         modules: MetroModules;
         vendetta: VendettaObject;
         React: typeof _React;
+        __vendetta_loader?: LoaderIdentity;
     }
 }
