@@ -1,4 +1,4 @@
-import { createStorage, wrapSync } from "@lib/storage";
+import { createMMKVBackend, createStorage, wrapSync } from "@lib/storage";
 import { Settings } from "@types";
 
-export default wrapSync(createStorage<Settings>("VENDETTA_SETTINGS"));
+export default wrapSync(createStorage<Settings>(createMMKVBackend("VENDETTA_SETTINGS")));

@@ -1,6 +1,6 @@
-import { Emitter, MMKVManager } from "@types";
+import { Emitter, MMKVManager, StorageBackend } from "@types";
 import { ReactNative as RN } from "@metro/hoist";
-import createEmitter from "./emitter";
+import createEmitter from "../emitter";
 
 const MMKVManager = RN.NativeModules.MMKVManager as MMKVManager;
 
@@ -79,11 +79,11 @@ export function useProxy<T>(storage: T): T {
     return storage;
 }
 
-export async function createStorage<T>(storeName: string): Promise<Awaited<T>> {
-    const data = JSON.parse((await MMKVManager.getItem(storeName)) ?? "{}");
+export async function createStorage<T>(backend: StorageBackend): Promise<Awaited<T>> {
+    const data = await backend.get();
     const { proxy, emitter } = createProxy(data);
 
-    const handler = () => MMKVManager.setItem(storeName, JSON.stringify(proxy));
+    const handler = () => backend.set(proxy);
     emitter.on("SET", handler);
     emitter.on("DEL", handler);
 
@@ -115,3 +115,5 @@ export function wrapSync<T extends Promise<any>>(store: T): Awaited<T> {
 }
 
 export const awaitSyncWrapper = (store: any) => new Promise<void>((res) => store[syncAwaitSymbol](res));
+
+export * from "./backends";

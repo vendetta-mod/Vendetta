@@ -236,6 +236,11 @@ interface Emitter {
     emit: (event: EmitterEvent, data: EmitterListenerData) => void;
 }
 
+interface StorageBackend {
+    get: () => unknown | Promise<unknown>;
+    set: (data: unknown) => void | Promise<void>;
+}
+
 interface VendettaObject {
     patcher: {
         after: typeof _spitroast.after;
