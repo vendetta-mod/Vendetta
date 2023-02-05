@@ -323,9 +323,11 @@ interface VendettaObject {
     storage: {
         createProxy: <T>(target: T) => { proxy: T, emitter: Emitter };
         useProxy: <T>(storage: T) => T;
-        createStorage: <T>(storeName: string) => Promise<Awaited<T>>;
+        createStorage: <T>(backend: StorageBackend) => Promise<Awaited<T>>;
         wrapSync: <T extends Promise<any>>(store: T) => Awaited<T>;
         awaitSyncWrapper: (store: any) => Promise<void>;
+        createMMKVBackend: (store: string) => StorageBackend;
+        createFileBackend: (file: string) => StorageBackend;
     };
     settings: Settings;
     logger: Logger;
