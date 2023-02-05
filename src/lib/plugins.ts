@@ -49,6 +49,7 @@ export async function fetchPlugin(id: string) {
 }
 
 export async function installPlugin(id: string, enabled = true) {
+    if (!id.endsWith("/")) id += "/";
     if (typeof id !== "string" || id in plugins) throw new Error("Plugin already installed");
     await fetchPlugin(id);
     if (enabled) await startPlugin(id);
@@ -71,6 +72,7 @@ export async function evalPlugin(plugin: Plugin) {
 }
 
 export async function startPlugin(id: string) {
+    if (!id.endsWith("/")) id += "/";
     const plugin = plugins[id];
     if (!plugin) throw new Error("Attempted to start non-existent plugin");
 
@@ -94,6 +96,7 @@ export async function startPlugin(id: string) {
 }
 
 export function stopPlugin(id: string, disable = true) {
+    if (!id.endsWith("/")) id += "/";
     const plugin = plugins[id];
     const pluginRet = loadedPlugins[id];
     if (!plugin) throw new Error("Attempted to stop non-existent plugin");
@@ -110,6 +113,7 @@ export function stopPlugin(id: string, disable = true) {
 }
 
 export function removePlugin(id: string) {
+    if (!id.endsWith("/")) id += "/";
     const plugin = plugins[id];
     if (plugin.enabled) stopPlugin(id);
     delete plugins[id];
