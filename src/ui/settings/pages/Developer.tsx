@@ -57,25 +57,32 @@ export default function Developer() {
                     }}
                 />}
             </FormSection>
-            <FormSection title="Loader config">
+            {window.__vendetta_loader?.features.loaderConfig && <FormSection title="Loader config">
                 <FormSwitchRow
-                    label="Load from local host"
-                    subLabel={["Load Vendetta from ", <Text style={styles.code}>localhost:4040</Text>, " instead of GitHub."]}
+                    label="Load from custom url"
+                    subLabel={"Load Vendetta from a custom endpoint."}
                     leading={<FormRow.Icon source={getAssetIDByName("copy")} />}
-                    value={loaderConfig.loadFromLocal}
+                    value={loaderConfig.customLoadUrl.enabled}
                     onValueChange={(v: boolean) => {
-                        loaderConfig.loadFromLocal = v;
+                        loaderConfig.customLoadUrl.enabled = v;
                     }}
                 />
-                <FormSwitchRow
+                {loaderConfig.customLoadUrl.enabled && <FormInput
+                    value={loaderConfig.customLoadUrl.url}
+                    onChange={(v: string) => loaderConfig.customLoadUrl.url = v}
+                    placeholder="http://localhost:4040/vendetta.js"
+                    title="VENDETTA URL"
+                />}
+                {window.__vendetta_loader.features.devtools && <FormSwitchRow
                     label="Load React DevTools"
+                    subLabel={`Version: ${window.__vendetta_loader.features.devtools.version}`}
                     leading={<FormRow.Icon source={getAssetIDByName("ic_badge_staff")} />}
                     value={loaderConfig.loadReactDevTools}
                     onValueChange={(v: boolean) => {
                         loaderConfig.loadReactDevTools = v;
                     }}
-                />
-            </FormSection>
+                />}
+            </FormSection>}
             <FormSection title="Other">
                 <FormRow
                     label="Asset Browser"
