@@ -344,6 +344,10 @@ interface VendettaObject {
         createFileBackend: (file: string) => StorageBackend;
     };
     settings: Settings;
+    loader: {
+        identity?: LoaderIdentity;
+        config: LoaderConfig;
+    };
     logger: Logger;
     version: string;
     unload: () => void;
