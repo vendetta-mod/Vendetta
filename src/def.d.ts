@@ -211,6 +211,7 @@ interface VendettaObject {
         findByPropsAll: PropsFinderAll;
         findByDisplayName: (name: string, defaultExp?: boolean) => any;
         findByDisplayNameAll: (name: string, defaultExp?: boolean) => any[];
+        findByStoreName: (storeName: string) => any;
         common: {
             constants: PropIntellisense<"API_HOST">;
             channels: PropIntellisense<"getVoiceChannelId">;
