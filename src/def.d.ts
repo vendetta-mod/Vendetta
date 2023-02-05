@@ -241,6 +241,11 @@ interface StorageBackend {
     set: (data: unknown) => void | Promise<void>;
 }
 
+interface LoaderConfig {
+    loadFromLocal: boolean;
+    loadReactDevTools: boolean;
+}
+
 interface VendettaObject {
     patcher: {
         after: typeof _spitroast.after;

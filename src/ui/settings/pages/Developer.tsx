@@ -1,17 +1,28 @@
-import { ReactNative as RN, NavigationNative } from "@metro/common";
-import { Forms } from "@ui/components";
+import { ReactNative as RN, NavigationNative, stylesheet, constants } from "@metro/common";
+import { Forms, General } from "@ui/components";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
 import { connectToDebugger } from "@lib/debug";
 import { useProxy } from "@lib/storage";
-import settings from "@lib/settings";
+import settings, { loaderConfig } from "@lib/settings";
 import logger from "@lib/logger";
 
-const { FormSection, FormRow, FormInput, FormDivider } = Forms;
+const { FormSection, FormRow, FormSwitchRow, FormInput, FormDivider } = Forms;
+const { Text } = General;
+
+const styles = stylesheet.createThemedStyleSheet({
+    code: {
+        fontFamily: constants.Fonts.CODE_SEMIBOLD,
+        includeFontPadding: false,
+        fontSize: 12,
+    }
+});
 
 export default function Developer() {
     const navigation = NavigationNative.useNavigation();
+
     useProxy(settings);
+    useProxy(loaderConfig);
 
     return (
         <RN.ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 38 }}>
@@ -45,6 +56,25 @@ export default function Developer() {
                         }
                     }}
                 />}
+            </FormSection>
+            <FormSection title="Loader config">
+                <FormSwitchRow
+                    label="Load from local host"
+                    subLabel={["Load Vendetta from ", <Text style={styles.code}>localhost:4040</Text>, " instead of GitHub."]}
+                    leading={<FormRow.Icon source={getAssetIDByName("copy")} />}
+                    value={loaderConfig.loadFromLocal}
+                    onValueChange={(v: boolean) => {
+                        loaderConfig.loadFromLocal = v;
+                    }}
+                />
+                <FormSwitchRow
+                    label="Load React DevTools"
+                    leading={<FormRow.Icon source={getAssetIDByName("ic_badge_staff")} />}
+                    value={loaderConfig.loadReactDevTools}
+                    onValueChange={(v: boolean) => {
+                        loaderConfig.loadReactDevTools = v;
+                    }}
+                />
             </FormSection>
             <FormSection title="Other">
                 <FormRow
