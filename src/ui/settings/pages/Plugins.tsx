@@ -3,7 +3,7 @@ import { Forms } from "@ui/components";
 import { showToast } from "@ui/toasts";
 import { getAssetIDByName } from "@ui/assets";
 import { useProxy } from "@lib/storage";
-import { plugins, fetchPlugin, startPlugin } from "@lib/plugins";
+import { plugins, installPlugin } from "@lib/plugins";
 import PluginCard from "@ui/settings/components/PluginCard";
 
 const { FormInput, FormRow } = Forms;
@@ -24,7 +24,7 @@ export default function Plugins() {
                 label="Install plugin"
                 leading={<FormRow.Icon source={getAssetIDByName("ic_add_18px")} />}
                 onPress={() => {
-                        fetchPlugin(pluginUrl).then(() => {
+                        installPlugin(pluginUrl).then(() => {
                             setPluginUrl("");
                         }).catch((e: Error) => {
                             showToast(e.message, getAssetIDByName("Small"));

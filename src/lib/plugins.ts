@@ -14,9 +14,9 @@ type EvaledPlugin = {
 export const plugins = wrapSync(createStorage<Indexable<Plugin>>("VENDETTA_PLUGINS"));
 const loadedPlugins: Indexable<EvaledPlugin> = {};
 
-export async function fetchPlugin(id: string, enabled = true) {
+export async function fetchPlugin(id: string) {
     if (!id.endsWith("/")) id += "/";
-    if (typeof id !== "string" || id in plugins) throw new Error("Plugin ID invalid or taken");
+    const existingPlugin = plugins[id];
 
     let pluginManifest: PluginManifest;
 
@@ -26,26 +26,31 @@ export async function fetchPlugin(id: string, enabled = true) {
         throw new Error(`Failed to fetch manifest for ${id}`);
     }
 
-    let pluginJs: string;
+    let pluginJs: string | undefined;
 
-    // TODO: Remove duplicate error if possible
-    try {
-        // by polymanifest spec, plugins should always specify their main file, but just in case
-        pluginJs = await (await safeFetch(id + (pluginManifest.main || "index.js"), { cache: "no-store" })).text();
-    } catch {
-        throw new Error(`Failed to fetch JS for ${id}`);
+    if (existingPlugin?.manifest.hash !== pluginManifest.hash) {
+        try {
+            // by polymanifest spec, plugins should always specify their main file, but just in case
+            pluginJs = await (await safeFetch(id + (pluginManifest.main || "index.js"), { cache: "no-store" })).text();
+        } catch {
+            throw new Error(`Failed to fetch JS for ${id}`);
+        }
+
+        if (pluginJs.length === 0) throw new Error(`Failed to fetch JS for ${id}`);
     }
-
-    if (pluginJs.length === 0) throw new Error(`Failed to fetch JS for ${id}`);
 
     plugins[id] = {
         id: id,
         manifest: pluginManifest,
-        enabled: false,
-        update: true,
-        js: pluginJs,
+        enabled: existingPlugin?.enabled ?? false,
+        update: existingPlugin?.update ?? true,
+        js: pluginJs ?? existingPlugin.js,
     };
+}
 
+export async function installPlugin(id: string, enabled = true) {
+    if (typeof id !== "string" || id in plugins) throw new Error("Plugin already installed");
+    await fetchPlugin(id);
     if (enabled) await startPlugin(id);
 }
 
@@ -112,10 +117,10 @@ export function removePlugin(id: string) {
 
 export async function initPlugins() {
     await awaitSyncWrapper(plugins);
-
+    
     const allIds = Object.keys(plugins);
-    await Promise.allSettled(allIds.map((pl) => fetchPlugin(pl, false)));
-    for (const pl of allIds.filter((pl) => plugins[pl].enabled)) startPlugin(pl);
+    await Promise.allSettled(allIds.filter(pl => plugins[pl].enabled && plugins[pl].update).map(pl => fetchPlugin(pl)));
+    for (const pl of allIds.filter(pl => plugins[pl].enabled)) startPlugin(pl);
 
     return stopAllPlugins;
 }
