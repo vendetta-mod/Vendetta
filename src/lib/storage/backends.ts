@@ -16,9 +16,15 @@ export const createMMKVBackend = (store: string): StorageBackend => ({
   set: (data) => MMKVManager.setItem(store, JSON.stringify(data)),
 });
 
-export const createFileBackend = (file: string): StorageBackend => ({
-  get: async function() {
-    return JSON.parse((await DCDFileManager.readFile(`${DCDFileManager.getConstants().DocumentsDirPath}/${file}`, "utf8")) ?? "{}");
-  },
-  set: (data) => void DCDFileManager.writeFile("documents", filePathFixer(file), JSON.stringify(data), "utf8"),
-});
+export const createFileBackend = (file: string): StorageBackend => {
+  let created: boolean;
+  return {
+    get: async function() {
+      const path = `${DCDFileManager.getConstants().DocumentsDirPath}/${file}`;
+      if (!created && !await DCDFileManager.fileExists(path))
+        return (created = true, DCDFileManager.writeFile("documents", filePathFixer(file), "{}", "utf8"));
+      return JSON.parse((await DCDFileManager.readFile(path, "utf8")));
+    },
+    set: (data) => void DCDFileManager.writeFile("documents", filePathFixer(file), JSON.stringify(data), "utf8"),
+  };
+};
