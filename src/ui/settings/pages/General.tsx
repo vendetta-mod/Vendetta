@@ -92,18 +92,18 @@ export default function General() {
                 />
             </FormSection>
             <FormSection title="Versions">
-                {versions.map((v) => (
+                {versions.map((v, i) => (
                     <>
                         <Version label={v.label} version={v.version} icon={v.icon} />
-                        <FormDivider />
+                        {i !== versions.length - 1 && <FormDivider />}
                     </>
                 ))}
             </FormSection>
             <FormSection title="Platform Info">
-                {platformInfo.map((p) => (
+                {platformInfo.map((p, i) => (
                     <>
                         <Version label={p.label} version={p.version} icon={p.icon} />
-                        <FormDivider />
+                        {i !== platformInfo.length - 1 && <FormDivider />}
                     </>
                 ))}
             </FormSection>
