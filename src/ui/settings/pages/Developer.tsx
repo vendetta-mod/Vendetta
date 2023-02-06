@@ -27,7 +27,7 @@ export default function Developer() {
     return (
         <RN.ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 38 }}>
             <FormSection title="Debug" titleStyleType="no_border">
-                <FormInput 
+                <FormInput
                     value={settings.debuggerUrl}
                     onChange={(v: string) => settings.debuggerUrl = v}
                     placeholder="127.0.0.1:9090"
@@ -39,23 +39,25 @@ export default function Developer() {
                     leading={<FormRow.Icon source={getAssetIDByName("copy")} />}
                     onPress={() => connectToDebugger(settings.debuggerUrl)}
                 />
-                <FormDivider />
-                {window.__vendetta_rdc && <FormRow
-                    label="Connect to React DevTools"
-                    leading={<FormRow.Icon source={getAssetIDByName("ic_badge_staff")} />}
-                    onPress={() => {
-                        try {
-                            window.__vendetta_rdc?.connectToDevTools({
-                                host: settings.debuggerUrl.split(":")?.[0],
-                                resolveRNStyle: RN.StyleSheet.flatten,
-                            });
-                        } catch(e) {
-                            // TODO: Check if this ever actually catches anything
-                            logger.error("Failed to connect to React DevTools!", e);
-                            showToast("Failed to connect to React DevTools!", getAssetIDByName("Small"));
-                        }
-                    }}
-                />}
+                {window.__vendetta_rdc && <>
+                    <FormDivider />
+                    <FormRow
+                        label="Connect to React DevTools"
+                        leading={<FormRow.Icon source={getAssetIDByName("ic_badge_staff")} />}
+                        onPress={() => {
+                            try {
+                                window.__vendetta_rdc?.connectToDevTools({
+                                    host: settings.debuggerUrl.split(":")?.[0],
+                                    resolveRNStyle: RN.StyleSheet.flatten,
+                                });
+                            } catch (e) {
+                                // TODO: Check if this ever actually catches anything
+                                logger.error("Failed to connect to React DevTools!", e);
+                                showToast("Failed to connect to React DevTools!", getAssetIDByName("Small"));
+                            }
+                        }}
+                    />
+                </>}
             </FormSection>
             {window.__vendetta_loader?.features.loaderConfig && <FormSection title="Loader config">
                 <FormSwitchRow
@@ -67,12 +69,16 @@ export default function Developer() {
                         loaderConfig.customLoadUrl.enabled = v;
                     }}
                 />
-                {loaderConfig.customLoadUrl.enabled && <FormInput
-                    value={loaderConfig.customLoadUrl.url}
-                    onChange={(v: string) => loaderConfig.customLoadUrl.url = v}
-                    placeholder="http://localhost:4040/vendetta.js"
-                    title="VENDETTA URL"
-                />}
+                <FormDivider />
+                {loaderConfig.customLoadUrl.enabled && <>
+                    <FormInput
+                        value={loaderConfig.customLoadUrl.url}
+                        onChange={(v: string) => loaderConfig.customLoadUrl.url = v}
+                        placeholder="http://localhost:4040/vendetta.js"
+                        title="VENDETTA URL"
+                    />
+                    <FormDivider />
+                </>}
                 {window.__vendetta_loader.features.devtools && <FormSwitchRow
                     label="Load React DevTools"
                     subLabel={`Version: ${window.__vendetta_loader.features.devtools.version}`}
