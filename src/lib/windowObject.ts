@@ -1,7 +1,7 @@
 import { VendettaObject } from "@types";
 import patcher from "@lib/patcher";
 import logger from "@lib/logger";
-import settings from "@lib/settings";
+import settings, { loaderConfig } from "@lib/settings";
 import * as constants from "@lib/constants";
 import * as debug from "@lib/debug";
 import * as plugins from "@lib/plugins";
@@ -37,6 +37,10 @@ export default async function windowObject(unloads: any[]): Promise<VendettaObje
         commands: without(commands, "patchCommands"),
         storage,
         settings,
+        loader: {
+            identity: window.__vendetta_loader,
+            config: loaderConfig,
+        },
         logger,
         version: debug.versionHash,
         unload: () => {

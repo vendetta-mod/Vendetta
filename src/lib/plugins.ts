@@ -1,5 +1,5 @@
 import { Indexable, PluginManifest, Plugin } from "@types";
-import { awaitSyncWrapper, createStorage, wrapSync } from "@lib/storage";
+import { awaitSyncWrapper, createMMKVBackend, createStorage, wrapSync } from "@lib/storage";
 import safeFetch from "@utils/safeFetch";
 import logger from "@lib/logger";
 
@@ -11,7 +11,7 @@ type EvaledPlugin = {
     settings: JSX.Element;
 };
 
-export const plugins = wrapSync(createStorage<Indexable<Plugin>>("VENDETTA_PLUGINS"));
+export const plugins = wrapSync(createStorage<Indexable<Plugin>>(createMMKVBackend("VENDETTA_PLUGINS")));
 const loadedPlugins: Indexable<EvaledPlugin> = {};
 
 export async function fetchPlugin(id: string) {
@@ -61,7 +61,7 @@ export async function evalPlugin(plugin: Plugin) {
         plugin: {
             manifest: plugin.manifest,
             // Wrapping this with wrapSync is NOT an option.
-            storage: await createStorage<Indexable<any>>(plugin.id),
+            storage: await createStorage<Indexable<any>>(createMMKVBackend(plugin.id)),
         }
     };
     const pluginString = `vendetta=>{return ${plugin.js}}\n//# sourceURL=${plugin.id}`;
