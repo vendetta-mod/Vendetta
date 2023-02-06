@@ -39,7 +39,6 @@ export default function Developer() {
                     leading={<FormRow.Icon source={getAssetIDByName("copy")} />}
                     onPress={() => connectToDebugger(settings.debuggerUrl)}
                 />
-                <FormDivider />
                 {window.__vendetta_rdc && <>
                     <FormDivider />
                     <FormRow
