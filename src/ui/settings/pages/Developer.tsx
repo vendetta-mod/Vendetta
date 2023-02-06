@@ -70,12 +70,16 @@ export default function Developer() {
                         loaderConfig.customLoadUrl.enabled = v;
                     }}
                 />
-                {loaderConfig.customLoadUrl.enabled && <FormInput
-                    value={loaderConfig.customLoadUrl.url}
-                    onChange={(v: string) => loaderConfig.customLoadUrl.url = v}
-                    placeholder="http://localhost:4040/vendetta.js"
-                    title="VENDETTA URL"
-                />}
+                <FormDivider />
+                {loaderConfig.customLoadUrl.enabled && <>
+                    <FormInput
+                        value={loaderConfig.customLoadUrl.url}
+                        onChange={(v: string) => loaderConfig.customLoadUrl.url = v}
+                        placeholder="http://localhost:4040/vendetta.js"
+                        title="VENDETTA URL"
+                    />
+                    <FormDivider />
+                </>}
                 {window.__vendetta_loader.features.devtools && <FormSwitchRow
                     label="Load React DevTools"
                     subLabel={`Version: ${window.__vendetta_loader.features.devtools.version}`}
