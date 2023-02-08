@@ -123,8 +123,8 @@ export async function initPlugins() {
     await awaitSyncWrapper(plugins);
     
     const allIds = Object.keys(plugins);
-    await Promise.allSettled(allIds.filter(pl => plugins[pl].enabled && plugins[pl].update).map(pl => fetchPlugin(pl)));
-    for (const pl of allIds.filter(pl => plugins[pl].enabled)) startPlugin(pl);
+    await Promise.allSettled(allIds.filter(pl => plugins[pl].enabled && plugins[pl].update).map((pl) => fetchPlugin(pl)));
+    await Promise.allSettled(allIds.filter(pl => plugins[pl].enabled).map((pl) => startPlugin(pl)));
 
     return stopAllPlugins;
 }
