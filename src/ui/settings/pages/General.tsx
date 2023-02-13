@@ -1,7 +1,7 @@
 import { ReactNative as RN, url, invites } from "@metro/common";
 import { DISCORD_SERVER, GITHUB } from "@lib/constants";
 import { getAssetIDByName } from "@ui/assets";
-import { Forms } from "@ui/components";
+import { Forms, Summary } from "@ui/components";
 import { getDebugInfo } from "@lib/debug";
 import { useProxy } from "@lib/storage";
 import settings from "@lib/settings";
@@ -17,7 +17,7 @@ export default function General() {
         {
             label: "Vendetta",
             version: debugInfo.vendetta.version,
-            icon: "ic_progress_wrench_24px"
+            icon: "ic_progress_wrench_24px",
         },
         {
             label: "Discord",
@@ -42,6 +42,11 @@ export default function General() {
     ];
 
     const platformInfo = [
+        {
+            label: "Loader",
+            version: debugInfo.vendetta.loader,
+            icon: "ic_download_24px",
+        },
         {
             label: "Operating System",
             version: `${debugInfo.os.name} ${debugInfo.os.version}`,
@@ -91,22 +96,6 @@ export default function General() {
                     onPress={() => url.openURL(GITHUB)}
                 />
             </FormSection>
-            <FormSection title="Versions">
-                {versions.map((v, i) => (
-                    <>
-                        <Version label={v.label} version={v.version} icon={v.icon} />
-                        {i !== versions.length - 1 && <FormDivider />}
-                    </>
-                ))}
-            </FormSection>
-            <FormSection title="Platform Info">
-                {platformInfo.map((p, i) => (
-                    <>
-                        <Version label={p.label} version={p.version} icon={p.icon} />
-                        {i !== platformInfo.length - 1 && <FormDivider />}
-                    </>
-                ))}
-            </FormSection>
             <FormSection title="Actions">
                 <FormRow
                     label="Reload Discord"
@@ -122,6 +111,25 @@ export default function General() {
                         settings.developerSettings = v;
                     }}
                 />
+            </FormSection>
+            <FormSection title="Info">
+                <Summary label="Versions" icon="ic_information_filled_24px">
+                    {versions.map((v, i) => (
+                        <>
+                            <Version label={v.label} version={v.version} icon={v.icon} />
+                            {i !== versions.length - 1 && <FormDivider />}
+                        </>
+                    ))}
+                </Summary>
+                <FormDivider />
+                <Summary label="Platform" icon="ic_mobile_device">
+                    {platformInfo.map((p, i) => (
+                        <>
+                            <Version label={p.label} version={p.version} icon={p.icon} />
+                            {i !== platformInfo.length - 1 && <FormDivider />}
+                        </>
+                    ))}
+                </Summary>
             </FormSection>
         </RN.ScrollView>
     )
