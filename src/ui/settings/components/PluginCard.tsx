@@ -1,4 +1,5 @@
-import { ReactNative as RN, stylesheet, NavigationNative } from "@metro/common";
+import { ReactNative as RN, stylesheet, constants, NavigationNative } from "@metro/common";
+import { findByProps } from "@metro/filters";
 import { Forms, General } from "@ui/components";
 import { Plugin } from "@types";
 import { getAssetIDByName } from "@ui/assets";
@@ -6,18 +7,26 @@ import { showToast } from "@ui/toasts";
 import { removePlugin, startPlugin, stopPlugin, getSettings } from "@lib/plugins";
 import copyText from "@utils/copyText";
 
+//! This module is only found on 165.0+, under the assumption that iOS 165.0 is the same as Android 165.0.
+//* In 167.1 (Android alpha at the time of writing), stylesheet.ThemeColorMap is gone, and constants.ThemeColorMap has broken behaviour.
+//? SemanticColor is effectively ThemeColorMap
+//? RawColor is effectively Colors
+// TODO: Should this hotfix be moved elsewhere? Maybe a prop on window object, for plugins to use.
+const colorModule = findByProps("SemanticColorsByThemeTable");
+const colorMap = (colorModule?.SemanticColor ?? constants.ThemeColorMap);
+
 const { FormRow, FormSwitch } = Forms;
 const { TouchableOpacity, Image } = General;
 
 const styles = stylesheet.createThemedStyleSheet({
     card: {
-        backgroundColor: stylesheet.ThemeColorMap.BACKGROUND_SECONDARY,
+        backgroundColor: colorMap?.BACKGROUND_SECONDARY,
         borderRadius: 5,
         margin: 10,
         marginTop: 0,
     },
     header: {
-        backgroundColor: stylesheet.ThemeColorMap.BACKGROUND_TERTIARY,
+        backgroundColor: colorMap?.BACKGROUND_TERTIARY,
         borderTopLeftRadius: 5,
         borderTopRightRadius: 5,
     },
@@ -30,7 +39,7 @@ const styles = stylesheet.createThemedStyleSheet({
         width: 22,
         height: 22,
         marginLeft: 5,
-        tintColor: stylesheet.ThemeColorMap.INTERACTIVE_NORMAL,
+        tintColor: colorMap?.INTERACTIVE_NORMAL,
     }
 })
 
