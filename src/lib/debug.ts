@@ -65,6 +65,7 @@ export function getDebugInfo() {
     return {
         vendetta: {
             version: versionHash,
+            loader: window.__vendetta_loader?.name ?? "Unknown",
         },
         discord: {
             version: InfoDictionaryManager.Version,
