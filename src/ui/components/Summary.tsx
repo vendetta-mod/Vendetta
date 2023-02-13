@@ -1,16 +1,10 @@
+import { SummaryProps } from "@types";
 import { getAssetIDByName } from "@ui/assets";
 import { ReactNative as RN } from "@metro/common";
 import { Forms } from "@ui/components";
 
 // TODO: Animated would be awesome
 // TODO: Destructuring Forms doesn't work here. Why?
-
-interface SummaryProps {
-    label: string;
-    icon?: string;
-    noPadding?: boolean;
-    children: JSX.Element | JSX.Element[];
-}
 
 export default function Summary({ label, icon, noPadding = false, children }: SummaryProps) {
     const [hidden, setHidden] = React.useState(true);

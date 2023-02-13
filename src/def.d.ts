@@ -5,6 +5,15 @@ import _Clipboard from "@react-native-clipboard/clipboard";
 
 type MetroModules = { [id: number]: any };
 
+// Component types
+// TODO: Make these not be here?
+interface SummaryProps {
+    label: string;
+    icon?: string;
+    noPadding?: boolean;
+    children: JSX.Element | JSX.Element[];
+}
+
 // Helper types for API functions
 type PropIntellisense<P extends string | symbol> = Record<P, any> & Record<PropertyKey, any>;
 type PropsFinder = <T extends string | symbol>(...props: T[]) => PropIntellisense<T>;
@@ -312,9 +321,12 @@ interface VendettaObject {
     }
     ui: {
         components: {
+            // Discord
             Forms: PropIntellisense<"Form" | "FormSection">;
             General: PropIntellisense<"Button" | "Text" | "View">;
             Search: _React.ComponentType;
+            // Vendetta
+            Summary: (props: SummaryProps) => JSX.Element;
         }
         toasts: {
             showToast: (content: string, asset: number) => void;
