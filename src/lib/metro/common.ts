@@ -22,3 +22,6 @@ export const FluxDispatcher = findByProps("_currentDispatchActionType");
 // React
 export const React = window.React as typeof import("react");
 export { ReactNative } from "@metro/hoist";
+
+// Moment
+export { moment } from "@metro/hoist";

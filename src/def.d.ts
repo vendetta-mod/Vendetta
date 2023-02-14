@@ -2,6 +2,7 @@ import * as _spitroast from "spitroast";
 import _React from "react";
 import _RN from "react-native";
 import _Clipboard from "@react-native-clipboard/clipboard";
+import _moment from "moment";
 
 type MetroModules = { [id: number]: any };
 
@@ -301,6 +302,7 @@ interface VendettaObject {
             FluxDispatcher: PropIntellisense<"_currentDispatchActionType">;
             React: typeof _React;
             ReactNative: typeof _RN;
+            moment: typeof _moment;
         };
     };
     constants: {
