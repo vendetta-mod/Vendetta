@@ -311,7 +311,7 @@ interface VendettaObject {
     };
     utils: {
         copyText: (content: string) => void;
-        findInReactTree: (tree: { [key: string]: any }, filter: SearchFilter) => void;
+        findInReactTree: (tree: { [key: string]: any }, filter: SearchFilter) => any;
         findInTree: (tree: { [key: string]: any }, filter: SearchFilter, options: FindInTreeOptions) => any;
         safeFetch: (input: RequestInfo, options: RequestInit) => Promise<Response>;
         unfreeze: (obj: object) => object;
