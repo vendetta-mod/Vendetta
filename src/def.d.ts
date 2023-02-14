@@ -373,8 +373,8 @@ interface VendettaObject {
 }
 
 interface VendettaPluginObject {
-    manifest: PluginManifest,
-    storage: Indexable<any>,
+    manifest: PluginManifest;
+    storage: Indexable<any>;
 }
 
 declare global {

@@ -14,4 +14,4 @@ export const ReactNative = basicFind("Text") as typeof import("react-native");
 export const constants = basicFind("AbortCodes");
 
 // Export moment
-export const moment = basicFind("isMoment");
+export const moment = basicFind("isMoment") as typeof import("moment");
