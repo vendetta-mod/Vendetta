@@ -39,7 +39,7 @@ Vendetta's codebase is platform-agnostic, but you need a platform-specific loade
 
 6. In the newly created `dist` directory, run a HTTP server. I recommend [http-server](https://www.npmjs.com/package/http-server).
 
-7. Go to Settings > Developer enabled earlier) and input the IP address and port of the server, e.g. `http://192.168.1.236:4040`.
+7. Go to Settings > Developer enabled earlier). Enable `Load from custom url` and input the IP address and port of the server (e.g.  e.g. `http://192.168.1.236:4040`) in the new input box labelled `VENDETTA URL`.
 
 8. Restart Discord. Upon reload, you should notice that your device will download Vendetta's bundled code from your server, rather than GitHub.
 
