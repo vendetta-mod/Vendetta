@@ -22,7 +22,8 @@ export default function Plugins() {
             />
             <FormRow
                 label="Install plugin"
-                leading={<FormRow.Icon source={getAssetIDByName("ic_add_18px")} />}
+                // I checked, this icon exists on a fresh Discord install. Please, stop disappearing.
+                leading={<FormRow.Icon source={getAssetIDByName("ic_add_24px")} />}
                 onPress={() => {
                         installPlugin(pluginUrl).then(() => {
                             setPluginUrl("");
