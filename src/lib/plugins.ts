@@ -3,8 +3,6 @@ import { awaitSyncWrapper, createMMKVBackend, createStorage, wrapSync } from "@l
 import safeFetch from "@utils/safeFetch";
 import logger from "@lib/logger";
 
-// TODO: Properly implement hash-based updating
-
 type EvaledPlugin = {
     onLoad?(): void;
     onUnload(): void;
