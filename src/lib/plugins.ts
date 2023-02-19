@@ -30,12 +30,10 @@ export async function fetchPlugin(id: string) {
         try {
             // by polymanifest spec, plugins should always specify their main file, but just in case
             pluginJs = await (await safeFetch(id + (pluginManifest.main || "index.js"), { cache: "no-store" })).text();
-        } catch {
-            throw new Error(`Failed to fetch JS for ${id}`);
-        }
-
-        if (pluginJs.length === 0) throw new Error(`Failed to fetch JS for ${id}`);
+        } catch {} // Empty catch, checked below
     }
+
+    if (!pluginJs && !existingPlugin) throw new Error(`Failed to fetch JS for ${id}`);
 
     plugins[id] = {
         id: id,
