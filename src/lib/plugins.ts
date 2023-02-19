@@ -1,10 +1,7 @@
 import { Indexable, PluginManifest, Plugin } from "@types";
 import { awaitSyncWrapper, createMMKVBackend, createStorage, wrapSync } from "@lib/storage";
-import { findByProps } from "@metro/filters";
+import logger, { logModule } from "@lib/logger";
 import safeFetch from "@utils/safeFetch";
-import logger from "@lib/logger";
-
-const logModule = findByProps("setLogFn").default;
 
 type EvaledPlugin = {
     onLoad?(): void;
@@ -63,8 +60,8 @@ export async function evalPlugin(plugin: Plugin) {
             manifest: plugin.manifest,
             // Wrapping this with wrapSync is NOT an option.
             storage: await createStorage<Indexable<any>>(createMMKVBackend(plugin.id)),
-            logger: new logModule(plugin.manifest.name),
-        }
+        },
+        logger: new logModule(`Vendetta » ${plugin.manifest.name}`),
     };
     const pluginString = `vendetta=>{return ${plugin.js}}\n//# sourceURL=${plugin.id}`;
 

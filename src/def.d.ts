@@ -375,7 +375,6 @@ interface VendettaObject {
 interface VendettaPluginObject {
     manifest: PluginManifest;
     storage: Indexable<any>;
-    logger: Logger;
 }
 
 declare global {
