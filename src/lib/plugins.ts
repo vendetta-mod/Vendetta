@@ -119,10 +119,14 @@ export function removePlugin(id: string) {
 
 export async function initPlugins() {
     await awaitSyncWrapper(plugins);
-    
     const allIds = Object.keys(plugins);
-    await Promise.allSettled(allIds.filter(pl => plugins[pl].enabled && plugins[pl].update).map((pl) => fetchPlugin(pl)));
-    await Promise.allSettled(allIds.filter(pl => plugins[pl].enabled).map((pl) => startPlugin(pl)));
+
+    // Wait for every plugin that is enabled and allowed to update to be fetched...
+    await Promise.allSettled(allIds.filter(pl => plugins[pl].enabled && plugins[pl].update).map(pl => fetchPlugin(pl)));
+    // ...then start ALL enabled plugins, regardless of whether they are allowed to update.
+    await Promise.allSettled(allIds.filter(pl => plugins[pl].enabled).map(pl => startPlugin(pl)));
+    // After this, fetch all disabled plugins that are allowed to update, without waiting for them to finish doing so.
+    allIds.filter(pl => !plugins[pl].enabled && plugins[pl].update).forEach(pl => fetchPlugin(pl));
 
     return stopAllPlugins;
 }
