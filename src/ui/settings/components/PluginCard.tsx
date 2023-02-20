@@ -71,7 +71,11 @@ export default function PluginCard({ plugin }: PluginCardProps) {
                         style={RN.Platform.OS === "android" && { marginVertical: -15 }}
                         value={plugin.enabled}
                         onValueChange={(v: boolean) => {
-                            if (v) startPlugin(plugin.id); else stopPlugin(plugin.id);
+                            try {
+                                if (v) startPlugin(plugin.id); else stopPlugin(plugin.id);
+                            } catch (e) {
+                                showToast((e as Error).message, getAssetIDByName("Small"));
+                            }
                         }}
                     />
                 }
@@ -88,8 +92,12 @@ export default function PluginCard({ plugin }: PluginCardProps) {
                                 cancelText: "Cancel",
                                 confirmColor: "red",
                                 onConfirm: () => {
-                                    removePlugin(plugin.id);
-                                    setRemoved(true);
+                                    try {
+                                        removePlugin(plugin.id);
+                                        setRemoved(true);
+                                    } catch (e) {
+                                        showToast((e as Error).message, getAssetIDByName("Small"));
+                                    }
                                 }
                             })}
                         >

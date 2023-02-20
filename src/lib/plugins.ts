@@ -100,7 +100,7 @@ export function stopPlugin(id: string, disable = true) {
     if (!pluginRet) throw new Error("Attempted to stop a non-started plugin");
 
     try {
-        loadedPlugins[plugin.id]?.onUnload?.();
+        pluginRet.onUnload?.();
     } catch(e) {
         logger.error(`Plugin ${plugin.id} errored whilst unloading`, e);
     }
