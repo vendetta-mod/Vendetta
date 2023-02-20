@@ -340,6 +340,11 @@ interface VendettaObject {
             getAssetByID: (id: number) => Asset;
             getAssetIDByName: (name: string) => number;
         };
+        color: {
+            // TODO: Make a vain attempt to type these
+            map: Indexable<any>;
+            raw: Indexable<any>;
+        }
     };
     plugins: {
         plugins: Indexable<Plugin>;

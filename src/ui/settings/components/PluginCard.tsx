@@ -1,19 +1,12 @@
-import { ReactNative as RN, stylesheet, constants, NavigationNative } from "@metro/common";
+import { ReactNative as RN, stylesheet, NavigationNative } from "@metro/common";
 import { findByProps } from "@metro/filters";
 import { Forms, General } from "@ui/components";
 import { Plugin } from "@types";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
+import { map as colorMap } from "@ui/color";
 import { removePlugin, startPlugin, stopPlugin, getSettings } from "@lib/plugins";
 import copyText from "@utils/copyText";
-
-//! This module is only found on 165.0+, under the assumption that iOS 165.0 is the same as Android 165.0.
-//* In 167.1 (Android alpha at the time of writing), stylesheet.ThemeColorMap is gone, and constants.ThemeColorMap has broken behaviour.
-//? SemanticColor is effectively ThemeColorMap
-//? RawColor is effectively Colors
-// TODO: Should this hotfix be moved elsewhere? Maybe a prop on window object, for plugins to use.
-const colorModule = findByProps("SemanticColorsByThemeTable");
-const colorMap = (colorModule?.SemanticColor ?? constants.ThemeColorMap);
 
 // TODO: Replace with our eventual dialog API
 const Dialog = findByProps("show", "openLazy", "close");
