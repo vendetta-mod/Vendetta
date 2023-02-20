@@ -55,6 +55,7 @@ export async function evalPlugin(plugin: Plugin) {
     const vendettaForPlugins = {
         ...window.vendetta,
         plugin: {
+            id: plugin.id,
             manifest: plugin.manifest,
             // Wrapping this with wrapSync is NOT an option.
             storage: await createStorage<Indexable<any>>(createMMKVBackend(plugin.id)),

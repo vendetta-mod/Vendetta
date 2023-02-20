@@ -373,6 +373,7 @@ interface VendettaObject {
 }
 
 interface VendettaPluginObject {
+    id: string;
     manifest: PluginManifest;
     storage: Indexable<any>;
 }
