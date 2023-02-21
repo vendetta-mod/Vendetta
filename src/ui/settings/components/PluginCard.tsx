@@ -58,7 +58,7 @@ export default function PluginCard({ plugin }: PluginCardProps) {
                 style={styles.header}
                 // TODO: Actually make use of user IDs
                 label={`${plugin.manifest.name} by ${plugin.manifest.authors.map(i => i.name).join(", ")}`}
-                leading={<FormRow.Icon source={getAssetIDByName(plugin.manifest.vendetta?.icon || "ic_application_command_24px")} />}
+                leading={<FormRow.Icon source={typeof plugin.manifest.vendetta?.icon !== "object" ? getAssetIDByName(plugin.manifest.vendetta?.icon || "ic_application_command_24px") : plugin.manifest.vendetta?.icon } />}
                 trailing={
                     <FormSwitch
                         style={RN.Platform.OS === "android" && { marginVertical: -15 }}

@@ -1,9 +1,8 @@
 import * as _spitroast from "spitroast";
 import _React from "react";
-import _RN from "react-native";
+import _RN, { ImageURISource } from "react-native";
 import _Clipboard from "@react-native-clipboard/clipboard";
 import _moment from "moment";
-
 type MetroModules = { [id: number]: any };
 
 // Component types
@@ -57,7 +56,7 @@ interface PluginManifest {
     hash: string;
     // Vendor-specific field, contains our own data
     vendetta?: {
-        icon?: string;
+        icon?: string | ImageURISource;
     };
 }
 
