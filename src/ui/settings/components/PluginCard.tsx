@@ -4,7 +4,7 @@ import { Forms, General } from "@ui/components";
 import { Plugin } from "@types";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
-import { map as colorMap } from "@ui/color";
+import { semanticColors } from "@ui/color";
 import { removePlugin, startPlugin, stopPlugin, getSettings } from "@lib/plugins";
 import copyText from "@utils/copyText";
 
@@ -17,14 +17,14 @@ const { TouchableOpacity, Image } = General;
 // TODO: These styles work weirdly. iOS has cramped text, Android with low DPI probably does too. Fix?
 const styles = stylesheet.createThemedStyleSheet({
     card: {
-        backgroundColor: colorMap?.BACKGROUND_SECONDARY,
+        backgroundColor: semanticColors?.BACKGROUND_SECONDARY,
         borderRadius: 5,
         marginHorizontal: 10,
         marginBottom: 10,
     },
     header: {
         padding: 0,
-        backgroundColor: colorMap?.BACKGROUND_TERTIARY,
+        backgroundColor: semanticColors?.BACKGROUND_TERTIARY,
         borderTopLeftRadius: 5,
         borderTopRightRadius: 5,
     },
@@ -36,7 +36,7 @@ const styles = stylesheet.createThemedStyleSheet({
         width: 22,
         height: 22,
         marginLeft: 5,
-        tintColor: colorMap?.INTERACTIVE_NORMAL,
+        tintColor: semanticColors?.INTERACTIVE_NORMAL,
     }
 })
 

@@ -6,7 +6,7 @@ import { constants } from "@metro/hoist";
 const colorModule = findByProps("SemanticColorsByThemeTable");
 
 //? SemanticColor is effectively ThemeColorMap
-export const map = (colorModule?.SemanticColor ?? constants.ThemeColorMap);
+export const semanticColors = (constants.ThemeColorMap ?? colorModule?.SemanticColor);
 
 //? RawColor is effectively Colors
-export const raw = (colorModule?.RawColor ?? constants.Colors);
+export const rawColors = (constants.Colors ?? colorModule?.RawColor);

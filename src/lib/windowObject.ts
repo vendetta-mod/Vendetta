@@ -12,6 +12,7 @@ import * as common from "@metro/common";
 import * as components from "@ui/components";
 import * as toasts from "@ui/toasts";
 import * as assets from "@ui/assets";
+import * as color from "@ui/color";
 import * as utils from "@utils";
 
 function without<T extends Record<string, any>>(object: T, ...keys: string[]) {
@@ -32,6 +33,7 @@ export default async function windowObject(unloads: any[]): Promise<VendettaObje
             components,
             toasts,
             assets,
+            ...color,
         },
         plugins: without(plugins, "initPlugins"),
         commands: without(commands, "patchCommands"),
