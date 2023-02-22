@@ -277,6 +277,8 @@ interface VendettaObject {
         instead: typeof _spitroast.instead;
     };
     metro: {
+        find: (filter: (m: any) => boolean) => any;
+        findAll: (filter: (m: any) => boolean) => any[];
         findByProps: PropsFinder;
         findByPropsAll: PropsFinderAll;
         findByDisplayName: (name: string, defaultExp?: boolean) => any;
