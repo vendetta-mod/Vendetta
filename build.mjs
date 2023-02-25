@@ -29,7 +29,7 @@ try {
                 "__vendettaVersion": commit,
             })
         ],
-        legalComments: "external",
+        legalComments: "none",
     });
 
     await fs.appendFile("./dist/vendetta.js", "//# sourceURL=Vendetta");
