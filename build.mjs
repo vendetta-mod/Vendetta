@@ -7,6 +7,7 @@ import replace from "@rollup/plugin-replace";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import { typescriptPaths } from "rollup-plugin-typescript-paths";
 import { swc } from "rollup-plugin-swc3";
+import esbuild from "rollup-plugin-esbuild";
 
 const exec = promisify(_exec);
 
@@ -24,6 +25,10 @@ try {
             nodeResolve({
                 extensions: [".tsx", ".ts", ".jsx", ".js", "json"],
             }),
+            // If we ever get rid of window.React, though it'll probably break some plugins.
+            // inject({
+            //     React: ["@metro/hoist", "React"],
+            // }),
             swc({
                 env: {
                     targets: "defaults",
@@ -32,13 +37,10 @@ try {
                         "transform-arrow-functions",
                     ],
                 },
-                jsc: {
-                    loose: true,
-                    minify: {
-                        compress: true,
-                        mangle: true,
-                    },
-                },
+            }),
+            esbuild({
+                minify: true,
+                target: "esnext",
             }),
         ],
     });
@@ -49,7 +51,7 @@ try {
         compact: true,
     });
 
-    await fs.appendFile("./dist/vendetta.js", "\n//# sourceURL=Vendetta");
+    await fs.appendFile("./dist/vendetta.js", "//# sourceURL=Vendetta");
 
     console.log("Build successful!");
 } catch (e) {
