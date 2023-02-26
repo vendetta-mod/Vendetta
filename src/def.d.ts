@@ -344,6 +344,7 @@ interface VendettaObject {
     constants: {
         DISCORD_SERVER: string;
         GITHUB: string;
+        HTTP_REGEX: RegExp;
     };
     utils: {
         copyText: (content: string) => void;
