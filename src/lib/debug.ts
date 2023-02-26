@@ -7,19 +7,16 @@ import logger from "@lib/logger";
 export let socket: WebSocket;
 
 export function connectToDebugger(url: string) {
-    if (socket !== undefined && socket.readyState !== WebSocket.CLOSED) {
-        socket.close();
-    }
+    if (socket !== undefined && socket.readyState !== WebSocket.CLOSED) socket.close();
 
-    if (url === "") {
+    if (!url) {
         showToast("Invalid debugger URL!", getAssetIDByName("Small"));
         return;
     }
 
     socket = new WebSocket(`ws://${url}`);
-
+    
     socket.addEventListener("open", () => showToast("Connected to debugger.", getAssetIDByName("Check")));
-
     socket.addEventListener("message", (message: any) => {
         try {
             (0, eval)(message.data);

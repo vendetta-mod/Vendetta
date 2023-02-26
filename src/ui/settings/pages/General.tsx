@@ -1,7 +1,7 @@
 import { ReactNative as RN, url, invites } from "@metro/common";
-import { DISCORD_SERVER, GITHUB } from "@lib/constants";
 import { getAssetIDByName } from "@ui/assets";
 import { Forms, Summary } from "@ui/components";
+import { DISCORD_SERVER, GITHUB } from "@lib/constants";
 import { getDebugInfo } from "@lib/debug";
 import { useProxy } from "@lib/storage";
 import settings from "@lib/settings";

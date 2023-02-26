@@ -4,7 +4,7 @@ import InputAlert from "@ui/components/InputAlert";
 
 const Alerts = findByProps("openLazy", "close");
 
-interface InternalConfirmationAlertOptions extends Omit<ConfirmationAlertOptions, 'content'> {
+interface InternalConfirmationAlertOptions extends Omit<ConfirmationAlertOptions, "content"> {
     content: string | JSX.Element | JSX.Element[] | undefined;
     body: string | undefined;
     children: JSX.Element | JSX.Element[];
@@ -20,18 +20,11 @@ export function showConfirmationAlert(options: ConfirmationAlertOptions) {
     };
 
     delete internalOptions.content;
-
     return Alerts.show(internalOptions);
 };
 
-export function showCustomAlert(component: React.ComponentType, props: any) {
-    Alerts.openLazy({
-        importer: async function () {
-            return () => React.createElement(component, props);
-        }
-    });
-};
+export const showCustomAlert = (component: React.ComponentType, props: any) => Alerts.openLazy({
+    importer: async () => () => React.createElement(component, props),
+});
 
-export function showInputAlert(options: InputAlertProps) {
-    showCustomAlert(InputAlert as React.ComponentType, options);
-};
+export const showInputAlert = (options: InputAlertProps) => showCustomAlert(InputAlert as React.ComponentType, options);

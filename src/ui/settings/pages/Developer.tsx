@@ -1,11 +1,9 @@
 import { ReactNative as RN, NavigationNative } from "@metro/common";
 import { Forms } from "@ui/components";
 import { getAssetIDByName } from "@ui/assets";
-import { showToast } from "@ui/toasts";
 import { connectToDebugger } from "@lib/debug";
 import { useProxy } from "@lib/storage";
 import settings, { loaderConfig } from "@lib/settings";
-import logger from "@lib/logger";
 import ErrorBoundary from "@ui/components/ErrorBoundary";
 
 const { FormSection, FormRow, FormSwitchRow, FormInput, FormDivider } = Forms;
@@ -37,18 +35,10 @@ export default function Developer() {
                         <FormRow
                             label="Connect to React DevTools"
                             leading={<FormRow.Icon source={getAssetIDByName("ic_badge_staff")} />}
-                            onPress={() => {
-                                try {
-                                    window.__vendetta_rdc?.connectToDevTools({
-                                        host: settings.debuggerUrl.split(":")?.[0],
-                                        resolveRNStyle: RN.StyleSheet.flatten,
-                                    });
-                                } catch (e) {
-                                    // TODO: Check if this ever actually catches anything
-                                    logger.error("Failed to connect to React DevTools!", e);
-                                    showToast("Failed to connect to React DevTools!", getAssetIDByName("Small"));
-                                }
-                            }}
+                            onPress={() => window.__vendetta_rdc?.connectToDevTools({
+                                host: settings.debuggerUrl.split(":")?.[0],
+                                resolveRNStyle: RN.StyleSheet.flatten,
+                            })}
                         />
                     </>}
                 </FormSection>

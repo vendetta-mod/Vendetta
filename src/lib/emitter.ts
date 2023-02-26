@@ -1,10 +1,10 @@
 import { Emitter, EmitterEvent, EmitterListener, EmitterListenerData, EmitterListeners } from "@types";
 
-export const Events = Object.freeze({
-    GET: "GET",
-    SET: "SET",
-    DEL: "DEL",
-});
+export enum Events {
+    GET = "GET",
+    SET = "SET",
+    DEL = "DEL",
+};
 
 export default function createEmitter(): Emitter {
     return {

@@ -1,8 +1,8 @@
 // Based on https://github.com/Aliucord/AliucordRN/blob/main/src/ui/patchTheme.ts
 // Literally could not figure this out, many thanks
 
-import { findByProps, findByStoreName } from "@metro/filters";
 import { FluxDispatcher } from "@metro/common";
+import { findByProps, findByStoreName } from "@metro/filters";
 import logger from "@lib/logger";
 
 // TODO: Move these to common modules?

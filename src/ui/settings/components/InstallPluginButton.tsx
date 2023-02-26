@@ -1,9 +1,9 @@
-import { HTTP_REGEX } from "@/lib/constants";
-import { semanticColors } from "@ui/color";
-import { installPlugin } from "@lib/plugins";
 import { clipboard, stylesheet } from "@metro/common";
+import { HTTP_REGEX } from "@lib/constants";
+import { installPlugin } from "@lib/plugins";
 import { showInputAlert } from "@ui/alerts";
 import { getAssetIDByName } from "@ui/assets";
+import { semanticColors } from "@ui/color";
 import { General } from "@ui/components";
 
 const { TouchableOpacity, Image } = General;

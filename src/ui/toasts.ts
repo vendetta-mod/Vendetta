@@ -1,8 +1,6 @@
 import { toasts } from "@metro/common";
 
-export function showToast(content: string, asset: number) {
-    return toasts.open({
-        content: content,
-        source: asset,
-    });
-}
+export const showToast = (content: string, asset: number) => toasts.open({
+    content: content,
+    source: asset,
+});

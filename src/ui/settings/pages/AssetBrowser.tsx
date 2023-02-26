@@ -1,6 +1,6 @@
 import { ReactNative as RN, stylesheet } from "@metro/common";
-import { Forms, Search } from "@ui/components";
 import { all } from "@ui/assets";
+import { Forms, Search } from "@ui/components";
 import ErrorBoundary from "@ui/components/ErrorBoundary";
 import AssetDisplay from "@ui/settings/components/AssetDisplay";
 

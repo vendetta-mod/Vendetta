@@ -4,11 +4,11 @@ import { after } from "@lib/patcher";
 import findInReactTree from "@utils/findInReactTree";
 import ErrorBoundary from "@ui/components/ErrorBoundary";
 import SettingsSection from "@ui/settings/components/SettingsSection";
+import InstallPluginButton from "@ui/settings/components/InstallPluginButton";
 import General from "@ui/settings/pages/General";
 import Plugins from "@ui/settings/pages/Plugins";
 import Developer from "@ui/settings/pages/Developer";
 import AssetBrowser from "@ui/settings/pages/AssetBrowser";
-import InstallPluginButton from "@ui/settings/components/InstallPluginButton";
 
 const screensModule = findByDisplayName("getScreens", false);
 const settingsModule = findByDisplayName("UserSettingsOverviewWrapper", false);

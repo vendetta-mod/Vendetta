@@ -5,10 +5,10 @@
 const basicFind = (prop: string) => Object.values(window.modules).find(m => m?.publicModule.exports?.[prop])?.publicModule?.exports;
 
 // Hoist React on window
-window.React = basicFind("createElement") as typeof import("react");;
+window.React = basicFind("createElement") as typeof import("react");
 
 // Export ReactNative
-export const ReactNative = basicFind("Text") as typeof import("react-native");
+export const ReactNative = basicFind("AppRegistry") as typeof import("react-native");
 
 // Export Discord's constants
 export const constants = basicFind("AbortCodes");

@@ -1,15 +1,12 @@
+import { ButtonColors, Plugin } from "@types";
 import { ReactNative as RN, stylesheet, NavigationNative } from "@metro/common";
-import { findByProps } from "@metro/filters";
 import { Forms, General } from "@ui/components";
-import { Plugin } from "@types";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
+import { showConfirmationAlert } from "@ui/alerts";
 import { semanticColors } from "@ui/color";
 import { removePlugin, startPlugin, stopPlugin, getSettings } from "@lib/plugins";
 import copyText from "@utils/copyText";
-
-// TODO: Replace with our eventual dialog API
-const Dialog = findByProps("show", "openLazy", "close");
 
 const { FormRow, FormSwitch } = Forms;
 const { TouchableOpacity, Image } = General;
@@ -79,12 +76,12 @@ export default function PluginCard({ plugin, index }: PluginCardProps) {
                 trailing={
                     <RN.View style={styles.actions}>
                         <TouchableOpacity
-                            onPress={() => Dialog.show({
+                            onPress={() => showConfirmationAlert({
                                 title: "Wait!",
-                                body: `Are you sure you wish to delete ${plugin.manifest.name}?`,
+                                content: `Are you sure you wish to delete ${plugin.manifest.name}?`,
                                 confirmText: "Delete",
                                 cancelText: "Cancel",
-                                confirmColor: "red",
+                                confirmColor: ButtonColors.RED,
                                 onConfirm: () => {
                                     try {
                                         removePlugin(plugin.id);

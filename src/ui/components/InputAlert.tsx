@@ -3,7 +3,6 @@ import { Forms, Alert } from "@ui/components";
 import { InputAlertProps } from "@types";
 
 const { FormInput } = Forms;
-
 const Alerts = findByProps("openLazy", "close");
 
 export default function InputAlert({ title, confirmText, confirmColor, onConfirm, cancelText, placeholder, initialValue = "" }: InputAlertProps) {

@@ -46,7 +46,7 @@ interface Asset {
     id: number;
 }
 
-declare enum ButtonColors {
+export enum ButtonColors {
     BRAND = "brand",
     RED = "red",
     GREEN = "green",
@@ -121,7 +121,7 @@ interface ApplicationCommand {
     type: ApplicationCommandType;
 }
 
-declare enum ApplicationCommandInputType {
+export enum ApplicationCommandInputType {
     BUILT_IN,
     BUILT_IN_TEXT,
     BUILT_IN_INTEGRATION,
@@ -138,7 +138,7 @@ interface ApplicationCommandOption {
     displayDescription: string;
 }
 
-declare enum ApplicationCommandOptionType {
+export enum ApplicationCommandOptionType {
     SUB_COMMAND = 1,
     SUB_COMMAND_GROUP,
     STRING,
@@ -152,7 +152,7 @@ declare enum ApplicationCommandOptionType {
     ATTACHMENT,
 }
 
-declare enum ApplicationCommandType {
+export enum ApplicationCommandType {
     CHAT = 1,
     USER,
     MESSAGE,
