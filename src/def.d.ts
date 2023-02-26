@@ -366,8 +366,8 @@ interface VendettaObject {
             Search: _React.ComponentType;
             Alert: _React.ComponentType;
             // Vendetta
-            Summary: (props: SummaryProps) => JSX.Element;
-            ErrorBoundary: (props: ErrorBoundaryProps) => JSX.Element;
+            Summary: _React.ComponentType<SummaryProps>;
+            ErrorBoundary: _React.ComponentType<ErrorBoundaryProps>;
         }
         toasts: {
             showToast: (content: string, asset: number) => void;
