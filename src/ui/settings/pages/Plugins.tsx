@@ -11,9 +11,8 @@ export default function Plugins() {
         <ErrorBoundary>
             <RN.View style={{ flex: 1 }}>
                 <RN.FlatList
-                    style={{ marginTop: 10 }}
                     data={Object.values(plugins)}
-                    renderItem={({ item }) => <PluginCard plugin={item} />}
+                    renderItem={({ item, index }) => <PluginCard plugin={item} index={index} />}
                     keyExtractor={item => item.id}
                 />
             </RN.View>

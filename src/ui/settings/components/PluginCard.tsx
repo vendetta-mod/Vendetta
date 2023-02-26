@@ -42,9 +42,10 @@ const styles = stylesheet.createThemedStyleSheet({
 
 interface PluginCardProps {
     plugin: Plugin;
+    index: number;
 }
 
-export default function PluginCard({ plugin }: PluginCardProps) {
+export default function PluginCard({ plugin, index }: PluginCardProps) {
     const settings = getSettings(plugin.id);
     const navigation = NavigationNative.useNavigation();
     const [removed, setRemoved] = React.useState(false);
@@ -53,7 +54,7 @@ export default function PluginCard({ plugin }: PluginCardProps) {
     if (removed) return null;
 
     return ( 
-        <RN.View style={styles.card}>
+        <RN.View style={[styles.card, {marginTop: index === 0 ? 10 : 0}]}>
             <FormRow
                 style={styles.header}
                 // TODO: Actually make use of user IDs
