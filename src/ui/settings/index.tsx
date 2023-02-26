@@ -8,6 +8,7 @@ import General from "@ui/settings/pages/General";
 import Plugins from "@ui/settings/pages/Plugins";
 import Developer from "@ui/settings/pages/Developer";
 import AssetBrowser from "@ui/settings/pages/AssetBrowser";
+import InstallPluginButton from "@ui/settings/components/InstallPluginButton";
 
 const screensModule = findByDisplayName("getScreens", false);
 const settingsModule = findByDisplayName("UserSettingsOverviewWrapper", false);
@@ -25,6 +26,7 @@ export default function initSettings() {
             VendettaPlugins: {
                 title: "Plugins",
                 render: Plugins,
+                headerRight: InstallPluginButton,
             },
             VendettaDeveloper: {
                 title: "Developer",

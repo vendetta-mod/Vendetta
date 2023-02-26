@@ -46,6 +46,37 @@ interface Asset {
     id: number;
 }
 
+declare enum ButtonColors {
+    BRAND = "brand",
+    RED = "red",
+    GREEN = "green",
+    PRIMARY = "primary",
+    TRANSPARENT = "transparent",
+    GREY = "grey",
+    LIGHTGREY = "lightgrey",
+    WHITE = "white",
+    LINK = "link"
+}
+
+interface ConfirmationAlertOptions {
+    title: string | undefined;
+    content: string | JSX.Element | JSX.Element[];
+    confirmText: string | undefined;
+    confirmColor: ButtonColors | undefined;
+    onConfirm: () => void;
+    cancelText: string | undefined;
+}
+
+interface InputAlertProps {
+    title: string | undefined;
+    confirmText: string | undefined;
+    confirmColor: ButtonColors | undefined;
+    onConfirm: (input: string) => void | Promise<void>;
+    cancelText: string | undefined;
+    placeholder: string | undefined;
+    initialValue: string | undefined;
+}
+
 interface PluginAuthor {
     name: string;
     id: string;
@@ -230,13 +261,13 @@ type Indexable<Type> = { [index: string]: Type }
 type EmitterEvent = "SET" | "GET" | "DEL";
 
 interface EmitterListenerData {
-	path: string[];
-	value?: any;
+    path: string[];
+    value?: any;
 }
 
 type EmitterListener = (
-	event: EmitterEvent,
-	data: EmitterListenerData | any
+    event: EmitterEvent,
+    data: EmitterListenerData | any
 ) => any;
 
 type EmitterListeners = Indexable<Set<EmitterListener>>;
@@ -313,6 +344,7 @@ interface VendettaObject {
     constants: {
         DISCORD_SERVER: string;
         GITHUB: string;
+        HTTP_REGEX: RegExp;
     };
     utils: {
         copyText: (content: string) => void;
@@ -332,12 +364,18 @@ interface VendettaObject {
             Forms: PropIntellisense<"Form" | "FormSection">;
             General: PropIntellisense<"Button" | "Text" | "View">;
             Search: _React.ComponentType;
+            Alert: _React.ComponentType;
             // Vendetta
             Summary: (props: SummaryProps) => JSX.Element;
             ErrorBoundary: (props: ErrorBoundaryProps) => JSX.Element;
         }
         toasts: {
             showToast: (content: string, asset: number) => void;
+        };
+        alerts: {
+            showConfirmationAlert: (options: ConfirmationAlertOptions) => void;
+            showCustomAlert: (component: _React.ComponentType, props: any) => void;
+            showInputAlert: (options: InputAlertProps) => void;
         };
         assets: {
             all: Indexable<Asset>;
