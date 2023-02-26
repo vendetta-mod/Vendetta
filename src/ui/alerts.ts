@@ -1,5 +1,6 @@
-import { ConfirmationAlertOptions } from "@types";
+import { ConfirmationAlertOptions, InputAlertProps } from "@types";
 import { findByProps } from "@metro/filters";
+import InputAlert from "@ui/components/InputAlert";
 
 const Alerts = findByProps("openLazy", "close");
 
@@ -21,4 +22,16 @@ export function showConfirmationAlert(options: ConfirmationAlertOptions) {
 	delete internalOptions.content;
 
 	return Alerts.show(internalOptions);
+};
+
+export function showCustomAlert(component: React.ComponentType, props: any) {
+	Alerts.openLazy({
+		importer: async function () {
+			return () => React.createElement(component, props);
+		}
+	});
+};
+
+export function showInputAlert(options: InputAlertProps) {
+	showCustomAlert(InputAlert as React.ComponentType, options);
 };

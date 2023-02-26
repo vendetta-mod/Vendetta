@@ -67,6 +67,16 @@ interface ConfirmationAlertOptions {
     cancelText: string | undefined;
 }
 
+interface InputAlertProps {
+    title: string | undefined;
+    confirmText: string | undefined;
+    confirmColor: ButtonColors | undefined;
+    onConfirm: (input: string) => void | Promise<void>;
+    cancelText: string | undefined;
+    placeholder: string | undefined;
+    initialValue: string | undefined;
+}
+
 interface PluginAuthor {
     name: string;
     id: string;
@@ -353,6 +363,7 @@ interface VendettaObject {
             Forms: PropIntellisense<"Form" | "FormSection">;
             General: PropIntellisense<"Button" | "Text" | "View">;
             Search: _React.ComponentType;
+            Alert: _React.ComponentType;
             // Vendetta
             Summary: (props: SummaryProps) => JSX.Element;
             ErrorBoundary: (props: ErrorBoundaryProps) => JSX.Element;
@@ -362,6 +373,8 @@ interface VendettaObject {
         };
         alerts: {
             showConfirmationAlert: (options: ConfirmationAlertOptions) => void;
+            showCustomAlert: (component: _React.ComponentType, props: any) => void;
+            showInputAlert: (options: InputAlertProps) => void;
         };
         assets: {
             all: Indexable<Asset>;
