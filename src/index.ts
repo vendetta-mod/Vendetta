@@ -10,7 +10,7 @@ import logger from "@lib/logger";
 // This logs in the native logging implementation, e.g. logcat
 console.log("Hello from Vendetta!");
 
-async function init() {
+(async () => {
     try {
         // Load everything in parallel
         const unloads = await Promise.all([
@@ -32,6 +32,4 @@ async function init() {
     } catch (e: any) {
         alert(`Vendetta failed to initialize... ${e.stack || e.toString()}`);
     }
-};
-
-init();
+})();

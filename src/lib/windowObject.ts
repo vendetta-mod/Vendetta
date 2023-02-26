@@ -21,34 +21,31 @@ function without<T extends Record<string, any>>(object: T, ...keys: string[]) {
     return cloned;
 }
 
-// I wish Hermes let me do async arrow functions
-export default async function windowObject(unloads: any[]): Promise<VendettaObject> {
-    return {
-        patcher: without(patcher, "unpatchAll"),
-        metro: { ...metro, common: { ...common } },
-        constants,
-        utils,
-        debug: without(debug, "versionHash", "patchLogHook"),
-        ui: {
-            components,
-            toasts,
-            assets,
-            ...color,
-        },
-        plugins: without(plugins, "initPlugins"),
-        commands: without(commands, "patchCommands"),
-        storage,
-        settings,
-        loader: {
-            identity: window.__vendetta_loader,
-            config: loaderConfig,
-        },
-        logger,
-        version: debug.versionHash,
-        unload: () => {
-            unloads.filter(i => typeof i === "function").forEach(p => p());
-            // @ts-expect-error explode
-            delete window.vendetta;
-        }
-    }   
-}
+export default async (unloads: any[]): Promise<VendettaObject> => ({
+    patcher: without(patcher, "unpatchAll"),
+    metro: { ...metro, common: { ...common } },
+    constants,
+    utils,
+    debug: without(debug, "versionHash", "patchLogHook"),
+    ui: {
+        components,
+        toasts,
+        assets,
+        ...color,
+    },
+    plugins: without(plugins, "initPlugins"),
+    commands: without(commands, "patchCommands"),
+    storage,
+    settings,
+    loader: {
+        identity: window.__vendetta_loader,
+        config: loaderConfig,
+    },
+    logger,
+    version: debug.versionHash,
+    unload: () => {
+        unloads.filter(i => typeof i === "function").forEach(p => p());
+        // @ts-expect-error explode
+        delete window.vendetta;
+    }
+});

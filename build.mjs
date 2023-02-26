@@ -1,36 +1,47 @@
-import { build } from "esbuild";
 import { promisify } from "util";
 import { exec as _exec } from "child_process";
-import { replace } from "esbuild-plugin-replace";
-import alias from "esbuild-plugin-alias";
-import esg from "esbuild-plugin-external-global";
 import fs from "fs/promises";
-import path from "path";
-const exec = promisify(_exec);
 
-const tsconfig = JSON.parse(await fs.readFile("./tsconfig.json"));
-const aliases = Object.fromEntries(Object.entries(tsconfig.compilerOptions.paths).map(([alias, [target]]) => [alias, path.resolve(target)]));
+import { rollup } from "rollup";
+import { swc } from "rollup-plugin-swc3";
+import { typescriptPaths } from "rollup-plugin-typescript-paths";
+import esbuild from "rollup-plugin-esbuild";
+import replace from "@rollup/plugin-replace";
+import nodeResolve from "@rollup/plugin-node-resolve";
+
+const exec = promisify(_exec);
 const commit = (await exec("git rev-parse HEAD")).stdout.trim().substring(0, 7) || "custom";
 
 try {
-    await build({
-        entryPoints: ["./src/index.ts"],
-        outfile: "./dist/vendetta.js",
-        minify: true,
-        bundle: true,
-        format: "iife",
-        target: "esnext",
+    const bundle = await rollup({
+        input: "src/index.ts",
+        onwarn: () => {},
         plugins: [
-            alias(aliases),
-            esg.externalGlobalPlugin({
-                "react": "window.React",
-            }),
             replace({
-                "__vendettaVersion": commit,
-            })
+                __vendettaVersion: commit,
+                preventAssignment: true,
+            }),
+            typescriptPaths(),
+            nodeResolve({ extensions: [".tsx", ".ts", ".jsx", ".js", ".json"] }),
+            swc({
+                env: {
+                    targets: "defaults",
+                    include: [
+                        "transform-classes",
+                        "transform-arrow-functions",
+                    ],
+                },
+            }),
+            esbuild({ minify: true }),
         ],
-        legalComments: "none",
     });
+
+    await bundle.write({
+        format: "iife",
+        file: "dist/vendetta.js",
+        compact: true,
+    });
+    await bundle.close();
 
     await fs.appendFile("./dist/vendetta.js", "//# sourceURL=Vendetta");
     console.log("Build successful!");
