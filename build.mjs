@@ -41,6 +41,7 @@ try {
         file: "dist/vendetta.js",
         compact: true,
     });
+    await bundle.close();
 
     await fs.appendFile("./dist/vendetta.js", "//# sourceURL=Vendetta");
     console.log("Build successful!");
