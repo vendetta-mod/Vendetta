@@ -1,7 +1,7 @@
 import { SummaryProps } from "@types";
+import { Forms } from "@ui/components";
 import { getAssetIDByName } from "@ui/assets";
 import { ReactNative as RN } from "@metro/common";
-import { Forms } from "@ui/components";
 
 // TODO: Animated would be awesome
 // TODO: Destructuring Forms doesn't work here. Why?

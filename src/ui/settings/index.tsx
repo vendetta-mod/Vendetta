@@ -2,6 +2,7 @@ import { NavigationNative, i18n } from "@metro/common";
 import { findByDisplayName } from "@metro/filters";
 import { after } from "@lib/patcher";
 import findInReactTree from "@utils/findInReactTree";
+import ErrorBoundary from "@ui/components/ErrorBoundary";
 import SettingsSection from "@ui/settings/components/SettingsSection";
 import General from "@ui/settings/pages/General";
 import Plugins from "@ui/settings/pages/Plugins";
@@ -38,7 +39,8 @@ export default function initSettings() {
                 render: ({ render: PageView, ...options }: { render: React.ComponentType }) => {
                     const navigation = NavigationNative.useNavigation();
                     React.useEffect(() => options && navigation.setOptions(options));
-                    return <PageView />;
+                    // TODO: Is wrapping this in ErrorBoundary a good idea?
+                    return <ErrorBoundary><PageView /></ErrorBoundary>;
                 }
             }
         }

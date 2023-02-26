@@ -7,3 +7,4 @@ export const Search = findByDisplayName("StaticSearchBarContainer");
 
 // Vendetta
 export { default as Summary } from "@ui/components/Summary";
+export { default as ErrorBoundary } from "@ui/components/ErrorBoundary";

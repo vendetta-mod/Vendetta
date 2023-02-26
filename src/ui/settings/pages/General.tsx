@@ -6,6 +6,7 @@ import { getDebugInfo } from "@lib/debug";
 import { useProxy } from "@lib/storage";
 import settings from "@lib/settings";
 import Version from "@ui/settings/components/Version";
+import ErrorBoundary from "@ui/components/ErrorBoundary";
 
 const { FormRow, FormSwitchRow, FormSection, FormDivider } = Forms;
 const debugInfo = getDebugInfo();
@@ -80,57 +81,59 @@ export default function General() {
     ];
 
     return (
-        <RN.ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 38 }}>
-            <FormSection title="Links" titleStyleType="no_border">
-                <FormRow
-                    label="Discord Server"
-                    leading={<FormRow.Icon source={getAssetIDByName("Discord")} />}
-                    trailing={FormRow.Arrow}
-                    onPress={() => invites.acceptInviteAndTransitionToInviteChannel({ inviteKey: DISCORD_SERVER })}
-                />
-                <FormDivider />
-                <FormRow
-                    label="GitHub"
-                    leading={<FormRow.Icon source={getAssetIDByName("img_account_sync_github_white")} />}
-                    trailing={FormRow.Arrow}
-                    onPress={() => url.openURL(GITHUB)}
-                />
-            </FormSection>
-            <FormSection title="Actions">
-                <FormRow
-                    label="Reload Discord"
-                    leading={<FormRow.Icon source={getAssetIDByName("ic_message_retry")} />}
-                    onPress={() => RN.NativeModules.BundleUpdaterManager.reload()}
-                />
-                <FormDivider />
-                <FormSwitchRow
-                    label="Developer Settings"
-                    leading={<FormRow.Icon source={getAssetIDByName("ic_progress_wrench_24px")} />}
-                    value={settings.developerSettings}
-                    onValueChange={(v: boolean) => {
-                        settings.developerSettings = v;
-                    }}
-                />
-            </FormSection>
-            <FormSection title="Info">
-                <Summary label="Versions" icon="ic_information_filled_24px">
-                    {versions.map((v, i) => (
-                        <>
-                            <Version label={v.label} version={v.version} icon={v.icon} />
-                            {i !== versions.length - 1 && <FormDivider />}
-                        </>
-                    ))}
-                </Summary>
-                <FormDivider />
-                <Summary label="Platform" icon="ic_mobile_device">
-                    {platformInfo.map((p, i) => (
-                        <>
-                            <Version label={p.label} version={p.version} icon={p.icon} />
-                            {i !== platformInfo.length - 1 && <FormDivider />}
-                        </>
-                    ))}
-                </Summary>
-            </FormSection>
-        </RN.ScrollView>
+        <ErrorBoundary>
+            <RN.ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 38 }}>
+                <FormSection title="Links" titleStyleType="no_border">
+                    <FormRow
+                        label="Discord Server"
+                        leading={<FormRow.Icon source={getAssetIDByName("Discord")} />}
+                        trailing={FormRow.Arrow}
+                        onPress={() => invites.acceptInviteAndTransitionToInviteChannel({ inviteKey: DISCORD_SERVER })}
+                    />
+                    <FormDivider />
+                    <FormRow
+                        label="GitHub"
+                        leading={<FormRow.Icon source={getAssetIDByName("img_account_sync_github_white")} />}
+                        trailing={FormRow.Arrow}
+                        onPress={() => url.openURL(GITHUB)}
+                    />
+                </FormSection>
+                <FormSection title="Actions">
+                    <FormRow
+                        label="Reload Discord"
+                        leading={<FormRow.Icon source={getAssetIDByName("ic_message_retry")} />}
+                        onPress={() => RN.NativeModules.BundleUpdaterManager.reload()}
+                    />
+                    <FormDivider />
+                    <FormSwitchRow
+                        label="Developer Settings"
+                        leading={<FormRow.Icon source={getAssetIDByName("ic_progress_wrench_24px")} />}
+                        value={settings.developerSettings}
+                        onValueChange={(v: boolean) => {
+                            settings.developerSettings = v;
+                        }}
+                    />
+                </FormSection>
+                <FormSection title="Info">
+                    <Summary label="Versions" icon="ic_information_filled_24px">
+                        {versions.map((v, i) => (
+                            <>
+                                <Version label={v.label} version={v.version} icon={v.icon} />
+                                {i !== versions.length - 1 && <FormDivider />}
+                            </>
+                        ))}
+                    </Summary>
+                    <FormDivider />
+                    <Summary label="Platform" icon="ic_mobile_device">
+                        {platformInfo.map((p, i) => (
+                            <>
+                                <Version label={p.label} version={p.version} icon={p.icon} />
+                                {i !== platformInfo.length - 1 && <FormDivider />}
+                            </>
+                        ))}
+                    </Summary>
+                </FormSection>
+            </RN.ScrollView>
+        </ErrorBoundary>
     )
 }

@@ -7,12 +7,15 @@ import _moment from "moment";
 type MetroModules = { [id: number]: any };
 
 // Component types
-// TODO: Make these not be here?
 interface SummaryProps {
     label: string;
     icon?: string;
     noPadding?: boolean;
     children: JSX.Element | JSX.Element[];
+}
+
+interface ErrorBoundaryProps {
+    children: JSX.Element | JSX.Element[],
 }
 
 // Helper types for API functions
@@ -331,6 +334,7 @@ interface VendettaObject {
             Search: _React.ComponentType;
             // Vendetta
             Summary: (props: SummaryProps) => JSX.Element;
+            ErrorBoundary: (props: ErrorBoundaryProps) => JSX.Element;
         }
         toasts: {
             showToast: (content: string, asset: number) => void;
