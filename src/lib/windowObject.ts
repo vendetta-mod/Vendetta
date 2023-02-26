@@ -11,6 +11,7 @@ import * as metro from "@metro/filters";
 import * as common from "@metro/common";
 import * as components from "@ui/components";
 import * as toasts from "@ui/toasts";
+import * as alerts from "@ui/alerts";
 import * as assets from "@ui/assets";
 import * as color from "@ui/color";
 import * as utils from "@utils";
@@ -30,6 +31,7 @@ export default async (unloads: any[]): Promise<VendettaObject> => ({
     ui: {
         components,
         toasts,
+        alerts,
         assets,
         ...color,
     },

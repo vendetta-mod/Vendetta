@@ -46,6 +46,27 @@ interface Asset {
     id: number;
 }
 
+declare enum ButtonColors {
+    BRAND = "brand",
+    RED = "red",
+    GREEN = "green",
+    PRIMARY = "primary",
+    TRANSPARENT = "transparent",
+    GREY = "grey",
+    LIGHTGREY = "lightgrey",
+    WHITE = "white",
+    LINK = "link"
+}
+
+interface ConfirmationAlertOptions {
+    title: string | undefined;
+    content: string | JSX.Element | JSX.Element[];
+    confirmText: string | undefined;
+    confirmColor: ButtonColors | undefined;
+    onConfirm: () => void;
+    cancelText: string | undefined;
+}
+
 interface PluginAuthor {
     name: string;
     id: string;
@@ -230,13 +251,13 @@ type Indexable<Type> = { [index: string]: Type }
 type EmitterEvent = "SET" | "GET" | "DEL";
 
 interface EmitterListenerData {
-	path: string[];
-	value?: any;
+    path: string[];
+    value?: any;
 }
 
 type EmitterListener = (
-	event: EmitterEvent,
-	data: EmitterListenerData | any
+    event: EmitterEvent,
+    data: EmitterListenerData | any
 ) => any;
 
 type EmitterListeners = Indexable<Set<EmitterListener>>;
@@ -338,6 +359,9 @@ interface VendettaObject {
         }
         toasts: {
             showToast: (content: string, asset: number) => void;
+        };
+        alerts: {
+            showConfirmationAlert: (options: ConfirmationAlertOptions) => void;
         };
         assets: {
             all: Indexable<Asset>;
