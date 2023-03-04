@@ -11,6 +11,7 @@ interface SummaryProps {
     label: string;
     icon?: string;
     noPadding?: boolean;
+    noAnimation?: boolean;
     children: JSX.Element | JSX.Element[];
 }
 
