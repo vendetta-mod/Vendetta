@@ -1,4 +1,4 @@
-import { ReactNative as RN, url, invites } from "@metro/common";
+import { ReactNative as RN, url } from "@metro/common";
 import { getAssetIDByName } from "@ui/assets";
 import { Forms, Summary } from "@ui/components";
 import { DISCORD_SERVER, GITHUB } from "@lib/constants";
@@ -88,7 +88,7 @@ export default function General() {
                         label="Discord Server"
                         leading={<FormRow.Icon source={getAssetIDByName("Discord")} />}
                         trailing={FormRow.Arrow}
-                        onPress={() => invites.acceptInviteAndTransitionToInviteChannel({ inviteKey: DISCORD_SERVER })}
+                        onPress={() => url.openDeeplink(DISCORD_SERVER)}
                     />
                     <FormDivider />
                     <FormRow

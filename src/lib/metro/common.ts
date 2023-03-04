@@ -4,7 +4,7 @@ import { find, findByProps } from "@metro/filters";
 export { constants } from "@metro/hoist";
 export const channels = findByProps("getVoiceChannelId");
 export const i18n = findByProps("Messages");
-export const url = findByProps("openURL");
+export const url = findByProps("openDeeplink");
 export const toasts = find(m => m.open && m.close && !m.startDrag && !m.init && !m.openReplay && !m.setAlwaysOnTop);
 export const stylesheet = findByProps("createThemedStyleSheet");
 export const clipboard = findByProps("setString", "getString", "hasString") as typeof import("@react-native-clipboard/clipboard").default;
