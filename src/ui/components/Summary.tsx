@@ -3,10 +3,9 @@ import { Forms } from "@ui/components";
 import { getAssetIDByName } from "@ui/assets";
 import { ReactNative as RN } from "@metro/common";
 
-// TODO: Animated would be awesome
 // TODO: Destructuring Forms doesn't work here. Why?
 
-export default function Summary({ label, icon, noPadding = false, children }: SummaryProps) {
+export default function Summary({ label, icon, noPadding = false, noAnimation = false, children }: SummaryProps) {
     const [hidden, setHidden] = React.useState(true);
 
     return (
@@ -14,8 +13,11 @@ export default function Summary({ label, icon, noPadding = false, children }: Su
             <Forms.FormRow
                 label={label}
                 leading={icon && <Forms.FormRow.Icon source={getAssetIDByName(icon)} />}
-                trailing={<Forms.FormRow.Arrow style={{ transform: [{ rotate: `${hidden ? 180 : 90}deg` }] }} source={getAssetIDByName("down_arrow")} />}
-                onPress={() => setHidden(!hidden)}
+                trailing={<Forms.FormRow.Arrow style={{ transform: [{ rotate: `${hidden ? 180 : 90}deg` }] }} />}
+                onPress={() => {
+                    setHidden(!hidden);
+                    if (!noAnimation) RN.LayoutAnimation.configureNext(RN.LayoutAnimation.Presets.easeInEaseOut);
+                }}
             />
             {!hidden && <>
                 <Forms.FormDivider />
