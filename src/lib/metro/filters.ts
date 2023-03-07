@@ -1,5 +1,4 @@
 import { MetroModules, PropsFinder, PropsFinderAll } from "@types";
-import { moment } from "@metro/hoist";
 
 // Metro require
 declare const __r: (moduleId: number) => any;
@@ -29,17 +28,12 @@ for (const key in window.modules) {
 const filterModules = (modules: MetroModules, single = false) => (filter: (m: any) => boolean) => {
     const found = [];
 
-    // Get the previous moment locale
-    const previousLocale = moment?.locale();
-
     for (const key in modules) {
         const id = Number(key);
         const module = modules[id]?.publicModule?.exports;
 
         if (!modules[id].isInitialized) try {
             __r(id);
-            // Set moment locale, sort of crappy fix but works I guess
-            if (previousLocale && previousLocale !== moment.locale()) moment.locale(previousLocale);
         } catch {};
 
         if (!module) {

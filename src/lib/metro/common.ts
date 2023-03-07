@@ -24,4 +24,4 @@ export const React = window.React as typeof import("react");
 export { ReactNative } from "@metro/hoist";
 
 // Moment
-export { moment } from "@metro/hoist";
+export const moment = findByProps("isMoment") as typeof import("moment");

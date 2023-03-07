@@ -12,6 +12,3 @@ export const ReactNative = basicFind("AppRegistry") as typeof import("react-nati
 
 // Export Discord's constants
 export const constants = basicFind("AbortCodes");
-
-// Export moment
-export const moment = basicFind("isMoment") as typeof import("moment");

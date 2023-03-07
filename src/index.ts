@@ -3,9 +3,9 @@ import { patchCommands } from "@lib/commands";
 import { initPlugins } from "@lib/plugins";
 import { patchAssets } from "@ui/assets";
 import initSettings from "@ui/settings";
-import fixTheme from "@ui/fixTheme";
-import windowObject from "@lib/windowObject";
+import initFixes from "@lib/fixes";
 import logger from "@lib/logger";
+import windowObject from "@lib/windowObject";
 
 // This logs in the native logging implementation, e.g. logcat
 console.log("Hello from Vendetta!");
@@ -17,7 +17,7 @@ console.log("Hello from Vendetta!");
             patchLogHook(),
             patchAssets(),
             patchCommands(),
-            fixTheme(),
+            initFixes(),
             initSettings(),
         ]);
 
