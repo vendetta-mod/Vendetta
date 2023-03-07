@@ -1,5 +1,4 @@
 import { build } from "esbuild";
-import { replace } from "esbuild-plugin-replace";
 import alias from "esbuild-plugin-alias";
 import swc from "@swc/core";
 import { promisify } from "util";
@@ -43,10 +42,10 @@ try {
                 },
             },
             alias(aliases),
-            replace({
-                "__vendettaVersion": commit,
-            }),
         ],
+        define: {
+            __vendettaVersion: `"${commit}"`,
+        },
         legalComments: "none",
     });
 
