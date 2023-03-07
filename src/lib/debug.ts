@@ -43,7 +43,8 @@ export function patchLogHook() {
     }
 }
 
-export const versionHash = "__vendettaVersion";
+// @ts-expect-error
+export const versionHash: string = __vendettaVersion;
 
 export function getDebugInfo() {
     // Discord
