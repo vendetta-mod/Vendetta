@@ -35,7 +35,8 @@ interface Logger {
     verbose: LoggerFunction;
 }
 
-type SearchFilter = (tree: any) => boolean;
+type SearchTree = Record<string, any>;
+type SearchFilter = (tree: SearchTree) => boolean;
 interface FindInTreeOptions {
     walkable?: string[];
     ignore?: string[];
@@ -349,8 +350,8 @@ interface VendettaObject {
     };
     utils: {
         copyText: (content: string) => void;
-        findInReactTree: (tree: { [key: string]: any }, filter: SearchFilter) => any;
-        findInTree: (tree: { [key: string]: any }, filter: SearchFilter, options: FindInTreeOptions) => any;
+        findInReactTree: (tree: SearchTree, filter: SearchFilter) => any;
+        findInTree: (tree: SearchTree, filter: SearchFilter, options: FindInTreeOptions) => any;
         safeFetch: (input: RequestInfo, options: RequestInit) => Promise<Response>;
         unfreeze: (obj: object) => object;
     };
