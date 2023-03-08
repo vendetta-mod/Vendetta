@@ -27,7 +27,7 @@ function onDispatch({ locale }: { locale: string }) {
     }
 
     // We're done here!
-    FluxDispatcher.unsubscribe("I18N_LOAD_START", onDispatch);
+    FluxDispatcher.unsubscribe("I18N_LOAD_SUCCESS", onDispatch);
 }
 
-export default () => FluxDispatcher.subscribe("I18N_LOAD_START", onDispatch);
+export default () => FluxDispatcher.subscribe("I18N_LOAD_SUCCESS", onDispatch);
