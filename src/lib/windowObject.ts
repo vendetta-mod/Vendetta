@@ -5,6 +5,7 @@ import settings, { loaderConfig } from "@lib/settings";
 import * as constants from "@lib/constants";
 import * as debug from "@lib/debug";
 import * as plugins from "@lib/plugins";
+import * as themes from "@lib/themes";
 import * as commands from "@lib/commands";
 import * as storage from "@lib/storage";
 import * as metro from "@metro/filters";
@@ -36,6 +37,7 @@ export default async (unloads: any[]): Promise<VendettaObject> => ({
         ...color,
     },
     plugins: without(plugins, "initPlugins"),
+    themes: without(themes, "initThemes"),
     commands: without(commands, "patchCommands"),
     storage,
     settings,
