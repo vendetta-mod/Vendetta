@@ -105,18 +105,19 @@ interface Plugin {
     js: string;
 }
 
-interface ThemeData {
+interface ThemeData<T extends string | number = string> {
     name: string;
     description?: string;
-    theme_color_map: Indexable<string[]>;
-    colors?: Indexable<string>;
-    colours?: Indexable<string>;
+    theme_color_map: Indexable<T[]>;
+    colors?: Indexable<T>;
+    colours?: Indexable<T>;
 }
 
 interface Theme {
     id: string;
     selected: boolean;
     data: ThemeData;
+    processedData: ThemeData<number>;
 }
 
 interface Settings {

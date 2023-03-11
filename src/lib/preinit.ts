@@ -10,7 +10,7 @@ const basicFind = (prop: string) => Object.values(window.modules).find(m => m?.p
 window.React = basicFind("createElement") as typeof import("react");
 
 // Export ReactNative
-export const ReactNative = basicFind("AppRegistry") as typeof import("react-native");
+export const ReactNative = window.ReactNative = basicFind("AppRegistry") as typeof import("react-native");
 
 // Export Discord's constants
 export const constants = basicFind("AbortCodes");
@@ -21,6 +21,6 @@ export const color = basicFind("SemanticColor");
 // Themes
 try {
     initThemes(color);
-} catch(e) {
+} catch (e) {
     console.error("Vendetta themes failed to initialize!", e);
 }
