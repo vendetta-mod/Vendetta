@@ -4,11 +4,12 @@ import { after } from "@lib/patcher";
 import findInReactTree from "@utils/findInReactTree";
 import ErrorBoundary from "@ui/components/ErrorBoundary";
 import SettingsSection from "@ui/settings/components/SettingsSection";
-import InstallPluginButton from "@ui/settings/components/InstallPluginButton";
+import { InstallPluginButton, InstallThemeButton } from "@/ui/settings/components/InstallButton";
 import General from "@ui/settings/pages/General";
 import Plugins from "@ui/settings/pages/Plugins";
 import Developer from "@ui/settings/pages/Developer";
 import AssetBrowser from "@ui/settings/pages/AssetBrowser";
+import Themes from "./pages/Themes";
 
 const screensModule = findByDisplayName("getScreens", false);
 const settingsModule = findByDisplayName("UserSettingsOverviewWrapper", false);
@@ -27,6 +28,11 @@ export default function initSettings() {
                 title: "Plugins",
                 render: Plugins,
                 headerRight: InstallPluginButton,
+            },
+            VendettaThemes: {
+                title: "Themes",
+                render: Themes,
+                headerRight: InstallThemeButton,
             },
             VendettaDeveloper: {
                 title: "Developer",

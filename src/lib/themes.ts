@@ -6,17 +6,17 @@ import { safeFetch } from "@utils";
 const DCDFileManager = window.nativeModuleProxy.DCDFileManager as DCDFileManager;
 export const themes = wrapSync(createStorage<Indexable<Theme>>(createMMKVBackend("VENDETTA_THEMES")));
 
-async function writeTheme(data: ThemeData, processedData: ThemeData<number>) {
+async function writeTheme(data: ThemeData | {}, processedData: ThemeData<number> | {}) {
     if (typeof data !== "object" || typeof processedData !== "object") {
         throw new Error("Theme data must be an object of type ThemeData");
     }
 
     // Save the current theme data as vendetta_theme.json. When supported by loader,
     // this json will be written to window.__vendetta_theme.
-    createFileBackend("vendetta_theme.json").set(data);
+    await createFileBackend("vendetta_theme.json").set(data);
 
     // Processed theme for native side
-    createFileBackend("vendetta_processed_theme.json").set(processedData);
+    await createFileBackend("vendetta_processed_theme.json").set(processedData);
 }
 
 // Process data for native side, and some compatiblity
@@ -64,12 +64,21 @@ export async function fetchTheme(id: string) {
 }
 
 export async function selectTheme(id: string) {
+    if (id === "default") {
+        await writeTheme({}, {});
+        return;
+    }
+
     await awaitSyncWrapper(themes);
     const selectedThemeId = Object.values(themes).find(i => i.selected)?.id;
 
     if (selectedThemeId) themes[selectedThemeId].selected = false;
     themes[id].selected = true;
     await writeTheme(themes[id].data, themes[id].processedData);
+}
+
+export function getCurrentThemeData(): ThemeData | null {
+    return window[window.__vendetta_loader?.features?.themes?.prop ?? undefined!] || null
 }
 
 export async function initThemes(color: any) {
@@ -80,7 +89,7 @@ export async function initThemes(color: any) {
     // const selectedThemeId = Object.values(themes).find(i => i.selected)?.id;
     // const selectedTheme = selectedThemeId ? themes[selectedThemeId] : undefined;
 
-    const selectedTheme = window.__vendetta_theme as ThemeData | undefined;
+    const selectedTheme = getCurrentThemeData();
     if (!selectedTheme) return;
 
     const keys = Object.keys(color.default.colors);

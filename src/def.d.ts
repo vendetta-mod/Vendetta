@@ -317,6 +317,9 @@ interface LoaderIdentity {
         devtools?: {
             prop: string;
             version: string;
+        },
+        themes?: {
+            prop: string;
         }
     }
 }
