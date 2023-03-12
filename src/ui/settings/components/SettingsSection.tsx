@@ -26,6 +26,17 @@ export default function SettingsSection() {
                     trailing={FormRow.Arrow}
                     onPress={() => navigation.push("VendettaPlugins")}
                 />
+                {window.__vendetta_loader?.features.themes && (
+                    <>
+                        <FormDivider />
+                        <FormRow
+                            label="Themes"
+                            leading={<FormRow.Icon source={getAssetIDByName("ic_theme_24px")} />}
+                            trailing={FormRow.Arrow}
+                            onPress={() => navigation.push("VendettaThemes")}
+                        />
+                    </>
+                )}
                 {settings.developerSettings && (
                     <>
                         <FormDivider />

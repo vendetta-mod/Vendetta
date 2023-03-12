@@ -105,12 +105,12 @@ interface Plugin {
     js: string;
 }
 
-interface ThemeData {
+interface ThemeData<T = string> {
     name: string;
     description?: string;
-    theme_color_map: Indexable<string[]>;
-    colors?: Indexable<string>;
-    colours?: Indexable<string>;
+    theme_color_map: Indexable<T[]>;
+    colors?: Indexable<T>;
+    colours?: Indexable<T>;
 }
 
 interface Theme {
@@ -316,6 +316,9 @@ interface LoaderIdentity {
         devtools?: {
             prop: string;
             version: string;
+        },
+        themes?: {
+            prop: string;
         }
     }
 }
