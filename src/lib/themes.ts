@@ -1,7 +1,8 @@
-import { Indexable, Theme, ThemeData, DCDFileManager } from "@types";
-import { createMMKVBackend, createStorage, wrapSync, awaitSyncWrapper, createFileBackend } from "@lib/storage";
 import { after } from "@lib/patcher";
+import { awaitSyncWrapper, createFileBackend, createMMKVBackend, createStorage, wrapSync } from "@lib/storage";
+import { DCDFileManager, Indexable, Theme, ThemeData } from "@types";
 import { safeFetch } from "@utils";
+import { ReactNative } from "@lib/preinit";
 
 const DCDFileManager = window.nativeModuleProxy.DCDFileManager as DCDFileManager;
 export const themes = wrapSync(createStorage<Indexable<Theme>>(createMMKVBackend("VENDETTA_THEMES")));
@@ -17,7 +18,7 @@ async function writeTheme(data: ThemeData | {}) {
 }
 
 function convertToRGBAString(hexString: string): string {
-    const color = window.ReactNative.processColor(hexString);
+    const color = Number(ReactNative.processColor(hexString));
 
     const alpha = (color >> 24 & 0xff).toString(16).padStart(2, '0');
     const red = (color >> 16 & 0xff).toString(16).padStart(2, '0');

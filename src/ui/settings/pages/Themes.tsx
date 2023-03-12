@@ -1,8 +1,8 @@
-import { ReactNative as RN } from "@metro/common";
-import { useProxy } from "@lib/storage";
-import ErrorBoundary from "@ui/components/ErrorBoundary";
 import { themes } from "@/lib/themes";
-import ThemeCard from "../components/ThemeCard";
+import { useProxy } from "@lib/storage";
+import { ReactNative as RN } from "@metro/common";
+import ErrorBoundary from "@ui/components/ErrorBoundary";
+import ThemeCard from "@ui/settings/components/ThemeCard";
 
 export default function Themes() {
     useProxy(themes);

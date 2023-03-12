@@ -1,3 +1,5 @@
+// Temporary: This is directly taken from PluginCard
+
 import { getCurrentThemeData, selectTheme } from "@/lib/themes";
 import { ReactNative as RN, stylesheet } from "@metro/common";
 import { Theme } from "@types";
@@ -5,7 +7,6 @@ import { semanticColors } from "@ui/color";
 import { Forms, General } from "@ui/components";
 
 const { FormRow, FormSwitch } = Forms;
-const { TouchableOpacity, Image } = General;
 
 // TODO: These styles work weirdly. iOS has cramped text, Android with low DPI probably does too. Fix?
 const styles = stylesheet.createThemedStyleSheet({

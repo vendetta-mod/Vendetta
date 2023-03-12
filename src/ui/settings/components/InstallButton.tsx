@@ -5,7 +5,7 @@ import { showInputAlert } from "@ui/alerts";
 import { getAssetIDByName } from "@ui/assets";
 import { semanticColors } from "@ui/color";
 import { General } from "@ui/components";
-import { fetchTheme } from "@/lib/themes";
+import { fetchTheme } from "@lib/themes";
 
 const { TouchableOpacity, Image } = General;
 

@@ -4,7 +4,7 @@ import { after } from "@lib/patcher";
 import findInReactTree from "@utils/findInReactTree";
 import ErrorBoundary from "@ui/components/ErrorBoundary";
 import SettingsSection from "@ui/settings/components/SettingsSection";
-import { InstallPluginButton, InstallThemeButton } from "@/ui/settings/components/InstallButton";
+import { InstallPluginButton, InstallThemeButton } from "@ui/settings/components/InstallButton";
 import General from "@ui/settings/pages/General";
 import Plugins from "@ui/settings/pages/Plugins";
 import Developer from "@ui/settings/pages/Developer";
