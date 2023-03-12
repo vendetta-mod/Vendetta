@@ -105,7 +105,7 @@ interface Plugin {
     js: string;
 }
 
-interface ThemeData<T extends string | number = string> {
+interface ThemeData<T = string> {
     name: string;
     description?: string;
     theme_color_map: Indexable<T[]>;
@@ -117,7 +117,6 @@ interface Theme {
     id: string;
     selected: boolean;
     data: ThemeData;
-    processedData: ThemeData<number>;
 }
 
 interface Settings {

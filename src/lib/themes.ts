@@ -6,48 +6,54 @@ import { safeFetch } from "@utils";
 const DCDFileManager = window.nativeModuleProxy.DCDFileManager as DCDFileManager;
 export const themes = wrapSync(createStorage<Indexable<Theme>>(createMMKVBackend("VENDETTA_THEMES")));
 
-async function writeTheme(data: ThemeData | {}, processedData: ThemeData<number> | {}) {
-    if (typeof data !== "object" || typeof processedData !== "object") {
-        throw new Error("Theme data must be an object of type ThemeData");
+async function writeTheme(data: ThemeData | {}) {
+    if (typeof data !== "object") {
+        throw new Error("Theme data must be an object");
     }
 
     // Save the current theme data as vendetta_theme.json. When supported by loader,
-    // this json will be written to window.__vendetta_theme.
+    // this json will be written to window.__vendetta_theme and be used to theme the native side.
     await createFileBackend("vendetta_theme.json").set(data);
-
-    // Processed theme for native side
-    await createFileBackend("vendetta_processed_theme.json").set(processedData);
 }
 
-// Process data for native side, and some compatiblity
-function processData(data: ThemeData): ThemeData<number> {
+function convertToRGBAString(hexString: string): string {
+    const color = window.ReactNative.processColor(hexString);
+
+    const alpha = (color >> 24 & 0xff).toString(16).padStart(2, '0');
+    const red = (color >> 16 & 0xff).toString(16).padStart(2, '0');
+    const green = (color >> 8 & 0xff).toString(16).padStart(2, '0');
+    const blue = (color & 0xff).toString(16).padStart(2, '0');
+
+    return `#${red}${green}${blue}${alpha !== "ff" ? alpha : ""}`;
+}
+
+// Process data for some compatiblity with native side
+function processData(data: ThemeData) {
     // entmy compat real ??
     data.colors ||= data.colours;
     data.theme_color_map.CHAT_BACKGROUND ||= data.theme_color_map.BACKGROUND_PRIMARY;
-
-    data = JSON.parse(JSON.stringify(data));
 
     if (data.theme_color_map) {
         const themeColorMap = data.theme_color_map;
 
         for (const key in themeColorMap) {
             for (const index in themeColorMap[key]) {
-                themeColorMap[key][index] = window.ReactNative.processColor(themeColorMap[key][index]);
+                themeColorMap[key][index] = convertToRGBAString(themeColorMap[key][index]);
             }
         }
     }
 
     if (data.colors) {
         for (const key in data.colors) {
-            data.colors[key] = window.ReactNative.processColor(data.colors[key]);
+            data.colors[key] = convertToRGBAString(data.colors[key]);
         }
     }
 
-    return data as unknown as ThemeData<number>;
+    return data;
 }
 
 export async function fetchTheme(id: string) {
-    let themeJSON: ThemeData;
+    let themeJSON: any;
 
     try {
         themeJSON = await (await safeFetch(id, { cache: "no-store" })).json();
@@ -58,14 +64,13 @@ export async function fetchTheme(id: string) {
     themes[id] = {
         id: id,
         selected: false,
-        data: themeJSON,
-        processedData: processData(themeJSON)
+        data: processData(themeJSON)
     };
 }
 
 export async function selectTheme(id: string) {
     if (id === "default") {
-        await writeTheme({}, {});
+        await writeTheme({});
         return;
     }
 
@@ -74,11 +79,13 @@ export async function selectTheme(id: string) {
 
     if (selectedThemeId) themes[selectedThemeId].selected = false;
     themes[id].selected = true;
-    await writeTheme(themes[id].data, themes[id].processedData);
+    await writeTheme(themes[id].data);
 }
 
 export function getCurrentThemeData(): ThemeData | null {
-    return window[window.__vendetta_loader?.features?.themes?.prop ?? undefined!] || null
+    const themeProp = window.__vendetta_loader?.features?.themes?.prop;
+    if (!themeProp) return null;
+    return window[themeProp] || null;
 }
 
 export async function initThemes(color: any) {
