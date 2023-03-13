@@ -12,6 +12,7 @@ async function writeTheme(data: ThemeData | {}) {
 
     // Save the current theme data as vendetta_theme.json. When supported by loader,
     // this json will be written to window.__vendetta_theme and be used to theme the native side.
+    // TODO: Write once, debug everywhere
     await createFileBackend("vendetta_theme.json").set(data);
 }
 
@@ -67,6 +68,11 @@ export async function fetchTheme(id: string) {
     };
 }
 
+export async function installTheme(id: string) {
+    if (typeof id !== "string" || id in themes) throw new Error("Theme already installed");
+    await fetchTheme(id);
+}
+
 export async function selectTheme(id: string) {
     if (id === "default") {
         await writeTheme({});
@@ -86,6 +92,8 @@ export function getCurrentThemeData(): ThemeData | null {
     if (!themeProp) return null;
     return window[themeProp] || null;
 }
+
+// TODO: Theme updating
 
 export async function initThemes(color: any) {
     //! Native code is required here!
