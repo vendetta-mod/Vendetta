@@ -8,9 +8,7 @@ const DCDFileManager = window.nativeModuleProxy.DCDFileManager as DCDFileManager
 export const themes = wrapSync(createStorage<Indexable<Theme>>(createMMKVBackend("VENDETTA_THEMES")));
 
 async function writeTheme(data: ThemeData | {}) {
-    if (typeof data !== "object") {
-        throw new Error("Theme data must be an object");
-    }
+    if (typeof data !== "object") throw new Error("Theme data must be an object");
 
     // Save the current theme data as vendetta_theme.json. When supported by loader,
     // this json will be written to window.__vendetta_theme and be used to theme the native side.
@@ -20,10 +18,10 @@ async function writeTheme(data: ThemeData | {}) {
 function convertToRGBAString(hexString: string): string {
     const color = Number(ReactNative.processColor(hexString));
 
-    const alpha = (color >> 24 & 0xff).toString(16).padStart(2, '0');
-    const red = (color >> 16 & 0xff).toString(16).padStart(2, '0');
-    const green = (color >> 8 & 0xff).toString(16).padStart(2, '0');
-    const blue = (color & 0xff).toString(16).padStart(2, '0');
+    const alpha = (color >> 24 & 0xff).toString(16).padStart(2, "0");
+    const red = (color >> 16 & 0xff).toString(16).padStart(2, "0");
+    const green = (color >> 8 & 0xff).toString(16).padStart(2, "0");
+    const blue = (color & 0xff).toString(16).padStart(2, "0");
 
     return `#${red}${green}${blue}${alpha !== "ff" ? alpha : ""}`;
 }

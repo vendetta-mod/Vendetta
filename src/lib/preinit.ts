@@ -22,5 +22,5 @@ export const color = basicFind("SemanticColor");
 try {
     initThemes(color);
 } catch (e) {
-    console.error("Vendetta themes failed to initialize!", e);
+    console.error("[Vendetta] Failed to initialize themes...", e);
 }
