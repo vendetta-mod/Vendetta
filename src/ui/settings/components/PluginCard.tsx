@@ -1,11 +1,10 @@
 import { ButtonColors, Plugin } from "@types";
-import { NavigationNative } from "@metro/common";
+import { NavigationNative, clipboard } from "@metro/common";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
 import { showConfirmationAlert } from "@ui/alerts";
 import { removePlugin, startPlugin, stopPlugin, getSettings } from "@lib/plugins";
-import copyText from "@utils/copyText";
-import Card from "./Card";
+import Card from "@ui/settings/components/Card";
 
 interface PluginCardProps {
     plugin: Plugin;
@@ -58,7 +57,7 @@ export default function PluginCard({ plugin, index }: PluginCardProps) {
                 {
                     icon: "copy",
                     onPress: () => {
-                        copyText(plugin.id);
+                        clipboard.setString(plugin.id);
                         showToast("Copied plugin URL to clipboard.", getAssetIDByName("toast_copy_link"));
                     },
                 },

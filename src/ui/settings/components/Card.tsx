@@ -1,7 +1,7 @@
 import { ReactNative as RN, stylesheet } from "@metro/common";
 import { Forms } from "@ui/components";
 import { getAssetIDByName } from "@ui/assets";
-import { semanticColors, rawColors } from "@ui/color";
+import { semanticColors } from "@ui/color";
 
 const { FormRow, FormSwitch, FormRadio } = Forms;
 

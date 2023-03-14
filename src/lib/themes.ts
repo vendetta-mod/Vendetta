@@ -1,8 +1,10 @@
 import { after } from "@lib/patcher";
-import { awaitSyncWrapper, createFileBackend, createMMKVBackend, createStorage, wrapSync } from "@lib/storage";
+import { createFileBackend, createMMKVBackend, createStorage, wrapSync } from "@lib/storage";
 import { DCDFileManager, Indexable, Theme, ThemeData } from "@types";
 import { safeFetch } from "@utils";
 import { ReactNative } from "@lib/preinit";
+
+// TODO: New theme format
 
 const DCDFileManager = window.nativeModuleProxy.DCDFileManager as DCDFileManager;
 export const themes = wrapSync(createStorage<Indexable<Theme>>(createMMKVBackend("VENDETTA_THEMES")));
@@ -12,7 +14,6 @@ async function writeTheme(data: ThemeData | {}) {
 
     // Save the current theme data as vendetta_theme.json. When supported by loader,
     // this json will be written to window.__vendetta_theme and be used to theme the native side.
-    // TODO: Write once, debug everywhere
     await createFileBackend("vendetta_theme.json").set(data);
 }
 
@@ -74,17 +75,20 @@ export async function installTheme(id: string) {
 }
 
 export async function selectTheme(id: string) {
-    if (id === "default") {
-        await writeTheme({});
-        return;
-    }
-
-    await awaitSyncWrapper(themes);
+    if (id === "default") return await writeTheme({});
     const selectedThemeId = Object.values(themes).find(i => i.selected)?.id;
 
     if (selectedThemeId) themes[selectedThemeId].selected = false;
     themes[id].selected = true;
     await writeTheme(themes[id].data);
+}
+
+export async function removeTheme(id: string) {
+    const theme = themes[id];
+    if (theme.selected) await selectTheme("default");
+    delete themes[id];
+    
+    return theme.selected;
 }
 
 export function getCurrentThemeData(): ThemeData | null {
@@ -100,8 +104,6 @@ export async function initThemes(color: any) {
     // Awaiting the sync wrapper is too slow, to the point where semanticColors are not correctly overwritten.
     // We need a workaround, and it will unfortunately have to be done on the native side.
     // await awaitSyncWrapper(themes);
-    // const selectedThemeId = Object.values(themes).find(i => i.selected)?.id;
-    // const selectedTheme = selectedThemeId ? themes[selectedThemeId] : undefined;
 
     const selectedTheme = getCurrentThemeData();
     if (!selectedTheme) return;

@@ -19,8 +19,10 @@ export const constants = basicFind("AbortCodes");
 export const color = basicFind("SemanticColor");
 
 // Themes
-try {
-    initThemes(color);
-} catch (e) {
-    console.error("[Vendetta] Failed to initialize themes...", e);
+if (window.__vendetta_loader?.features.themes) {
+    try {
+        initThemes(color);
+    } catch (e) {
+        console.error("[Vendetta] Failed to initialize themes...", e);
+    }
 }
