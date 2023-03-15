@@ -3,7 +3,7 @@ console.log("Hello from Vendetta!");
 
 (async () => {
     try {
-        await import("./src/index.ts");
+        await (await import("./src/index.ts")).default();
     } catch (ex) {
         const dialog = [
             "Failed to load Vendetta!\n",
