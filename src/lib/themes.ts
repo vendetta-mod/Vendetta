@@ -4,8 +4,6 @@ import { DCDFileManager, Indexable, Theme, ThemeData } from "@types";
 import { safeFetch } from "@utils";
 import { ReactNative } from "@lib/preinit";
 
-// TODO: New theme format
-
 const DCDFileManager = window.nativeModuleProxy.DCDFileManager as DCDFileManager;
 export const themes = wrapSync(createStorage<Indexable<Theme>>(createMMKVBackend("VENDETTA_THEMES")));
 
@@ -30,23 +28,21 @@ function convertToRGBAString(hexString: string): string {
 
 // Process data for some compatiblity with native side
 function processData(data: ThemeData) {
-    // entmy compat real ??
-    data.colors ||= data.colours;
-    data.theme_color_map.CHAT_BACKGROUND ||= data.theme_color_map.BACKGROUND_PRIMARY;
+    if (data.semanticColors) {
+        const semanticColors = data.semanticColors;
 
-    if (data.theme_color_map) {
-        const themeColorMap = data.theme_color_map;
-
-        for (const key in themeColorMap) {
-            for (const index in themeColorMap[key]) {
-                themeColorMap[key][index] = convertToRGBAString(themeColorMap[key][index]);
+        for (const key in semanticColors) {
+            for (const index in semanticColors[key]) {
+                semanticColors[key][index] = convertToRGBAString(semanticColors[key][index]);
             }
         }
     }
 
-    if (data.colors) {
-        for (const key in data.colors) {
-            data.colors[key] = convertToRGBAString(data.colors[key]);
+    if (data.rawColors) {
+        const rawColors = data.rawColors;
+
+        for (const key in rawColors) {
+            data.rawColors[key] = convertToRGBAString(rawColors[key]);
         }
     }
 
@@ -120,9 +116,7 @@ export async function initThemes(color: any) {
         get: (_, colorProp: string) => {
             if (!selectedTheme) return Reflect.get(oldRaw, colorProp);
 
-            // damn britlanders
-            const themeColors = (selectedTheme?.data?.colors ?? selectedTheme?.data?.colours)!;
-            return themeColors?.[colorProp] ?? Reflect.get(oldRaw, colorProp);
+            return selectedTheme.data?.rawColors?.[colorProp] ?? Reflect.get(oldRaw, colorProp);
         }
     });
 
@@ -133,7 +127,7 @@ export async function initThemes(color: any) {
         const colorProp = keys[refs.indexOf(colorSymbol)];
         const themeIndex = args[0] === "dark" ? 0 : 1;
 
-        return selectedTheme?.data?.theme_color_map?.[colorProp]?.[themeIndex] ?? ret;
+        return selectedTheme?.data?.semanticColors?.[colorProp]?.[themeIndex] ?? ret;
     });
 
     await updateThemes();

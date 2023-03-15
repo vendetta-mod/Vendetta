@@ -81,7 +81,7 @@ interface InputAlertProps {
 
 interface Author {
     name: string;
-    id: string;
+    id?: string;
 }
 
 // See https://github.com/vendetta-mod/polymanifest
@@ -105,12 +105,13 @@ interface Plugin {
     js: string;
 }
 
-interface ThemeData<T = string> {
+interface ThemeData {
     name: string;
     description?: string;
-    theme_color_map: Indexable<T[]>;
-    colors?: Indexable<T>;
-    colours?: Indexable<T>;
+    authors?: Author[];
+    spec: number;
+    semanticColors?: Indexable<string[]>;
+    rawColors?: Indexable<string>;
 }
 
 interface Theme {
