@@ -72,6 +72,7 @@ export const findByProps: PropsFinder = (...props) => find(propsFilter(props));
 export const findByPropsAll: PropsFinderAll = (...props) => findAll(propsFilter(props));
 export const findByName = (name: string, defaultExp = true) => find(nameFilter(name, defaultExp));
 export const findByNameAll = (name: string, defaultExp = true) => findAll(nameFilter(name, defaultExp));
-export const findByDisplayName = (displayName: string, defaultExp = true) => find(dNameFilter(displayName, defaultExp));
-export const findByDisplayNameAll = (displayName: string, defaultExp = true) => findAll(dNameFilter(displayName, defaultExp));
+// TODO: Make this use dNameFilter
+export const findByDisplayName = (displayName: string, defaultExp = true) => find(nameFilter(displayName, defaultExp));
+export const findByDisplayNameAll = (displayName: string, defaultExp = true) => findAll(nameFilter(displayName, defaultExp));
 export const findByStoreName = (name: string) => find(storeFilter(name));
