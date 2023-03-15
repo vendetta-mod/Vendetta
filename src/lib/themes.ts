@@ -1,5 +1,5 @@
 import { after } from "@lib/patcher";
-import { createFileBackend, createMMKVBackend, createStorage, wrapSync } from "@lib/storage";
+import { createFileBackend, createMMKVBackend, createStorage, wrapSync, awaitSyncWrapper } from "@lib/storage";
 import { DCDFileManager, Indexable, Theme, ThemeData } from "@types";
 import { safeFetch } from "@utils";
 import { ReactNative } from "@lib/preinit";
@@ -9,12 +9,12 @@ import { ReactNative } from "@lib/preinit";
 const DCDFileManager = window.nativeModuleProxy.DCDFileManager as DCDFileManager;
 export const themes = wrapSync(createStorage<Indexable<Theme>>(createMMKVBackend("VENDETTA_THEMES")));
 
-async function writeTheme(data: ThemeData | {}) {
-    if (typeof data !== "object") throw new Error("Theme data must be an object");
+async function writeTheme(theme: Theme | {}) {
+    if (typeof theme !== "object") throw new Error("Theme must be an object");
 
-    // Save the current theme data as vendetta_theme.json. When supported by loader,
+    // Save the current theme as vendetta_theme.json. When supported by loader,
     // this json will be written to window.__vendetta_theme and be used to theme the native side.
-    await createFileBackend("vendetta_theme.json").set(data);
+    await createFileBackend("vendetta_theme.json").set(theme);
 }
 
 function convertToRGBAString(hexString: string): string {
@@ -53,7 +53,7 @@ function processData(data: ThemeData) {
     return data;
 }
 
-export async function fetchTheme(id: string) {
+export async function fetchTheme(id: string, selected = false) {
     let themeJSON: any;
 
     try {
@@ -64,8 +64,8 @@ export async function fetchTheme(id: string) {
 
     themes[id] = {
         id: id,
-        selected: false,
-        data: processData(themeJSON)
+        selected: selected,
+        data: processData(themeJSON),
     };
 }
 
@@ -80,7 +80,7 @@ export async function selectTheme(id: string) {
 
     if (selectedThemeId) themes[selectedThemeId].selected = false;
     themes[id].selected = true;
-    await writeTheme(themes[id].data);
+    await writeTheme(themes[id]);
 }
 
 export async function removeTheme(id: string) {
@@ -91,13 +91,17 @@ export async function removeTheme(id: string) {
     return theme.selected;
 }
 
-export function getCurrentThemeData(): ThemeData | null {
+export function getCurrentTheme(): Theme | null {
     const themeProp = window.__vendetta_loader?.features?.themes?.prop;
     if (!themeProp) return null;
     return window[themeProp] || null;
 }
 
-// TODO: Theme updating
+export async function updateThemes() {
+    await awaitSyncWrapper(themes);
+    const currentTheme = getCurrentTheme();
+    await Promise.allSettled(Object.keys(themes).map(id => fetchTheme(id, currentTheme?.id === id)));
+}
 
 export async function initThemes(color: any) {
     //! Native code is required here!
@@ -105,7 +109,7 @@ export async function initThemes(color: any) {
     // We need a workaround, and it will unfortunately have to be done on the native side.
     // await awaitSyncWrapper(themes);
 
-    const selectedTheme = getCurrentThemeData();
+    const selectedTheme = getCurrentTheme();
     if (!selectedTheme) return;
 
     const keys = Object.keys(color.default.colors);
@@ -117,7 +121,7 @@ export async function initThemes(color: any) {
             if (!selectedTheme) return Reflect.get(oldRaw, colorProp);
 
             // damn britlanders
-            const themeColors = (selectedTheme.colors ?? selectedTheme.colours)!;
+            const themeColors = (selectedTheme?.data?.colors ?? selectedTheme?.data?.colours)!;
             return themeColors?.[colorProp] ?? Reflect.get(oldRaw, colorProp);
         }
     });
@@ -129,6 +133,8 @@ export async function initThemes(color: any) {
         const colorProp = keys[refs.indexOf(colorSymbol)];
         const themeIndex = args[0] === "dark" ? 0 : 1;
 
-        return selectedTheme.theme_color_map?.[colorProp]?.[themeIndex] ?? ret;
+        return selectedTheme?.data?.theme_color_map?.[colorProp]?.[themeIndex] ?? ret;
     });
+
+    await updateThemes();
 }

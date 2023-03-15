@@ -1,6 +1,6 @@
 import { ButtonColors, Theme } from "@types";
 import { clipboard } from "@metro/common";
-import { getCurrentThemeData, removeTheme, selectTheme } from "@lib/themes";
+import { removeTheme, selectTheme } from "@lib/themes";
 import { getAssetIDByName } from "@ui/assets";
 import { showConfirmationAlert } from "@ui/alerts";
 import { showToast } from "@ui/toasts";
@@ -17,8 +17,6 @@ async function selectAndReload(value: boolean, id: string) {
 }
 
 export default function ThemeCard({ theme, index }: ThemeCardProps) {
-    const currentTheme = getCurrentThemeData();
-    const [enabled, setEnabled] = React.useState(currentTheme?.name === theme.data.name);
     const [removed, setRemoved] = React.useState(false);
 
     // This is needed because of React™
@@ -30,9 +28,8 @@ export default function ThemeCard({ theme, index }: ThemeCardProps) {
             headerLabel={theme.data.name}
             descriptionLabel={theme.data.description}
             toggleType="radio"
-            toggleValue={enabled}
+            toggleValue={theme.selected}
             onToggleChange={(v: boolean) => {
-                setEnabled(v);
                 selectAndReload(v, theme.id)
             }}
             actions={[
