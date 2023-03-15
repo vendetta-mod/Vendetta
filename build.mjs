@@ -13,7 +13,7 @@ const commit = (await exec("git rev-parse HEAD")).stdout.trim().substring(0, 7) 
 
 try {
     await build({
-        entryPoints: ["./src/index.ts"],
+        entryPoints: ["./entry.js"],
         outfile: "./dist/vendetta.js",
         minify: true,
         bundle: true,
@@ -46,10 +46,12 @@ try {
         define: {
             __vendettaVersion: `"${commit}"`,
         },
+        footer: {
+            js: "//# sourceURL=Vendetta",
+        },
         legalComments: "none",
     });
 
-    await fs.appendFile("./dist/vendetta.js", "//# sourceURL=Vendetta");
     console.log("Build successful!");
 } catch (e) {
     console.error("Build failed...", e);
