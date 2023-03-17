@@ -1,8 +1,8 @@
+import { DCDFileManager, Indexable, Theme, ThemeData } from "@types";
+import { ReactNative } from "@metro/common";
 import { after } from "@lib/patcher";
 import { createFileBackend, createMMKVBackend, createStorage, wrapSync, awaitSyncWrapper } from "@lib/storage";
-import { DCDFileManager, Indexable, Theme, ThemeData } from "@types";
 import { safeFetch } from "@utils";
-import { ReactNative } from "@lib/preinit";
 
 const DCDFileManager = window.nativeModuleProxy.DCDFileManager as DCDFileManager;
 export const themes = wrapSync(createStorage<Indexable<Theme>>(createMMKVBackend("VENDETTA_THEMES")));
@@ -63,6 +63,9 @@ export async function fetchTheme(id: string, selected = false) {
         selected: selected,
         data: processData(themeJSON),
     };
+
+    // TODO: Should we prompt when the selected theme is updated?
+    if (selected) writeTheme(themes[id]);
 }
 
 export async function installTheme(id: string) {
@@ -125,7 +128,7 @@ export async function initThemes(color: any) {
 
         const colorSymbol = args[1] ?? ret;
         const colorProp = keys[refs.indexOf(colorSymbol)];
-        const themeIndex = args[0] === "dark" ? 0 : 1;
+        const themeIndex = args[0] === "amoled" ? 2 : args[0] === "light" ? 1 : 0;
 
         return selectedTheme?.data?.semanticColors?.[colorProp]?.[themeIndex] ?? ret;
     });

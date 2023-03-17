@@ -1,5 +1,5 @@
 import { DCDFileManager, MMKVManager, StorageBackend } from "@types";
-import { ReactNative as RN } from "@lib/preinit";
+import { ReactNative as RN } from "@metro/common";
 
 const MMKVManager = window.nativeModuleProxy.MMKVManager as MMKVManager;
 const DCDFileManager = window.nativeModuleProxy.DCDFileManager as DCDFileManager;
