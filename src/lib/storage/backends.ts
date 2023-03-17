@@ -1,13 +1,8 @@
 import { DCDFileManager, MMKVManager, StorageBackend } from "@types";
-import { ReactNative as RN } from "@metro/hoist";
+import { ReactNative as RN } from "@metro/common";
 
-const MMKVManager = RN.NativeModules.MMKVManager as MMKVManager;
-const DCDFileManager = RN.NativeModules.DCDFileManager as DCDFileManager;
-
-const filePathFixer: (file: string) => string = RN.Platform.select({
-    default: (f) => f,
-    ios: (f) => `Documents/${f}`,
-});
+const MMKVManager = window.nativeModuleProxy.MMKVManager as MMKVManager;
+const DCDFileManager = window.nativeModuleProxy.DCDFileManager as DCDFileManager;
 
 export const createMMKVBackend = (store: string): StorageBackend => ({
     get: async () => JSON.parse((await MMKVManager.getItem(store)) ?? "{}"),
@@ -15,6 +10,12 @@ export const createMMKVBackend = (store: string): StorageBackend => ({
 });
 
 export const createFileBackend = (file: string): StorageBackend => {
+    // TODO: Creating this function in every file backend probably isn't ideal.
+    const filePathFixer: (file: string) => string = RN.Platform.select({
+        default: (f) => f,
+        ios: (f) => `Documents/${f}`,
+    });
+
     let created: boolean;
     return {
         get: async () => {

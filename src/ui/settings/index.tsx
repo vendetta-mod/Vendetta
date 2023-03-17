@@ -1,12 +1,15 @@
 import { NavigationNative, i18n } from "@metro/common";
 import { findByDisplayName } from "@metro/filters";
 import { after } from "@lib/patcher";
+import { installPlugin } from "@lib/plugins";
+import { installTheme } from "@lib/themes";
 import findInReactTree from "@utils/findInReactTree";
 import ErrorBoundary from "@ui/components/ErrorBoundary";
 import SettingsSection from "@ui/settings/components/SettingsSection";
-import InstallPluginButton from "@ui/settings/components/InstallPluginButton";
+import InstallButton from "@ui/settings/components/InstallButton";
 import General from "@ui/settings/pages/General";
 import Plugins from "@ui/settings/pages/Plugins";
+import Themes from "@ui/settings/pages/Themes";
 import Developer from "@ui/settings/pages/Developer";
 import AssetBrowser from "@ui/settings/pages/AssetBrowser";
 
@@ -26,7 +29,12 @@ export default function initSettings() {
             VendettaPlugins: {
                 title: "Plugins",
                 render: Plugins,
-                headerRight: InstallPluginButton,
+                headerRight: () => <InstallButton alertTitle="Install Plugin" installFunction={installPlugin} />,
+            },
+            VendettaThemes: {
+                title: "Themes",
+                render: Themes,
+                headerRight: () => <InstallButton alertTitle="Install Theme" installFunction={installTheme} />,
             },
             VendettaDeveloper: {
                 title: "Developer",

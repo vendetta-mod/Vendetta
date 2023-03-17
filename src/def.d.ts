@@ -79,16 +79,16 @@ interface InputAlertProps {
     initialValue: string | undefined;
 }
 
-interface PluginAuthor {
+interface Author {
     name: string;
-    id: string;
+    id?: string;
 }
 
 // See https://github.com/vendetta-mod/polymanifest
 interface PluginManifest {
     name: string;
     description: string;
-    authors: PluginAuthor[];
+    authors: Author[];
     main: string;
     hash: string;
     // Vendor-specific field, contains our own data
@@ -103,6 +103,21 @@ interface Plugin {
     enabled: boolean;
     update: boolean;
     js: string;
+}
+
+interface ThemeData {
+    name: string;
+    description?: string;
+    authors?: Author[];
+    spec: number;
+    semanticColors?: Indexable<string[]>;
+    rawColors?: Indexable<string>;
+}
+
+interface Theme {
+    id: string;
+    selected: boolean;
+    data: ThemeData;
 }
 
 interface Settings {
@@ -302,6 +317,9 @@ interface LoaderIdentity {
         devtools?: {
             prop: string;
             version: string;
+        },
+        themes?: {
+            prop: string;
         }
     }
 }
@@ -398,6 +416,11 @@ interface VendettaObject {
         stopPlugin: (id: string, disable: boolean) => void;
         removePlugin: (id: string) => void;
         getSettings: (id: string) => JSX.Element;
+    };
+    themes: {
+        themes: Indexable<Theme>;
+        fetchTheme: (id: string) => void;
+        selectTheme: (id: string) => void;
     };
     commands: {
         registerCommand: (command: ApplicationCommand) => () => void;

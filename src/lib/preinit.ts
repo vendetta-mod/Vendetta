@@ -1,6 +1,8 @@
 // Hoist required modules
 // This used to be in filters.ts, but things became convoluted
 
+import { initThemes } from "@lib/themes";
+
 // Early find logic
 const basicFind = (prop: string) => Object.values(window.modules).find(m => m?.publicModule.exports?.[prop])?.publicModule?.exports;
 
@@ -12,3 +14,15 @@ export const ReactNative = basicFind("AppRegistry") as typeof import("react-nati
 
 // Export Discord's constants
 export const constants = basicFind("AbortCodes");
+
+// Export Discord's color module
+export const color = basicFind("SemanticColor");
+
+// Themes
+if (window.__vendetta_loader?.features.themes) {
+    try {
+        initThemes(color);
+    } catch (e) {
+        console.error("[Vendetta] Failed to initialize themes...", e);
+    }
+}

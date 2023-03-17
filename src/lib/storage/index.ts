@@ -1,8 +1,7 @@
 import { Emitter, MMKVManager, StorageBackend } from "@types";
-import { ReactNative as RN } from "@metro/hoist";
 import createEmitter from "../emitter";
 
-const MMKVManager = RN.NativeModules.MMKVManager as MMKVManager;
+const MMKVManager = window.nativeModuleProxy.MMKVManager as MMKVManager;
 
 const emitterSymbol = Symbol("emitter accessor");
 const syncAwaitSymbol = Symbol("wrapSync promise accessor");
