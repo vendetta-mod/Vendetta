@@ -22,15 +22,17 @@ export default function ThemeCard({ theme, index }: ThemeCardProps) {
     // This is needed because of React™
     if (removed) return null;
 
+    const authors = theme.data.authors;
+
     return (
         <Card 
             index={index}
-            headerLabel={theme.data.name}
-            descriptionLabel={theme.data.description}
+            headerLabel={`${theme.data.name} ${authors ? `by ${authors.map(i => i.name).join(", ")}` : ""}`}
+            descriptionLabel={theme.data.description ?? "No description."}
             toggleType="radio"
             toggleValue={theme.selected}
             onToggleChange={(v: boolean) => {
-                selectAndReload(v, theme.id)
+                selectAndReload(v, theme.id);
             }}
             actions={[
                 {
@@ -46,7 +48,7 @@ export default function ThemeCard({ theme, index }: ThemeCardProps) {
                                 setRemoved(true);
                                 if (wasSelected) selectAndReload(false, theme.id);
                             }).catch((e) => {
-                                showToast((e as Error).message, getAssetIDByName("Small"))
+                                showToast((e as Error).message, getAssetIDByName("Small"));
                             })
                         }
                     }),
