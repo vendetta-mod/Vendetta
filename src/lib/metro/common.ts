@@ -1,8 +1,10 @@
-import { find, findByProps } from "@metro/filters";
+import { find, findByProps, findByStoreName } from "@metro/filters";
 
 // Discord
 export { constants } from "@lib/preinit";
 export const channels = findByProps("getVoiceChannelId");
+export const users = findByStoreName("UserStore");
+export const profiles = findByProps("showUserProfile");
 export const i18n = findByProps("Messages");
 export const url = findByProps("openURL", "openDeeplink");
 export const toasts = find(m => m.open && m.close && !m.startDrag && !m.init && !m.openReplay && !m.setAlwaysOnTop);

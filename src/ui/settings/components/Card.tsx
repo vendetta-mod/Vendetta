@@ -38,7 +38,7 @@ interface Action {
 
 interface CardProps {
     index?: number;
-    headerLabel: string | React.ComponentType;
+    headerLabel: string | React.ComponentType | (string | JSX.Element)[];
     headerIcon?: string;
     toggleType: "switch" | "radio";
     toggleValue?: boolean;
