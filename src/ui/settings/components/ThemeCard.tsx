@@ -1,6 +1,6 @@
 import { ButtonColors, Theme } from "@types";
-import { clipboard } from "@metro/common";
-import { removeTheme, selectTheme } from "@lib/themes";
+import { ReactNative as RN, clipboard } from "@metro/common";
+import { fetchTheme, removeTheme, selectTheme } from "@lib/themes";
 import { getAssetIDByName } from "@ui/assets";
 import { showConfirmationAlert } from "@ui/alerts";
 import { showToast } from "@ui/toasts";
@@ -13,7 +13,7 @@ interface ThemeCardProps {
 
 async function selectAndReload(value: boolean, id: string) {
     await selectTheme(value ? id : "default");
-    window.nativeModuleProxy.BundleUpdaterManager.reload();
+    RN.NativeModules.BundleUpdaterManager.reload();
 }
 
 export default function ThemeCard({ theme, index }: ThemeCardProps) {
@@ -47,9 +47,9 @@ export default function ThemeCard({ theme, index }: ThemeCardProps) {
                             removeTheme(theme.id).then((wasSelected) => {
                                 setRemoved(true);
                                 if (wasSelected) selectAndReload(false, theme.id);
-                            }).catch((e) => {
-                                showToast((e as Error).message, getAssetIDByName("Small"));
-                            })
+                            }).catch((e: Error) => {
+                                showToast(e.message, getAssetIDByName("Small"));
+                            });
                         }
                     }),
                 },
@@ -58,6 +58,27 @@ export default function ThemeCard({ theme, index }: ThemeCardProps) {
                     onPress: () => {
                         clipboard.setString(theme.id);
                         showToast("Copied theme URL to clipboard.", getAssetIDByName("toast_copy_link"));
+                    },
+                },
+                {
+                    icon: "ic_sync_24px",
+                    onPress: () => {
+                        fetchTheme(theme.id).then(() => {
+                            if (theme.selected) {
+                                showConfirmationAlert({
+                                    title: "Theme refetched",
+                                    content: "A reload is required to see the changes. Do you want to reload now?",
+                                    confirmText: "Reload",
+                                    cancelText: "Cancel",
+                                    confirmColor: ButtonColors.RED,
+                                    onConfirm: () => RN.NativeModules.BundleUpdaterManager.reload(),
+                                })
+                            } else {
+                                showToast("Successfully refetched theme.", getAssetIDByName("toast_image_saved"));
+                            }
+                        }).catch(() => {
+                            showToast("Failed to refetch theme!", getAssetIDByName("Small"));
+                        });
                     },
                 },
             ]}
