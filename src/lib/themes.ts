@@ -126,11 +126,18 @@ export async function initThemes(color: any) {
     after("resolveSemanticColor", color.default.meta, (args, ret) => {
         if (!selectedTheme) return ret;
 
-        const colorSymbol = args[1] ?? ret;
+        const colorSymbol = args[1];
         const colorProp = keys[refs.indexOf(colorSymbol)];
         const themeIndex = args[0] === "amoled" ? 2 : args[0] === "light" ? 1 : 0;
 
-        return selectedTheme?.data?.semanticColors?.[colorProp]?.[themeIndex] ?? ret;
+        if (!selectedTheme.data?.semanticColors?.[colorProp]) {
+            const colorDef = color.SemanticColor[colorProp];
+            if (typeof colorDef !== "object") return ret;
+
+            return selectedTheme.data?.rawColors?.[colorDef[args[0]]?.raw] ?? ret;
+        } else {
+            return selectedTheme.data?.semanticColors?.[colorProp]?.[themeIndex] ?? ret;
+        }
     });
 
     await updateThemes();
