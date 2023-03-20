@@ -1,9 +1,8 @@
 import { Asset } from "@types";
-import { ReactNative as RN, stylesheet } from "@metro/common";
+import { ReactNative as RN, stylesheet, clipboard } from "@metro/common";
 import { showToast } from "@ui/toasts";
 import { getAssetIDByName } from "@ui/assets";
 import { Forms } from "@ui/components";
-import copyText from "@lib/utils/copyText";
 
 interface AssetDisplayProps {
     asset: Asset;
@@ -24,7 +23,7 @@ export default function AssetDisplay({ asset }: AssetDisplayProps) {
             label={`${asset.name} - ${asset.id}`}
             trailing={<RN.Image source={asset.id} style={styles.asset} />}
             onPress={() => {
-                copyText(asset.name);
+                clipboard.setString(asset.name);
                 showToast("Copied asset name to clipboard.", getAssetIDByName("toast_copy_link"));
             }}
         />
