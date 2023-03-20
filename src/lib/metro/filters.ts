@@ -64,12 +64,15 @@ export const find = filterModules(modules, true);
 export const findAll = filterModules(modules);
 
 const propsFilter = (props: (string | symbol)[]) => (m: any) => props.every((p) => m[p] !== undefined);
-// TODO: This uses .name, not .displayName. We should fix this SOON. Changing it directly WILL break plugins, though.
-const dNameFilter = (name: string, defaultExp: boolean) => (defaultExp ? (m: any) => m?.name === name : (m: any) => m?.default?.name === name);
+const nameFilter = (name: string, defaultExp: boolean) => (defaultExp ? (m: any) => m?.name === name : (m: any) => m?.default?.name === name);
+const dNameFilter = (displayName: string, defaultExp: boolean) => (defaultExp ? (m: any) => m?.displayName === displayName : (m: any) => m?.default?.displayName === displayName);
 const storeFilter = (name: string) => (m: any) => m.getName && m.getName.length === 0 && m.getName() === name;
 
 export const findByProps: PropsFinder = (...props) => find(propsFilter(props));
 export const findByPropsAll: PropsFinderAll = (...props) => findAll(propsFilter(props));
-export const findByDisplayName = (name: string, defaultExp = true) => find(dNameFilter(name, defaultExp));
-export const findByDisplayNameAll = (name: string, defaultExp = true) => findAll(dNameFilter(name, defaultExp));
+export const findByName = (name: string, defaultExp = true) => find(nameFilter(name, defaultExp));
+export const findByNameAll = (name: string, defaultExp = true) => findAll(nameFilter(name, defaultExp));
+// TODO: Make this use dNameFilter
+export const findByDisplayName = (displayName: string, defaultExp = true) => find(nameFilter(displayName, defaultExp));
+export const findByDisplayNameAll = (displayName: string, defaultExp = true) => findAll(nameFilter(displayName, defaultExp));
 export const findByStoreName = (name: string) => find(storeFilter(name));

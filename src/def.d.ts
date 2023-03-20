@@ -335,8 +335,10 @@ interface VendettaObject {
         findAll: (filter: (m: any) => boolean) => any[];
         findByProps: PropsFinder;
         findByPropsAll: PropsFinderAll;
-        findByDisplayName: (name: string, defaultExp?: boolean) => any;
-        findByDisplayNameAll: (name: string, defaultExp?: boolean) => any[];
+        findByName: (name: string, defaultExp?: boolean) => any;
+        findByNameAll: (name: string, defaultExp?: boolean) => any[];
+        findByDisplayName: (displayName: string, defaultExp?: boolean) => any;
+        findByDisplayNameAll: (displayName: string, defaultExp?: boolean) => any[];
         findByStoreName: (name: string) => any;
         common: {
             constants: PropIntellisense<"API_HOST">;
