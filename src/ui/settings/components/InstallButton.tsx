@@ -1,4 +1,4 @@
-import { ReactNative as RN, clipboard, stylesheet } from "@metro/common";
+import { ReactNative as RN, stylesheet, clipboard } from "@metro/common";
 import { HTTP_REGEX } from "@lib/constants";
 import { showInputAlert } from "@ui/alerts";
 import { getAssetIDByName } from "@ui/assets";

@@ -369,7 +369,6 @@ interface VendettaObject {
         HTTP_REGEX: RegExp;
     };
     utils: {
-        copyText: (content: string) => void;
         findInReactTree: (tree: SearchTree, filter: SearchFilter) => any;
         findInTree: (tree: SearchTree, filter: SearchFilter, options: FindInTreeOptions) => any;
         safeFetch: (input: RequestInfo, options: RequestInit) => Promise<Response>;
