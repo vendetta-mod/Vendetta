@@ -371,7 +371,7 @@ interface VendettaObject {
     utils: {
         findInReactTree: (tree: SearchTree, filter: SearchFilter) => any;
         findInTree: (tree: SearchTree, filter: SearchFilter, options: FindInTreeOptions) => any;
-        safeFetch: (input: RequestInfo, options: RequestInit) => Promise<Response>;
+        safeFetch: (input: RequestInfo | URL, options?: RequestInit) => Promise<Response>;
         unfreeze: (obj: object) => object;
     };
     debug: {
@@ -411,17 +411,21 @@ interface VendettaObject {
     };
     plugins: {
         plugins: Indexable<Plugin>;
-        fetchPlugin: (id: string, enabled: boolean) => void;
-        installPlugin: (id: string, enabled: boolean) => void;
+        fetchPlugin: (id: string) => void;
+        installPlugin: (id: string, enabled?: boolean) => void;
         evalPlugin: (plugin: Plugin) => void;
-        stopPlugin: (id: string, disable: boolean) => void;
+        stopPlugin: (id: string, disable?: boolean) => void;
         removePlugin: (id: string) => void;
         getSettings: (id: string) => JSX.Element;
     };
     themes: {
         themes: Indexable<Theme>;
-        fetchTheme: (id: string) => void;
+        fetchTheme: (id: string, selected?: boolean) => void;
+        installTheme: (id: string) => void;
         selectTheme: (id: string) => void;
+        removeTheme: (id: string) => Promise<boolean>;
+        getCurrentTheme: () => Theme | null;
+        updateThemes: () => void;
     };
     commands: {
         registerCommand: (command: ApplicationCommand) => () => void;
