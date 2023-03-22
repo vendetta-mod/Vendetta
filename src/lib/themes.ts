@@ -3,7 +3,7 @@ import { ReactNative } from "@metro/common";
 import { after, instead } from "@lib/patcher";
 import { createFileBackend, createMMKVBackend, createStorage, wrapSync, awaitSyncWrapper } from "@lib/storage";
 import { safeFetch } from "@utils";
-import { color } from "./preinit";
+import { chroma, color } from "./preinit";
 
 const DCDFileManager = window.nativeModuleProxy.DCDFileManager as DCDFileManager;
 export const themes = wrapSync(createStorage<Indexable<Theme>>(createMMKVBackend("VENDETTA_THEMES")));
@@ -103,15 +103,7 @@ export async function updateThemes() {
     await Promise.allSettled(Object.keys(themes).map(id => fetchTheme(id, currentTheme?.id === id)));
 }
 
-function extractInfo(themeMode: string, colorObj: any): [name: string, colorDef: any] {
-    // @ts-ignore - assigning to extract._sym
-    const propName = colorObj[extractInfo._sym ??= Object.getOwnPropertySymbols(colorObj)[0]];
-    const colorDef = color.SemanticColor[propName];
-
-    return [propName, colorDef[themeMode.toLowerCase()]];
-}
-
-export async function initThemes(color: any) {
+export async function initThemes() {
     //! Native code is required here!
     // Awaiting the sync wrapper is too slow, to the point where semanticColors are not correctly overwritten.
     // We need a workaround, and it will unfortunately have to be done on the native side.
@@ -120,8 +112,6 @@ export async function initThemes(color: any) {
     const selectedTheme = getCurrentTheme();
     if (!selectedTheme) return;
 
-    // const keys = Object.keys(color.default.colors);
-    // const refs = Object.values(color.default.colors);
     const oldRaw = color.default.unsafe_rawColors;
 
     color.default.unsafe_rawColors = new Proxy(oldRaw, {
@@ -140,17 +130,26 @@ export async function initThemes(color: any) {
 
         const themeIndex = theme === "amoled" ? 2 : theme === "light" ? 1 : 0;
 
-        if (selectedTheme.data?.semanticColors?.[name]?.[themeIndex]) {
-            return selectedTheme.data.semanticColors[name][themeIndex];
+        const semanticColorVal = selectedTheme.data?.semanticColors?.[name]?.[themeIndex];
+        if (semanticColorVal) return semanticColorVal;
+
+        const rawValue = selectedTheme.data?.rawColors?.[colorDef.raw];
+        if (rawValue) {
+            // Set opacity if needed
+            return colorDef.opacity === 1 ? rawValue : chroma(rawValue).alpha(colorDef.opacity).hex();
         }
 
-        if (selectedTheme.data?.rawColors?.[colorDef.raw]) {
-            // TODO: handle opacity
-            return selectedTheme.data.rawColors[colorDef.raw];
-        }
-
+        // Fallback to default
         return orig(...args);
     });
 
     await updateThemes();
+}
+
+function extractInfo(themeMode: string, colorObj: any): [name: string, colorDef: any] {
+    // @ts-ignore - assigning to extractInfo._sym
+    const propName = colorObj[extractInfo._sym ??= Object.getOwnPropertySymbols(colorObj)[0]];
+    const colorDef = color.SemanticColor[propName];
+
+    return [propName, colorDef[themeMode.toLowerCase()]];
 }
