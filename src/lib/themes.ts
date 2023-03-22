@@ -1,8 +1,9 @@
 import { DCDFileManager, Indexable, Theme, ThemeData } from "@types";
 import { ReactNative } from "@metro/common";
-import { after } from "@lib/patcher";
+import { after, instead } from "@lib/patcher";
 import { createFileBackend, createMMKVBackend, createStorage, wrapSync, awaitSyncWrapper } from "@lib/storage";
 import { safeFetch } from "@utils";
+import { color } from "./preinit";
 
 const DCDFileManager = window.nativeModuleProxy.DCDFileManager as DCDFileManager;
 export const themes = wrapSync(createStorage<Indexable<Theme>>(createMMKVBackend("VENDETTA_THEMES")));
@@ -86,7 +87,7 @@ export async function removeTheme(id: string) {
     const theme = themes[id];
     if (theme.selected) await selectTheme("default");
     delete themes[id];
-    
+
     return theme.selected;
 }
 
@@ -102,6 +103,14 @@ export async function updateThemes() {
     await Promise.allSettled(Object.keys(themes).map(id => fetchTheme(id, currentTheme?.id === id)));
 }
 
+function extractInfo(themeMode: string, colorObj: any): [name: string, colorDef: any] {
+    // @ts-ignore - assigning to extract._sym
+    const propName = colorObj[extractInfo._sym ??= Object.getOwnPropertySymbols(colorObj)[0]];
+    const colorDef = color.SemanticColor[propName];
+
+    return [propName, colorDef[themeMode.toLowerCase()]];
+}
+
 export async function initThemes(color: any) {
     //! Native code is required here!
     // Awaiting the sync wrapper is too slow, to the point where semanticColors are not correctly overwritten.
@@ -111,8 +120,8 @@ export async function initThemes(color: any) {
     const selectedTheme = getCurrentTheme();
     if (!selectedTheme) return;
 
-    const keys = Object.keys(color.default.colors);
-    const refs = Object.values(color.default.colors);
+    // const keys = Object.keys(color.default.colors);
+    // const refs = Object.values(color.default.colors);
     const oldRaw = color.default.unsafe_rawColors;
 
     color.default.unsafe_rawColors = new Proxy(oldRaw, {
@@ -123,21 +132,24 @@ export async function initThemes(color: any) {
         }
     });
 
-    after("resolveSemanticColor", color.default.meta, (args, ret) => {
-        if (!selectedTheme) return ret;
+    instead("resolveSemanticColor", color.default.meta, (args, orig) => {
+        if (!selectedTheme) return orig(...args);
 
-        const colorSymbol = args[1];
-        const colorProp = keys[refs.indexOf(colorSymbol)];
-        const themeIndex = args[0] === "amoled" ? 2 : args[0] === "light" ? 1 : 0;
+        const [theme, propIndex] = args;
+        const [name, colorDef] = extractInfo(theme, propIndex);
 
-        if (!selectedTheme.data?.semanticColors?.[colorProp]) {
-            const colorDef = color.SemanticColor[colorProp];
-            if (typeof colorDef !== "object") return ret;
+        const themeIndex = theme === "amoled" ? 2 : theme === "light" ? 1 : 0;
 
-            return selectedTheme.data?.rawColors?.[colorDef[args[0]]?.raw] ?? ret;
-        } else {
-            return selectedTheme.data?.semanticColors?.[colorProp]?.[themeIndex] ?? ret;
+        if (selectedTheme.data?.semanticColors?.[name]?.[themeIndex]) {
+            return selectedTheme.data.semanticColors[name][themeIndex];
         }
+
+        if (selectedTheme.data?.rawColors?.[colorDef.raw]) {
+            // TODO: handle opacity
+            return selectedTheme.data.rawColors[colorDef.raw];
+        }
+
+        return orig(...args);
     });
 
     await updateThemes();
