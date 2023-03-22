@@ -1,9 +1,9 @@
 import { DCDFileManager, Indexable, Theme, ThemeData } from "@types";
-import { ReactNative } from "@metro/common";
+import { ReactNative, chroma } from "@metro/common";
 import { instead } from "@lib/patcher";
+import { color } from "@lib/preinit";
 import { createFileBackend, createMMKVBackend, createStorage, wrapSync, awaitSyncWrapper } from "@lib/storage";
 import { safeFetch } from "@utils";
-import { chroma, color } from "./preinit";
 
 const DCDFileManager = window.nativeModuleProxy.DCDFileManager as DCDFileManager;
 export const themes = wrapSync(createStorage<Indexable<Theme>>(createMMKVBackend("VENDETTA_THEMES")));
