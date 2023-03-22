@@ -3,6 +3,7 @@ import _React from "react";
 import _RN from "react-native";
 import _Clipboard from "@react-native-clipboard/clipboard";
 import _moment from "moment";
+import _chroma from "chroma-js";
 
 type MetroModules = { [id: number]: any };
 
@@ -361,6 +362,7 @@ interface VendettaObject {
             React: typeof _React;
             ReactNative: typeof _RN;
             moment: typeof _moment;
+            chroma: typeof _chroma;
         };
     };
     constants: {

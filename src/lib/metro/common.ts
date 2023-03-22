@@ -25,3 +25,6 @@ export { ReactNative } from "@lib/preinit";
 
 // Moment
 export const moment = findByProps("isMoment") as typeof import("moment");
+
+// chroma.js
+export { chroma } from "@lib/preinit";

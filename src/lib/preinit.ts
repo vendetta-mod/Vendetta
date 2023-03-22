@@ -18,10 +18,13 @@ export const constants = basicFind("AbortCodes");
 // Export Discord's color module
 export const color = basicFind("SemanticColor");
 
+// Export chroma.js
+export const chroma = basicFind("brewer") as typeof import("chroma-js");
+
 // Themes
 if (window.__vendetta_loader?.features.themes) {
     try {
-        initThemes(color);
+        initThemes();
     } catch (e) {
         console.error("[Vendetta] Failed to initialize themes...", e);
     }

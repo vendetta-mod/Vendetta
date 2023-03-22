@@ -1,6 +1,7 @@
 import { DCDFileManager, Indexable, Theme, ThemeData } from "@types";
-import { ReactNative } from "@metro/common";
-import { after } from "@lib/patcher";
+import { ReactNative, chroma } from "@metro/common";
+import { instead } from "@lib/patcher";
+import { color } from "@lib/preinit";
 import { createFileBackend, createMMKVBackend, createStorage, wrapSync, awaitSyncWrapper } from "@lib/storage";
 import { safeFetch } from "@utils";
 
@@ -15,15 +16,17 @@ async function writeTheme(theme: Theme | {}) {
     await createFileBackend("vendetta_theme.json").set(theme);
 }
 
-function convertToRGBAString(hexString: string): string {
-    const color = Number(ReactNative.processColor(hexString));
+function normalizeToHex(colorString: string): string {
+    if (chroma.valid(colorString)) return chroma(colorString).hex();
 
-    const alpha = (color >> 24 & 0xff).toString(16).padStart(2, "0");
-    const red = (color >> 16 & 0xff).toString(16).padStart(2, "0");
-    const green = (color >> 8 & 0xff).toString(16).padStart(2, "0");
-    const blue = (color & 0xff).toString(16).padStart(2, "0");
+    const color = Number(ReactNative.processColor(colorString));
 
-    return `#${red}${green}${blue}${alpha !== "ff" ? alpha : ""}`;
+    return chroma.rgb(
+        color >> 16 & 0xff, // red 
+        color >> 8 & 0xff, // green
+        color & 0xff, // blue
+        color >> 24 & 0xff // alpha
+    ).hex();
 }
 
 // Process data for some compatiblity with native side
@@ -33,7 +36,7 @@ function processData(data: ThemeData) {
 
         for (const key in semanticColors) {
             for (const index in semanticColors[key]) {
-                semanticColors[key][index] = convertToRGBAString(semanticColors[key][index]);
+                semanticColors[key][index] = normalizeToHex(semanticColors[key][index]);
             }
         }
     }
@@ -42,11 +45,33 @@ function processData(data: ThemeData) {
         const rawColors = data.rawColors;
 
         for (const key in rawColors) {
-            data.rawColors[key] = convertToRGBAString(rawColors[key]);
+            data.rawColors[key] = normalizeToHex(rawColors[key]);
         }
+
+        if (ReactNative.Platform.OS === "android") applyAndroidAlphaKeys(rawColors);
     }
 
     return data;
+}
+
+function applyAndroidAlphaKeys(rawColors: Record<string, string>) {
+    // these are native Discord Android keys
+    const alphaMap: Record<string, [string, number]> = {
+        "BLACK_ALPHA_60": ["BLACK", 0.6],
+        "BRAND_NEW_360_ALPHA_20": ["BRAND_360", 0.2],
+        "BRAND_NEW_360_ALPHA_25": ["BRAND_360", 0.25],
+        "BRAND_NEW_500_ALPHA_20": ["BRAND_500", 0.2],
+        "PRIMARY_DARK_500_ALPHA_20": ["PRIMARY_500", 0.2],
+        "PRIMARY_DARK_700_ALPHA_60": ["PRIMARY_700", 0.6],
+        "STATUS_GREEN_500_ALPHA_20": ["GREEN_500", 0.2],
+        "STATUS_RED_500_ALPHA_20": ["RED_500", 0.2],
+    };
+
+    for (const key in alphaMap) {
+        const [colorKey, alpha] = alphaMap[key];
+        if (!rawColors[colorKey]) continue;
+        rawColors[key] = chroma(rawColors[colorKey]).alpha(alpha).hex();
+    }
 }
 
 export async function fetchTheme(id: string, selected = false) {
@@ -86,7 +111,7 @@ export async function removeTheme(id: string) {
     const theme = themes[id];
     if (theme.selected) await selectTheme("default");
     delete themes[id];
-    
+
     return theme.selected;
 }
 
@@ -102,7 +127,7 @@ export async function updateThemes() {
     await Promise.allSettled(Object.keys(themes).map(id => fetchTheme(id, currentTheme?.id === id)));
 }
 
-export async function initThemes(color: any) {
+export async function initThemes() {
     //! Native code is required here!
     // Awaiting the sync wrapper is too slow, to the point where semanticColors are not correctly overwritten.
     // We need a workaround, and it will unfortunately have to be done on the native side.
@@ -111,8 +136,6 @@ export async function initThemes(color: any) {
     const selectedTheme = getCurrentTheme();
     if (!selectedTheme) return;
 
-    const keys = Object.keys(color.default.colors);
-    const refs = Object.values(color.default.colors);
     const oldRaw = color.default.unsafe_rawColors;
 
     color.default.unsafe_rawColors = new Proxy(oldRaw, {
@@ -123,22 +146,34 @@ export async function initThemes(color: any) {
         }
     });
 
-    after("resolveSemanticColor", color.default.meta, (args, ret) => {
-        if (!selectedTheme) return ret;
+    instead("resolveSemanticColor", color.default.meta, (args, orig) => {
+        if (!selectedTheme) return orig(...args);
 
-        const colorSymbol = args[1];
-        const colorProp = keys[refs.indexOf(colorSymbol)];
-        const themeIndex = args[0] === "amoled" ? 2 : args[0] === "light" ? 1 : 0;
+        const [theme, propIndex] = args;
+        const [name, colorDef] = extractInfo(theme, propIndex);
 
-        if (!selectedTheme.data?.semanticColors?.[colorProp]) {
-            const colorDef = color.SemanticColor[colorProp];
-            if (typeof colorDef !== "object") return ret;
+        const themeIndex = theme === "amoled" ? 2 : theme === "light" ? 1 : 0;
 
-            return selectedTheme.data?.rawColors?.[colorDef[args[0]]?.raw] ?? ret;
-        } else {
-            return selectedTheme.data?.semanticColors?.[colorProp]?.[themeIndex] ?? ret;
+        const semanticColorVal = selectedTheme.data?.semanticColors?.[name]?.[themeIndex];
+        if (semanticColorVal) return semanticColorVal;
+
+        const rawValue = selectedTheme.data?.rawColors?.[colorDef.raw];
+        if (rawValue) {
+            // Set opacity if needed
+            return colorDef.opacity === 1 ? rawValue : chroma(rawValue).alpha(colorDef.opacity).hex();
         }
+
+        // Fallback to default
+        return orig(...args);
     });
 
     await updateThemes();
+}
+
+function extractInfo(themeMode: string, colorObj: any): [name: string, colorDef: any] {
+    // @ts-ignore - assigning to extractInfo._sym
+    const propName = colorObj[extractInfo._sym ??= Object.getOwnPropertySymbols(colorObj)[0]];
+    const colorDef = color.SemanticColor[propName];
+
+    return [propName, colorDef[themeMode.toLowerCase()]];
 }
