@@ -28,3 +28,6 @@ export const moment = findByProps("isMoment") as typeof import("moment");
 
 // chroma.js
 export { chroma } from "@lib/preinit";
+
+// Lodash
+export const lodash = findByProps("forEachRight") as typeof import("lodash");

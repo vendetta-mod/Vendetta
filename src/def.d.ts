@@ -4,6 +4,7 @@ import _RN from "react-native";
 import _Clipboard from "@react-native-clipboard/clipboard";
 import _moment from "moment";
 import _chroma from "chroma-js";
+import _lodash from "lodash";
 
 type MetroModules = { [id: number]: any };
 
@@ -363,6 +364,7 @@ interface VendettaObject {
             ReactNative: typeof _RN;
             moment: typeof _moment;
             chroma: typeof _chroma;
+            lodash: typeof _lodash;
         };
     };
     constants: {
