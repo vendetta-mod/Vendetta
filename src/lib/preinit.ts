@@ -19,7 +19,7 @@ export const constants = basicFind("AbortCodes");
 export const color = basicFind("SemanticColor");
 
 // Export chroma.js
-export const chroma = basicFind("brewer");
+export const chroma = basicFind("brewer") as typeof import("chroma-js");
 
 // Themes
 if (window.__vendetta_loader?.features.themes) {

@@ -1,6 +1,6 @@
 import { DCDFileManager, Indexable, Theme, ThemeData } from "@types";
 import { ReactNative } from "@metro/common";
-import { after, instead } from "@lib/patcher";
+import { instead } from "@lib/patcher";
 import { createFileBackend, createMMKVBackend, createStorage, wrapSync, awaitSyncWrapper } from "@lib/storage";
 import { safeFetch } from "@utils";
 import { chroma, color } from "./preinit";
@@ -16,15 +16,17 @@ async function writeTheme(theme: Theme | {}) {
     await createFileBackend("vendetta_theme.json").set(theme);
 }
 
-function convertToRGBAString(hexString: string): string {
-    const color = Number(ReactNative.processColor(hexString));
+function normalizeToHex(colorString: string): string {
+    if (chroma.valid(colorString)) return chroma(colorString).hex();
 
-    const alpha = (color >> 24 & 0xff).toString(16).padStart(2, "0");
-    const red = (color >> 16 & 0xff).toString(16).padStart(2, "0");
-    const green = (color >> 8 & 0xff).toString(16).padStart(2, "0");
-    const blue = (color & 0xff).toString(16).padStart(2, "0");
+    const color = Number(ReactNative.processColor(colorString));
 
-    return `#${red}${green}${blue}${alpha !== "ff" ? alpha : ""}`;
+    return chroma.rgb(
+        color >> 16 & 0xff, // red 
+        color >> 8 & 0xff, // green
+        color & 0xff, // blue
+        color >> 24 & 0xff // alpha
+    ).hex();
 }
 
 // Process data for some compatiblity with native side
@@ -34,7 +36,7 @@ function processData(data: ThemeData) {
 
         for (const key in semanticColors) {
             for (const index in semanticColors[key]) {
-                semanticColors[key][index] = convertToRGBAString(semanticColors[key][index]);
+                semanticColors[key][index] = normalizeToHex(semanticColors[key][index]);
             }
         }
     }
@@ -43,11 +45,33 @@ function processData(data: ThemeData) {
         const rawColors = data.rawColors;
 
         for (const key in rawColors) {
-            data.rawColors[key] = convertToRGBAString(rawColors[key]);
+            data.rawColors[key] = normalizeToHex(rawColors[key]);
         }
+
+        if (ReactNative.Platform.OS === "android") applyAndroidAlphaKeys(rawColors);
     }
 
     return data;
+}
+
+function applyAndroidAlphaKeys(rawColors: Record<string, string>) {
+    // these are native Discord Android keys
+    const alphaMap: Record<string, [string, number]> = {
+        "BLACK_ALPHA_60": ["BLACK", 0.6],
+        "BRAND_NEW_360_ALPHA_20": ["BRAND_360", 0.2],
+        "BRAND_NEW_360_ALPHA_25": ["BRAND_360", 0.25],
+        "BRAND_NEW_500_ALPHA_20": ["BRAND_500", 0.2],
+        "PRIMARY_DARK_500_ALPHA_20": ["PRIMARY_500", 0.2],
+        "PRIMARY_DARK_700_ALPHA_60": ["PRIMARY_700", 0.6],
+        "STATUS_GREEN_500_ALPHA_20": ["GREEN_500", 0.2],
+        "STATUS_RED_500_ALPHA_20": ["RED_500", 0.2],
+    };
+
+    for (const key in alphaMap) {
+        const [colorKey, alpha] = alphaMap[key];
+        if (!rawColors[colorKey]) continue;
+        rawColors[key] = chroma(rawColors[colorKey]).alpha(alpha).hex();
+    }
 }
 
 export async function fetchTheme(id: string, selected = false) {
