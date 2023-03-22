@@ -1,10 +1,38 @@
-import { RNConstants } from "@types";
-import { ReactNative as RN } from "@metro/common";
+import * as commands from "@lib/commands";
+import logger from "@lib/logger";
 import { after } from "@lib/patcher";
+import { ReactNative as RN } from "@metro/common";
+import { findByProps } from "@metro/filters";
+import { RNConstants } from "@types";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
-import logger from "@lib/logger";
 export let socket: WebSocket;
+
+const { setText, getText } = findByProps("setText", "getText");
+
+commands.registerCommand({
+    name: "reload",
+    displayName: "reload",
+    applicationId: "vendetta",
+    description: "Reloads the Discord client.",
+    displayDescription: "Reloads the Discord client.",
+    type: 1,
+    inputType: 1,
+    options: [],
+    async execute(_args, _ctx) {
+        setText("");
+        // Wait until the text is actually cleared, then wait another tick.
+        // We love React!
+        const waitClear = setInterval(() => {
+            if (getText().length === 0) {
+                clearInterval(waitClear);
+                setTimeout(() => {
+                    RN.NativeModules.BundleUpdaterManager.reload();
+                }, 0);
+            }
+        }, 0);
+    },
+});
 
 export function connectToDebugger(url: string) {
     if (socket !== undefined && socket.readyState !== WebSocket.CLOSED) socket.close();
@@ -15,7 +43,7 @@ export function connectToDebugger(url: string) {
     }
 
     socket = new WebSocket(`ws://${url}`);
-    
+
     socket.addEventListener("open", () => showToast("Connected to debugger.", getAssetIDByName("Check")));
     socket.addEventListener("message", (message: any) => {
         try {
@@ -31,7 +59,7 @@ export function connectToDebugger(url: string) {
     });
 }
 
-export function patchLogHook() { 
+export function patchLogHook() {
     const unpatch = after("nativeLoggingHook", globalThis, (args) => {
         if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ message: args[0], level: args[1] }));
         logger.log(args[0]);
@@ -40,7 +68,7 @@ export function patchLogHook() {
     return () => {
         socket && socket.close();
         unpatch();
-    }
+    };
 }
 
 // @ts-expect-error
@@ -78,42 +106,38 @@ export function getDebugInfo() {
             buildType: hermesProps["Build"],
             bytecodeVersion: hermesProps["Bytecode Version"],
         },
-        ...RN.Platform.select(
-            {
-                android: {
-                    os: {
-                        name: "Android",
-                        version: PlatformConstants.Release,
-                        sdk: PlatformConstants.Version
-                    },
+        ...RN.Platform.select({
+            android: {
+                os: {
+                    name: "Android",
+                    version: PlatformConstants.Release,
+                    sdk: PlatformConstants.Version,
                 },
-                ios: {
-                    os: {
-                        name: PlatformConstants.systemName,
-                        version: PlatformConstants.osVersion
-                    },
-                }
-            }
-        )!,
-        ...RN.Platform.select(
-            {
-                android: {
-                    device: {
-                        manufacturer: PlatformConstants.Manufacturer,
-                        brand: PlatformConstants.Brand,
-                        model: PlatformConstants.Model,
-                        codename: DCDDeviceManager.device
-                    }
+            },
+            ios: {
+                os: {
+                    name: PlatformConstants.systemName,
+                    version: PlatformConstants.osVersion,
                 },
-                ios: {
-                    device: {
-                        manufacturer: DCDDeviceManager.deviceManufacturer,
-                        brand: DCDDeviceManager.deviceBrand,
-                        model: DCDDeviceManager.deviceModel,
-                        codename: DCDDeviceManager.device
-                    }
-                }
-            }
-        )!
-    }
+            },
+        })!,
+        ...RN.Platform.select({
+            android: {
+                device: {
+                    manufacturer: PlatformConstants.Manufacturer,
+                    brand: PlatformConstants.Brand,
+                    model: PlatformConstants.Model,
+                    codename: DCDDeviceManager.device,
+                },
+            },
+            ios: {
+                device: {
+                    manufacturer: DCDDeviceManager.deviceManufacturer,
+                    brand: DCDDeviceManager.deviceBrand,
+                    model: DCDDeviceManager.deviceModel,
+                    codename: DCDDeviceManager.device,
+                },
+            },
+        })!,
+    };
 }
