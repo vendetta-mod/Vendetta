@@ -1,5 +1,5 @@
 import { NavigationNative, i18n } from "@metro/common";
-import { findByDisplayName } from "@metro/filters";
+import { findByName } from "@metro/filters";
 import { after } from "@lib/patcher";
 import { installPlugin } from "@lib/plugins";
 import { installTheme } from "@lib/themes";
@@ -13,8 +13,8 @@ import Themes from "@ui/settings/pages/Themes";
 import Developer from "@ui/settings/pages/Developer";
 import AssetBrowser from "@ui/settings/pages/AssetBrowser";
 
-const screensModule = findByDisplayName("getScreens", false);
-const settingsModule = findByDisplayName("UserSettingsOverviewWrapper", false);
+const screensModule = findByName("getScreens", false);
+const settingsModule = findByName("UserSettingsOverviewWrapper", false);
 
 export default function initSettings() {
     const patches = new Array<Function>;

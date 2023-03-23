@@ -1,9 +1,9 @@
-import { findByDisplayName, findByProps } from "@metro/filters";
+import { findByName, findByProps } from "@metro/filters";
 
 // Discord
 export const Forms = findByProps("Form", "FormSection");
 export const General = findByProps("Button", "Text", "View");
-export const Search = findByDisplayName("StaticSearchBarContainer");
+export const Search = findByName("StaticSearchBarContainer");
 export const Alert = findByProps("alertDarkStyles", "alertLightStyles").default;
 
 // Vendetta
