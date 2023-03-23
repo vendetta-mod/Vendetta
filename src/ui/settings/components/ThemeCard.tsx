@@ -1,10 +1,14 @@
 import { ButtonColors, Theme } from "@types";
 import { ReactNative as RN, clipboard } from "@metro/common";
+import { findByProps } from "@metro/filters";
 import { fetchTheme, removeTheme, selectTheme } from "@lib/themes";
 import { getAssetIDByName } from "@ui/assets";
 import { showConfirmationAlert } from "@ui/alerts";
 import { showToast } from "@ui/toasts";
 import Card from "@ui/settings/components/Card";
+
+const { hideActionSheet } = findByProps("openLazy", "hideActionSheet");
+const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 
 interface ThemeCardProps {
     theme: Theme;
@@ -25,7 +29,7 @@ export default function ThemeCard({ theme, index }: ThemeCardProps) {
     const authors = theme.data.authors;
 
     return (
-        <Card 
+        <Card
             index={index}
             headerLabel={`${theme.data.name} ${authors ? `by ${authors.map(i => i.name).join(", ")}` : ""}`}
             descriptionLabel={theme.data.description ?? "No description."}
@@ -36,51 +40,67 @@ export default function ThemeCard({ theme, index }: ThemeCardProps) {
             }}
             actions={[
                 {
-                    icon: "ic_message_delete",
-                    onPress: () => showConfirmationAlert({
-                        title: "Wait!",
-                        content: `Are you sure you wish to delete ${theme.data.name}?`,
-                        confirmText: "Delete",
-                        cancelText: "Cancel",
-                        confirmColor: ButtonColors.RED,
-                        onConfirm: () => {
-                            removeTheme(theme.id).then((wasSelected) => {
-                                setRemoved(true);
-                                if (wasSelected) selectAndReload(false, theme.id);
-                            }).catch((e: Error) => {
-                                showToast(e.message, getAssetIDByName("Small"));
-                            });
-                        }
-                    }),
-                },
-                {
-                    icon: "copy",
-                    onPress: () => {
-                        clipboard.setString(theme.id);
-                        showToast("Copied theme URL to clipboard.", getAssetIDByName("toast_copy_link"));
-                    },
-                },
-                {
-                    icon: "ic_sync_24px",
-                    onPress: () => {
-                        fetchTheme(theme.id).then(() => {
-                            if (theme.selected) {
-                                showConfirmationAlert({
-                                    title: "Theme refetched",
-                                    content: "A reload is required to see the changes. Do you want to reload now?",
-                                    confirmText: "Reload",
+                    icon: "ic_more_24px",
+                    onPress: () => showSimpleActionSheet({
+                        key: "PluginOverflow",
+                        header: {
+                            title: theme.data.name,
+                            onClose: () => hideActionSheet(),
+                        },
+                        options: [
+                            {
+                                icon: getAssetIDByName("ic_sync_24px"),
+                                label: "Refetch",
+                                onPress: () => {
+                                    fetchTheme(theme.id).then(() => {
+                                        if (theme.selected) {
+                                            showConfirmationAlert({
+                                                title: "Theme refetched",
+                                                content: "A reload is required to see the changes. Do you want to reload now?",
+                                                confirmText: "Reload",
+                                                cancelText: "Cancel",
+                                                confirmColor: ButtonColors.RED,
+                                                onConfirm: () => RN.NativeModules.BundleUpdaterManager.reload(),
+                                            })
+                                        } else {
+                                            showToast("Successfully refetched theme.", getAssetIDByName("toast_image_saved"));
+                                        }
+                                    }).catch(() => {
+                                        showToast("Failed to refetch theme!", getAssetIDByName("Small"));
+                                    });
+                                },
+                            },
+                            {
+                                icon: getAssetIDByName("copy"),
+                                label: "Copy theme URL",
+                                onPress: () => {
+                                    clipboard.setString(theme.id);
+                                    showToast("Copied theme URL to clipboard.", getAssetIDByName("toast_copy_link"));
+                                }
+                            },
+                            {
+                                icon: getAssetIDByName("ic_message_delete"),
+                                label: "Delete theme",
+                                isDestructive: true,
+                                onPress: () => showConfirmationAlert({
+                                    title: "Wait!",
+                                    content: `Are you sure you wish to delete ${theme.data.name}?`,
+                                    confirmText: "Delete",
                                     cancelText: "Cancel",
                                     confirmColor: ButtonColors.RED,
-                                    onConfirm: () => RN.NativeModules.BundleUpdaterManager.reload(),
+                                    onConfirm: () => {
+                                        removeTheme(theme.id).then((wasSelected) => {
+                                            setRemoved(true);
+                                            if (wasSelected) selectAndReload(false, theme.id);
+                                        }).catch((e: Error) => {
+                                            showToast(e.message, getAssetIDByName("Small"));
+                                        });
+                                    }
                                 })
-                            } else {
-                                showToast("Successfully refetched theme.", getAssetIDByName("toast_image_saved"));
-                            }
-                        }).catch(() => {
-                            showToast("Failed to refetch theme!", getAssetIDByName("Small"));
-                        });
-                    },
-                },
+                            },
+                        ]
+                    })
+                }
             ]}
         />
     )
