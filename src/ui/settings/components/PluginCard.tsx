@@ -1,14 +1,10 @@
 import { ButtonColors, Plugin } from "@types";
 import { NavigationNative, clipboard } from "@metro/common";
-import { findByProps } from "@metro/filters";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
 import { showConfirmationAlert } from "@ui/alerts";
 import { removePlugin, startPlugin, stopPlugin, getSettings } from "@lib/plugins";
 import Card from "@ui/settings/components/Card";
-
-const { hideActionSheet } = findByProps("openLazy", "hideActionSheet");
-const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 
 interface PluginCardProps {
     plugin: Plugin;
@@ -39,55 +35,46 @@ export default function PluginCard({ plugin, index }: PluginCardProps) {
                 }
             }}
             descriptionLabel={plugin.manifest.description}
-            actions={[
-                {
-                    icon: "ic_more_24px",
-                    onPress: () => showSimpleActionSheet({
-                        key: "PluginOverflow",
-                        header: {
-                            title: plugin.manifest.name,
-                            onClose: () => hideActionSheet(),
-                        },
-                        options: [
-                            {   
-                                icon: getAssetIDByName("ic_download_24px"),
-                                label: plugin.update ? "Disable updates" : "Enable updates",
-                                onPress: () => {
-                                    plugin.update = !plugin.update;
-                                    showToast(`${plugin.update ? "Enabled" : "Disabled"} updates for ${plugin.manifest.name}.`, getAssetIDByName("toast_image_saved"));
-                                }
-                            },
-                            {
-                                icon: getAssetIDByName("copy"),
-                                label: "Copy plugin URL",
-                                onPress: () => {
-                                    clipboard.setString(plugin.id);
-                                    showToast("Copied plugin URL to clipboard.", getAssetIDByName("toast_copy_link"));
-                                }
-                            },
-                            {
-                                icon: getAssetIDByName("ic_message_delete"),
-                                label: "Delete plugin",
-                                isDestructive: true,
-                                onPress: () => showConfirmationAlert({
-                                    title: "Wait!",
-                                    content: `Are you sure you wish to delete ${plugin.manifest.name}?`,
-                                    confirmText: "Delete",
-                                    cancelText: "Cancel",
-                                    confirmColor: ButtonColors.RED,
-                                    onConfirm: () => {
-                                        try {
-                                            removePlugin(plugin.id);
-                                            setRemoved(true);
-                                        } catch (e) {
-                                            showToast((e as Error).message, getAssetIDByName("Small"));
-                                        }
-                                    }
-                                }),
-                            },
-                        ]
-                    })
+            overflowTitle={plugin.manifest.name}
+            overflowActions={[
+                {   
+                    icon: "ic_download_24px",
+                    label: plugin.update ? "Disable updates" : "Enable updates",
+                    onPress: () => {
+                        plugin.update = !plugin.update;
+                        showToast(`${plugin.update ? "Enabled" : "Disabled"} updates for ${plugin.manifest.name}.`, getAssetIDByName("toast_image_saved"));
+                    }
                 },
+                {
+                    icon: "copy",
+                    label: "Copy plugin URL",
+                    onPress: () => {
+                        clipboard.setString(plugin.id);
+                        showToast("Copied plugin URL to clipboard.", getAssetIDByName("toast_copy_link"));
+                    }
+                },
+                {
+                    icon: "ic_message_delete",
+                    label: "Delete plugin",
+                    isDestructive: true,
+                    onPress: () => showConfirmationAlert({
+                        title: "Wait!",
+                        content: `Are you sure you wish to delete ${plugin.manifest.name}?`,
+                        confirmText: "Delete",
+                        cancelText: "Cancel",
+                        confirmColor: ButtonColors.RED,
+                        onConfirm: () => {
+                            try {
+                                removePlugin(plugin.id);
+                                setRemoved(true);
+                            } catch (e) {
+                                showToast((e as Error).message, getAssetIDByName("Small"));
+                            }
+                        }
+                    }),
+                },
+            ]}
+            actions={[
                 ...(settings ? [{
                     icon: "settings",
                     onPress: () => navigation.push("VendettaCustomPage", {
