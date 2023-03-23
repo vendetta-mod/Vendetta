@@ -1,9 +1,12 @@
 import { ReactNative as RN, stylesheet } from "@metro/common";
+import { findByProps } from "@metro/filters";
 import { Forms } from "@ui/components";
 import { getAssetIDByName } from "@ui/assets";
 import { semanticColors } from "@ui/color";
 
 const { FormRow, FormSwitch, FormRadio } = Forms;
+const { hideActionSheet } = findByProps("openLazy", "hideActionSheet");
+const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 
 // TODO: These styles work weirdly. iOS has cramped text, Android with low DPI probably does too. Fix?
 const styles = stylesheet.createThemedStyleSheet({
@@ -36,6 +39,11 @@ interface Action {
     onPress: () => void;
 }
 
+interface OverflowAction extends Action {
+    label: string;
+    isDestructive?: boolean;
+}
+
 interface CardProps {
     index?: number;
     headerLabel: string | React.ComponentType;
@@ -45,13 +53,15 @@ interface CardProps {
     onToggleChange?: (v: boolean) => void;
     descriptionLabel?: string | React.ComponentType;
     actions?: Action[];
+    overflowTitle?: string;
+    overflowActions?: OverflowAction[];
 }
 
 export default function Card(props: CardProps) {
     let pressableState = props.toggleValue ?? false;
 
     return ( 
-        <RN.View style={[styles.card, {marginTop: props.index === 0 ? 10 : 0}]}>
+        <RN.View style={[styles.card, { marginTop: props.index === 0 ? 10 : 0 }]}>
             <FormRow
                 style={styles.header}
                 label={props.headerLabel}
@@ -76,6 +86,19 @@ export default function Card(props: CardProps) {
                 label={props.descriptionLabel}
                 trailing={
                     <RN.View style={styles.actions}>
+                        {props.overflowActions && <RN.TouchableOpacity
+                            onPress={() => showSimpleActionSheet({
+                                key: "CardOverflow",
+                                header: {
+                                    title: props.overflowTitle,
+                                    icon: props.headerIcon && <FormRow.Icon style={{ marginRight: 8 }} source={getAssetIDByName(props.headerIcon)} />,
+                                    onClose: () => hideActionSheet(),
+                                },
+                                options: props.overflowActions?.map(i => ({ ...i, icon: getAssetIDByName(i.icon) })),
+                            })}
+                        >
+                            <RN.Image style={styles.icon} source={getAssetIDByName("ic_more_24px")} />
+                        </RN.TouchableOpacity>}
                         {props.actions?.map(({ icon, onPress }) => (
                             <RN.TouchableOpacity
                                 onPress={onPress}

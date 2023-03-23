@@ -25,7 +25,7 @@ export default function ThemeCard({ theme, index }: ThemeCardProps) {
     const authors = theme.data.authors;
 
     return (
-        <Card 
+        <Card
             index={index}
             headerLabel={`${theme.data.name} ${authors ? `by ${authors.map(i => i.name).join(", ")}` : ""}`}
             descriptionLabel={theme.data.description ?? "No description."}
@@ -34,34 +34,11 @@ export default function ThemeCard({ theme, index }: ThemeCardProps) {
             onToggleChange={(v: boolean) => {
                 selectAndReload(v, theme.id);
             }}
-            actions={[
-                {
-                    icon: "ic_message_delete",
-                    onPress: () => showConfirmationAlert({
-                        title: "Wait!",
-                        content: `Are you sure you wish to delete ${theme.data.name}?`,
-                        confirmText: "Delete",
-                        cancelText: "Cancel",
-                        confirmColor: ButtonColors.RED,
-                        onConfirm: () => {
-                            removeTheme(theme.id).then((wasSelected) => {
-                                setRemoved(true);
-                                if (wasSelected) selectAndReload(false, theme.id);
-                            }).catch((e: Error) => {
-                                showToast(e.message, getAssetIDByName("Small"));
-                            });
-                        }
-                    }),
-                },
-                {
-                    icon: "copy",
-                    onPress: () => {
-                        clipboard.setString(theme.id);
-                        showToast("Copied theme URL to clipboard.", getAssetIDByName("toast_copy_link"));
-                    },
-                },
+            overflowTitle={theme.data.name}
+            overflowActions={[
                 {
                     icon: "ic_sync_24px",
+                    label: "Refetch",
                     onPress: () => {
                         fetchTheme(theme.id).then(() => {
                             if (theme.selected) {
@@ -80,6 +57,34 @@ export default function ThemeCard({ theme, index }: ThemeCardProps) {
                             showToast("Failed to refetch theme!", getAssetIDByName("Small"));
                         });
                     },
+                },
+                {
+                    icon: "copy",
+                    label: "Copy theme URL",
+                    onPress: () => {
+                        clipboard.setString(theme.id);
+                        showToast("Copied theme URL to clipboard.", getAssetIDByName("toast_copy_link"));
+                    }
+                },
+                {
+                    icon: "ic_message_delete",
+                    label: "Delete theme",
+                    isDestructive: true,
+                    onPress: () => showConfirmationAlert({
+                        title: "Wait!",
+                        content: `Are you sure you wish to delete ${theme.data.name}?`,
+                        confirmText: "Delete",
+                        cancelText: "Cancel",
+                        confirmColor: ButtonColors.RED,
+                        onConfirm: () => {
+                            removeTheme(theme.id).then((wasSelected) => {
+                                setRemoved(true);
+                                if (wasSelected) selectAndReload(false, theme.id);
+                            }).catch((e: Error) => {
+                                showToast(e.message, getAssetIDByName("Small"));
+                            });
+                        }
+                    })
                 },
             ]}
         />

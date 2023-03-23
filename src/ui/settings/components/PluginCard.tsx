@@ -20,7 +20,7 @@ export default function PluginCard({ plugin, index }: PluginCardProps) {
     if (removed) return null;
 
     return (
-        <Card 
+        <Card
             index={index}
             // TODO: Actually make use of user IDs
             headerLabel={`${plugin.manifest.name} by ${plugin.manifest.authors.map(i => i.name).join(", ")}`}
@@ -35,9 +35,28 @@ export default function PluginCard({ plugin, index }: PluginCardProps) {
                 }
             }}
             descriptionLabel={plugin.manifest.description}
-            actions={[
+            overflowTitle={plugin.manifest.name}
+            overflowActions={[
+                {   
+                    icon: "ic_download_24px",
+                    label: plugin.update ? "Disable updates" : "Enable updates",
+                    onPress: () => {
+                        plugin.update = !plugin.update;
+                        showToast(`${plugin.update ? "Enabled" : "Disabled"} updates for ${plugin.manifest.name}.`, getAssetIDByName("toast_image_saved"));
+                    }
+                },
+                {
+                    icon: "copy",
+                    label: "Copy plugin URL",
+                    onPress: () => {
+                        clipboard.setString(plugin.id);
+                        showToast("Copied plugin URL to clipboard.", getAssetIDByName("toast_copy_link"));
+                    }
+                },
                 {
                     icon: "ic_message_delete",
+                    label: "Delete plugin",
+                    isDestructive: true,
                     onPress: () => showConfirmationAlert({
                         title: "Wait!",
                         content: `Are you sure you wish to delete ${plugin.manifest.name}?`,
@@ -54,20 +73,8 @@ export default function PluginCard({ plugin, index }: PluginCardProps) {
                         }
                     }),
                 },
-                {
-                    icon: "copy",
-                    onPress: () => {
-                        clipboard.setString(plugin.id);
-                        showToast("Copied plugin URL to clipboard.", getAssetIDByName("toast_copy_link"));
-                    },
-                },
-                {
-                    icon: plugin.update ? "Check" : "Small",
-                    onPress: () => {
-                        plugin.update = !plugin.update;
-                        showToast(`${plugin.update ? "Enabled" : "Disabled"} updates for ${plugin.manifest.name}.`, getAssetIDByName("toast_image_saved"));
-                    }
-                },
+            ]}
+            actions={[
                 ...(settings ? [{
                     icon: "settings",
                     onPress: () => navigation.push("VendettaCustomPage", {
