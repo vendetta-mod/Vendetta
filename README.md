@@ -6,9 +6,8 @@ Vendetta's codebase is platform-agnostic, but you need a platform-specific loade
 
 ### Android
 * Root - [VendettaXposed](https://github.com/vendetta-mod/VendettaXposed)
-* Non-root - [frendetta](https://github.com/vendetta-mod/frendetta)
-    - Unable to use frendetta? No problem! Pre-built APKs are provided [here](https://discord.k6.tf/).
-    - Note that this solution is not permanent - a dedicated patcher app for Android is on it's way.
+* Non-root - [VendettaManager](https://github.com/vendetta-mod/VendettaManager)
+    - Manager not working? No problem! Pre-built APKs are provided [here](https://discord.k6.tf/).
 
 ### iOS
 * [VendettaTweak](https://github.com/vendetta-mod/VendettaTweak)
