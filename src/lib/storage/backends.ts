@@ -2,7 +2,8 @@ import { DCDFileManager, MMKVManager, StorageBackend } from "@types";
 import { ReactNative as RN } from "@metro/common";
 
 const MMKVManager = window.nativeModuleProxy.MMKVManager as MMKVManager;
-const DCDFileManager = window.nativeModuleProxy.DCDFileManager as DCDFileManager;
+//! 173.10 renamed this to RTNFileManager.
+const DCDFileManager = (window.nativeModuleProxy.DCDFileManager ?? window.nativeModuleProxy.RTNFileManager) as DCDFileManager;
 
 export const createMMKVBackend = (store: string): StorageBackend => ({
     get: async () => JSON.parse((await MMKVManager.getItem(store)) ?? "{}"),

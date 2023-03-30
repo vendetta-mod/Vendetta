@@ -1,7 +1,7 @@
 import { find, findByProps } from "@metro/filters";
 
 // Discord
-export { constants } from "@lib/preinit";
+export const constants = findByProps("API_HOST");
 export const channels = findByProps("getVoiceChannelId");
 export const i18n = findByProps("Messages");
 export const url = findByProps("openURL", "openDeeplink");

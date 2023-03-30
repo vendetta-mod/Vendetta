@@ -1,9 +1,13 @@
 import { DCDFileManager, Indexable, Theme, ThemeData } from "@types";
+import { findByProps } from "@metro/filters";
 import { ReactNative, chroma } from "@metro/common";
 import { instead } from "@lib/patcher";
-import { color } from "@lib/preinit";
 import { createFileBackend, createMMKVBackend, createStorage, wrapSync, awaitSyncWrapper } from "@lib/storage";
 import { safeFetch } from "@utils";
+
+//! As of 173.10, early-finding this does not work.
+// Somehow, this is late enough, though?
+export const color = findByProps("SemanticColor");
 
 const DCDFileManager = window.nativeModuleProxy.DCDFileManager as DCDFileManager;
 export const themes = wrapSync(createStorage<Indexable<Theme>>(createMMKVBackend("VENDETTA_THEMES")));

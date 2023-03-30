@@ -12,12 +12,6 @@ window.React = basicFind("createElement") as typeof import("react");
 // Export ReactNative
 export const ReactNative = basicFind("AppRegistry") as typeof import("react-native");
 
-// Export Discord's constants
-export const constants = basicFind("AbortCodes");
-
-// Export Discord's color module
-export const color = basicFind("SemanticColor");
-
 // Export chroma.js
 export const chroma = basicFind("brewer") as typeof import("chroma-js");
 
