@@ -48,7 +48,8 @@ export const versionHash: string = __vendettaVersion;
 
 export function getDebugInfo() {
     // Discord
-    const InfoDictionaryManager = RN.NativeModules.InfoDictionaryManager;
+    //! 173.13 renamed this to RTNClientInfoManager.
+    const InfoDictionaryManager = RN.NativeModules.InfoDictionaryManager ?? RN.NativeModules.RTNClientInfoManager;
     const DCDDeviceManager = RN.NativeModules.DCDDeviceManager;
 
     // Hermes
