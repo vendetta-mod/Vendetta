@@ -5,14 +5,13 @@ console.log("Hello from Vendetta!");
     try {
         await (await import("./src/index.ts")).default();
     } catch (ex) {
+        console.log(ex?.stack ?? ex.toString());
         const dialog = [
             "Failed to load Vendetta!\n",
-            `Build Number: ${nativeModuleProxy.InfoDictionaryManager.Build}`,
+            `Build Number: ${(nativeModuleProxy.InfoDictionaryManager ?? nativeModuleProxy.RTNClientInfoManager).Build}`,
             `Vendetta: ${__vendettaVersion}`,
             ex?.stack || ex.toString(),
         ].join("\n");
-
         alert(dialog);
-        console.error(ex?.stack || ex.toString());
     }
 })();
