@@ -40,7 +40,7 @@ export default function ThemeCard({ theme, index }: ThemeCardProps) {
                     icon: "ic_sync_24px",
                     label: "Refetch",
                     onPress: () => {
-                        fetchTheme(theme.id).then(() => {
+                        fetchTheme(theme.id, theme.selected).then(() => {
                             if (theme.selected) {
                                 showConfirmationAlert({
                                     title: "Theme refetched",
