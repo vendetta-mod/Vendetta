@@ -82,7 +82,7 @@ export default function General() {
 
     return (
         <ErrorBoundary>
-            <RN.ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 38 }}>
+            <RN.ScrollView style={{ flex: 1, ...(settings.flip && { transform: [{ rotate: "180deg" }] }) }} contentContainerStyle={{ paddingBottom: 38 }}>
                 <FormSection title="Links" titleStyleType="no_border">
                     <FormRow
                         label="Discord Server"
@@ -105,6 +105,16 @@ export default function General() {
                         onPress={() => RN.NativeModules.BundleUpdaterManager.reload()}
                     />
                     <FormDivider />
+                    <FormSwitchRow
+                        label="Flip UI"
+                        subLabel="April Fools!"
+                        leading={<FormRow.Icon source={getAssetIDByName("ic_emoji_24px")} />}
+                        value={settings.flip}
+                        onValueChange={(v: boolean) => {
+                            settings.flip = v;
+                        }}
+                        style={{ transform: [{ rotate: "180deg" }] }}
+                    />
                     <FormSwitchRow
                         label="Developer Settings"
                         leading={<FormRow.Icon source={getAssetIDByName("ic_progress_wrench_24px")} />}

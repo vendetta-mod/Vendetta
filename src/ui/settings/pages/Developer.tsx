@@ -16,7 +16,7 @@ export default function Developer() {
 
     return (
         <ErrorBoundary>
-            <RN.ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 38 }}>
+            <RN.ScrollView style={{ flex: 1, ...(settings.flip && { transform: [{ rotate: "180deg" }] }) }} contentContainerStyle={{ paddingBottom: 38 }}>
                 <FormSection title="Debug" titleStyleType="no_border">
                     <FormInput
                         value={settings.debuggerUrl}

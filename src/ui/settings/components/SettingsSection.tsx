@@ -1,4 +1,4 @@
-import { NavigationNative } from "@metro/common";
+import { ReactNative as RN, NavigationNative } from "@metro/common";
 import { ErrorBoundary, Forms } from "@ui/components";
 import { getAssetIDByName } from "@ui/assets";
 import { useProxy } from "@lib/storage";
@@ -12,43 +12,45 @@ export default function SettingsSection() {
 
     return (
         <ErrorBoundary>
-            <FormSection key="Vendetta" title="Vendetta">
-                <FormRow
-                    label="General"
-                    leading={<FormRow.Icon source={getAssetIDByName("settings")} />}
-                    trailing={FormRow.Arrow}
-                    onPress={() => navigation.push("VendettaSettings")}
-                />
-                <FormDivider />
-                <FormRow
-                    label="Plugins"
-                    leading={<FormRow.Icon source={getAssetIDByName("debug")} />}
-                    trailing={FormRow.Arrow}
-                    onPress={() => navigation.push("VendettaPlugins")}
-                />
-                {window.__vendetta_loader?.features.themes && (
-                    <>
-                        <FormDivider />
-                        <FormRow
-                            label="Themes"
-                            leading={<FormRow.Icon source={getAssetIDByName("ic_theme_24px")} />}
-                            trailing={FormRow.Arrow}
-                            onPress={() => navigation.push("VendettaThemes")}
-                        />
-                    </>
-                )}
-                {settings.developerSettings && (
-                    <>
-                        <FormDivider />
-                        <FormRow
-                            label="Developer"
-                            leading={<FormRow.Icon source={getAssetIDByName("ic_progress_wrench_24px")} />}
-                            trailing={FormRow.Arrow}
-                            onPress={() => navigation.push("VendettaDeveloper")}
-                        />
-                    </>
-                )}
-            </FormSection>
+            <RN.View style={settings.flip && { transform: [{ rotate: "180deg" }] }}>
+                <FormSection key="Vendetta" title="Vendetta">
+                    <FormRow
+                        label="General"
+                        leading={<FormRow.Icon source={getAssetIDByName("settings")} />}
+                        trailing={FormRow.Arrow}
+                        onPress={() => navigation.push("VendettaSettings")}
+                    />
+                    <FormDivider />
+                    <FormRow
+                        label="Plugins"
+                        leading={<FormRow.Icon source={getAssetIDByName("debug")} />}
+                        trailing={FormRow.Arrow}
+                        onPress={() => navigation.push("VendettaPlugins")}
+                    />
+                    {window.__vendetta_loader?.features.themes && (
+                        <>
+                            <FormDivider />
+                            <FormRow
+                                label="Themes"
+                                leading={<FormRow.Icon source={getAssetIDByName("ic_theme_24px")} />}
+                                trailing={FormRow.Arrow}
+                                onPress={() => navigation.push("VendettaThemes")}
+                            />
+                        </>
+                    )}
+                    {settings.developerSettings && (
+                        <>
+                            <FormDivider />
+                            <FormRow
+                                label="Developer"
+                                leading={<FormRow.Icon source={getAssetIDByName("ic_progress_wrench_24px")} />}
+                                trailing={FormRow.Arrow}
+                                onPress={() => navigation.push("VendettaDeveloper")}
+                            />
+                        </>
+                    )}
+                </FormSection>
+            </RN.View>
         </ErrorBoundary>
     )
 }

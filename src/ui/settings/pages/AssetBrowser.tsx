@@ -1,6 +1,8 @@
+import { useProxy } from "@/lib/storage";
 import { ReactNative as RN, stylesheet } from "@metro/common";
 import { all } from "@ui/assets";
 import { Forms, Search } from "@ui/components";
+import settings from "@lib/settings";
 import ErrorBoundary from "@ui/components/ErrorBoundary";
 import AssetDisplay from "@ui/settings/components/AssetDisplay";
 
@@ -18,10 +20,11 @@ const styles = stylesheet.createThemedStyleSheet({
 
 export default function AssetBrowser() {
     const [search, setSearch] = React.useState("");
+    useProxy(settings);
 
     return (
         <ErrorBoundary>
-            <RN.View style={{ flex: 1 }}>
+            <RN.View style={{ flex: 1, ...(settings.flip && { transform: [{ rotate: "180deg" }] }) }}>
                 <Search
                     style={styles.search}
                     onChangeText={(v: string) => setSearch(v)}

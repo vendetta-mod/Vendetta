@@ -125,6 +125,7 @@ interface Theme {
 interface Settings {
     debuggerUrl: string;
     developerSettings: boolean;
+    flip: boolean;
 }
 
 interface ApplicationCommand {
