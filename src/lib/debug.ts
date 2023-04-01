@@ -50,7 +50,8 @@ export function getDebugInfo() {
     // Discord
     //! 173.13 renamed this to RTNClientInfoManager.
     const InfoDictionaryManager = RN.NativeModules.InfoDictionaryManager ?? RN.NativeModules.RTNClientInfoManager;
-    const DCDDeviceManager = RN.NativeModules.DCDDeviceManager;
+    //! 173.14 renamed this to RTNDeviceManager.
+    const DCDDeviceManager = RN.NativeModules.DCDDeviceManager ?? RN.NativeModules.RTNDeviceManager;
 
     // Hermes
     const hermesProps = window.HermesInternal.getRuntimeProperties();
