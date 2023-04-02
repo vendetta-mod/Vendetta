@@ -2,6 +2,7 @@ import { patchLogHook } from "@lib/debug";
 import { patchCommands } from "@lib/commands";
 import { initPlugins } from "@lib/plugins";
 import { patchAssets } from "@ui/assets";
+import initQuickInstall from "@ui/quickInstall";
 import initSettings from "@ui/settings";
 import initFixes from "@lib/fixes";
 import logger from "@lib/logger";
@@ -15,6 +16,7 @@ export default async () => {
         patchCommands(),
         initFixes(),
         initSettings(),
+        initQuickInstall(),
     ]);
 
     // Assign window object
