@@ -369,8 +369,13 @@ interface VendettaObject {
     };
     constants: {
         DISCORD_SERVER: string;
+        DISCORD_SERVER_ID: string;
+        PLUGINS_CHANNEL_ID: string;
+        THEMES_CHANNEL_ID: string;
         GITHUB: string;
+        PROXY_PREFIX: string;
         HTTP_REGEX: RegExp;
+        HTTP_REGEX_MULTI: RegExp;
     };
     utils: {
         findInReactTree: (tree: SearchTree, filter: SearchFilter) => any;
