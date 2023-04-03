@@ -1,8 +1,8 @@
+import { findByProps } from "@metro/filters";
 import { PROXY_PREFIX } from "@lib/constants";
 import { after } from "@lib/patcher";
 import { installPlugin } from "@lib/plugins";
 import { installTheme } from "@lib/themes";
-import { findByProps } from "@metro/filters";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
 
