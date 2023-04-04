@@ -1,15 +1,29 @@
 import { ButtonColors, Plugin } from "@types";
-import { NavigationNative, clipboard } from "@metro/common";
+import { NavigationNative, clipboard, users, profiles, stylesheet, ReactNative as RN } from "@metro/common";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
 import { showConfirmationAlert } from "@ui/alerts";
 import { removePlugin, startPlugin, stopPlugin, getSettings } from "@lib/plugins";
 import Card from "@ui/settings/components/Card";
+import { findByProps } from "@/lib/metro/filters";
+import { semanticColors } from "@/ui/color";
 
 interface PluginCardProps {
     plugin: Plugin;
     index: number;
 }
+
+const styles = stylesheet.createThemedStyleSheet({
+    link: {
+        color: semanticColors?.TEXT_LINK
+    }
+});
+
+const asyncUsers = findByProps("getUser", "fetchProfile");
+async function showUserProfile(id: string) {
+    if (!users.getUser(id)) await asyncUsers.fetchProfile(id);
+    profiles.showUserProfile({ userId: id });
+};
 
 export default function PluginCard({ plugin, index }: PluginCardProps) {
     const settings = getSettings(plugin.id);
@@ -18,12 +32,19 @@ export default function PluginCard({ plugin, index }: PluginCardProps) {
 
     // This is needed because of React™
     if (removed) return null;
+    const authors = plugin.manifest.authors;
 
     return (
         <Card
             index={index}
-            // TODO: Actually make use of user IDs
-            headerLabel={`${plugin.manifest.name} by ${plugin.manifest.authors.map(i => i.name).join(", ")}`}
+            // TODO: Find a method to add seperators to authors
+            headerLabel={[plugin.manifest.name, ...(authors ? ["by ", ...(authors ? authors.map(i => i.id ?
+                <RN.Text
+                    style={styles.link}
+                    onPress={() => showUserProfile(i.id!!)}
+                >
+                    {i.name}
+                </RN.Text> : i.name) : [])] : "")]}
             headerIcon={plugin.manifest.vendetta?.icon || "ic_application_command_24px"}
             toggleType="switch"
             toggleValue={plugin.enabled}
