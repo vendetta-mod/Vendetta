@@ -59,7 +59,7 @@ export default function PluginCard({ plugin, index }: PluginCardProps) {
                     isDestructive: true,
                     onPress: () => showConfirmationAlert({
                         title: "Wait!",
-                        content: `Are you sure you wish to delete ${plugin.manifest.name}?`,
+                        content: `Are you sure you wish to delete ${plugin.manifest.name}? This will remove all of the plugin's data.`,
                         confirmText: "Delete",
                         cancelText: "Cancel",
                         confirmColor: ButtonColors.RED,

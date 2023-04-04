@@ -1,7 +1,9 @@
-import { Indexable, PluginManifest, Plugin } from "@types";
+import { Indexable, PluginManifest, Plugin, MMKVManager } from "@types";
 import { awaitSyncWrapper, createMMKVBackend, createStorage, wrapSync } from "@lib/storage";
 import logger, { logModule } from "@lib/logger";
 import safeFetch from "@utils/safeFetch";
+
+const MMKVManager = window.nativeModuleProxy.MMKVManager as MMKVManager;
 
 type EvaledPlugin = {
     onLoad?(): void;
@@ -114,6 +116,7 @@ export function removePlugin(id: string) {
     if (!id.endsWith("/")) id += "/";
     const plugin = plugins[id];
     if (plugin.enabled) stopPlugin(id);
+    MMKVManager.removeItem(id);
     delete plugins[id];
 }
 
