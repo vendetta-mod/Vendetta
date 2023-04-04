@@ -12,6 +12,7 @@ import Plugins from "@ui/settings/pages/Plugins";
 import Themes from "@ui/settings/pages/Themes";
 import Developer from "@ui/settings/pages/Developer";
 import AssetBrowser from "@ui/settings/pages/AssetBrowser";
+import { Forms } from "@ui/components";
 
 const screensModule = findByName("getScreens", false);
 const settingsModule = findByName("UserSettingsOverviewWrapper", false);
@@ -67,7 +68,9 @@ export default function initSettings() {
 
         patches.push(after("render", Overview.type.prototype, (_, { props: { children } }) => {
             const titles = [i18n.Messages["BILLING_SETTINGS"], i18n.Messages["PREMIUM_SETTINGS"]];
-            const index = children.findIndex((c: any) => titles.includes(c.props.title));
+            //! Fix for Android 174201 and iOS 42188
+            children = findInReactTree(children, (tree) => tree.children[1].type === Forms.FormSection).children;
+            const index = children.findIndex((c: any) => titles.includes(c?.props.label));
             children.splice(index === -1 ? 4 : index, 0, <SettingsSection />);
         }));
     }, true);
