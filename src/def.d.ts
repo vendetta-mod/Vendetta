@@ -326,6 +326,11 @@ interface LoaderIdentity {
     }
 }
 
+interface DiscordStyleSheet {
+    [index: string]: any, 
+    createThemedStyleSheet: typeof _RN.StyleSheet.create;
+}
+
 interface VendettaObject {
     patcher: {
         after: typeof _spitroast.after;
@@ -348,7 +353,7 @@ interface VendettaObject {
             i18n: PropIntellisense<"Messages">;
             url: PropIntellisense<"openURL">;
             toasts: PropIntellisense<"open" | "close">;
-            stylesheet: PropIntellisense<"createThemedStyleSheet">;
+            stylesheet: DiscordStyleSheet;
             clipboard: typeof _Clipboard;
             assets: PropIntellisense<"registerAsset">;
             invites: PropIntellisense<"acceptInviteAndTransitionToInviteChannel">;
