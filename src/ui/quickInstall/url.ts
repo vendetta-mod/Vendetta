@@ -14,7 +14,7 @@ export default () => after("showSimpleActionSheet", showSimpleActionSheet, ([{ k
     let urlType: string;
     if (url.startsWith(PROXY_PREFIX)) {
         urlType = "Plugin";
-    } else if (url.endsWith(".json")) {
+    } else if (url.endsWith(".json") && window.__vendetta_loader?.features.themes) {
         urlType = "Theme";
     } else return;
 

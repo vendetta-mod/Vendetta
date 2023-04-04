@@ -23,7 +23,7 @@ export default () => after("default", ForumPostLongPressActionSheet, ([{ thread 
     let postType: string;
     if (thread.parent_id === PLUGINS_CHANNEL_ID) {
         postType = "Plugin";
-    } else if (thread.parent_id === THEMES_CHANNEL_ID) {
+    } else if (thread.parent_id === THEMES_CHANNEL_ID && window.__vendetta_loader?.features.themes) {
         postType = "Theme";
     } else return;
 
