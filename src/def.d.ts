@@ -346,6 +346,8 @@ interface VendettaObject {
         findByNameAll: (name: string, defaultExp?: boolean) => any[];
         findByDisplayName: (displayName: string, defaultExp?: boolean) => any;
         findByDisplayNameAll: (displayName: string, defaultExp?: boolean) => any[];
+        findByTypeName: (typeName: string, defaultExp?: boolean) => any;
+        findByTypeNameAll: (typeName: string, defaultExp?: boolean) => any[];
         findByStoreName: (name: string) => any;
         common: {
             constants: PropIntellisense<"API_HOST">;
