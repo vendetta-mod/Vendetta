@@ -61,7 +61,7 @@ export default function ThemeCard({ theme, index }: ThemeCardProps) {
                 },
                 {
                     icon: "copy",
-                    label: "Copy theme URL",
+                    label: "Copy URL",
                     onPress: () => {
                         clipboard.setString(theme.id);
                         showToast("Copied theme URL to clipboard.", getAssetIDByName("toast_copy_link"));
@@ -69,7 +69,7 @@ export default function ThemeCard({ theme, index }: ThemeCardProps) {
                 },
                 {
                     icon: "ic_message_delete",
-                    label: "Delete theme",
+                    label: "Delete",
                     isDestructive: true,
                     onPress: () => showConfirmationAlert({
                         title: "Wait!",
