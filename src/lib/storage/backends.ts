@@ -8,7 +8,6 @@ export const createMMKVBackend = (store: string): StorageBackend => ({
 });
 
 export const createFileBackend = (file: string): StorageBackend => {
-    // TODO: Creating this function in every file backend probably isn't ideal.
     const filePathFixer: (file: string) => string = RN.Platform.select({
         default: (f) => f,
         ios: (f) => `Documents/${f}`,
@@ -21,6 +20,6 @@ export const createFileBackend = (file: string): StorageBackend => {
             if (!created && !(await FileManager.fileExists(path))) return (created = true), FileManager.writeFile("documents", filePathFixer(file), "{}", "utf8");
             return JSON.parse(await FileManager.readFile(path, "utf8"));
         },
-        set: (data) => void FileManager.writeFile("documents", filePathFixer(file), JSON.stringify(data), "utf8"),
+        set: async (data) => void await FileManager.writeFile("documents", filePathFixer(file), JSON.stringify(data), "utf8"),
     };
 };

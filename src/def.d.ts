@@ -427,21 +427,21 @@ interface VendettaObject {
     };
     plugins: {
         plugins: Indexable<Plugin>;
-        fetchPlugin: (id: string) => void;
-        installPlugin: (id: string, enabled?: boolean) => void;
-        evalPlugin: (plugin: Plugin) => void;
+        fetchPlugin: (id: string) => Promise<void>;
+        installPlugin: (id: string, enabled?: boolean) => Promise<void>;
+        startPlugin: (id: string) => Promise<void>;
         stopPlugin: (id: string, disable?: boolean) => void;
         removePlugin: (id: string) => void;
         getSettings: (id: string) => JSX.Element;
     };
     themes: {
         themes: Indexable<Theme>;
-        fetchTheme: (id: string, selected?: boolean) => void;
-        installTheme: (id: string) => void;
-        selectTheme: (id: string) => void;
+        fetchTheme: (id: string, selected?: boolean) => Promise<void>;
+        installTheme: (id: string) => Promise<void>;
+        selectTheme: (id: string) => Promise<void>;
         removeTheme: (id: string) => Promise<boolean>;
         getCurrentTheme: () => Theme | null;
-        updateThemes: () => void;
+        updateThemes: () => Promise<void>;
     };
     commands: {
         registerCommand: (command: ApplicationCommand) => () => void;
