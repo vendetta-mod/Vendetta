@@ -8,8 +8,10 @@ import { showToast } from "@ui/toasts";
 
 const showSimpleActionSheet = findByProps("showSimpleActionSheet");
 
-export default () => after("showSimpleActionSheet", showSimpleActionSheet, ([{ key, header: { title: url }, options }]) => {
-    if (key !== "LongPressUrl") return;
+export default () => after("showSimpleActionSheet", showSimpleActionSheet, (args) => {
+    if (args[0].key !== "LongPressUrl") return;
+
+    const { header: { title: url }, options } = args[0];
 
     let urlType: string;
     if (url.startsWith(PROXY_PREFIX)) {
