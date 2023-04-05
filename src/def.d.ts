@@ -63,22 +63,22 @@ export enum ButtonColors {
 }
 
 interface ConfirmationAlertOptions {
-    title: string | undefined;
+    title?: string;
     content: string | JSX.Element | JSX.Element[];
-    confirmText: string | undefined;
-    confirmColor: ButtonColors | undefined;
+    confirmText?: string;
+    confirmColor?: ButtonColors;
     onConfirm: () => void;
-    cancelText: string | undefined;
+    cancelText?: string;
 }
 
 interface InputAlertProps {
-    title: string | undefined;
-    confirmText: string | undefined;
-    confirmColor: ButtonColors | undefined;
-    onConfirm: (input: string) => void | Promise<void>;
-    cancelText: string | undefined;
-    placeholder: string | undefined;
-    initialValue: string | undefined;
+    title?: string;
+    confirmText?: string;
+    confirmColor?: ButtonColors;
+    onConfirm: (input: string) => (void | Promise<void>);
+    cancelText?: string;
+    placeholder?: string;
+    initialValue?: string;
 }
 
 interface Author {

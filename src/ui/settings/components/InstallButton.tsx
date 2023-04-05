@@ -26,7 +26,6 @@ export default function InstallButton({ alertTitle, installFunction: fetchFuncti
                     placeholder: "https://example.com/",
                     onConfirm: (input: string) => fetchFunction(input),
                     confirmText: "Install",
-                    confirmColor: undefined,
                     cancelText: "Cancel"
                 })
             )

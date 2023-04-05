@@ -1,5 +1,5 @@
 import { ButtonColors, Theme } from "@types";
-import { ReactNative as RN, clipboard } from "@metro/common";
+import { clipboard } from "@metro/common";
 import { fetchTheme, removeTheme, selectTheme } from "@lib/themes";
 import { BundleUpdaterManager } from "@lib/native";
 import { getAssetIDByName } from "@ui/assets";
