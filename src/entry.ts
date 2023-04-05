@@ -3,7 +3,7 @@ import { ClientInfoManager } from "@lib/native";
 // This logs in the native logging implementation, e.g. logcat
 console.log("Hello from Vendetta!");
 
-(async () => (await import(".")).default().catch(e => {
+import(".").then((m) => m.default()).catch((e) => {
     console.log(e?.stack ?? e.toString());
     alert([
         "Failed to load Vendetta!\n",
@@ -12,4 +12,4 @@ console.log("Hello from Vendetta!");
         `Vendetta: ${__vendettaVersion}`,
         e?.stack || e.toString(),
     ].join("\n"));
-}))();
+});

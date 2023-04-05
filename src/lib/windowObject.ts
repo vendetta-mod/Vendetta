@@ -17,7 +17,7 @@ import * as assets from "@ui/assets";
 import * as color from "@ui/color";
 import * as utils from "@utils";
 
-function without<T extends Record<string, any>>(object: T, ...keys: string[]) {
+function without<O extends object, K extends readonly (keyof O)[]>(object: O, ...keys: K): Omit<O, typeof keys[number]> {
     const cloned = { ...object };
     keys.forEach((k) => delete cloned[k]);
     return cloned;
@@ -36,7 +36,7 @@ export default async (unloads: any[]): Promise<VendettaObject> => ({
         assets,
         ...color,
     },
-    plugins: without(plugins, "initPlugins"),
+    plugins: without(plugins, "initPlugins", "evalPlugin"),
     themes: without(themes, "initThemes"),
     commands: without(commands, "patchCommands"),
     storage,
