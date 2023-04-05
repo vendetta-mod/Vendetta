@@ -1,9 +1,6 @@
-import { DCDFileManager, MMKVManager, StorageBackend } from "@types";
+import { StorageBackend } from "@types";
 import { ReactNative as RN } from "@metro/common";
-
-const MMKVManager = window.nativeModuleProxy.MMKVManager as MMKVManager;
-//! 173.10 renamed this to RTNFileManager.
-const DCDFileManager = (window.nativeModuleProxy.DCDFileManager ?? window.nativeModuleProxy.RTNFileManager) as DCDFileManager;
+import { MMKVManager, FileManager } from "@lib/native";
 
 export const createMMKVBackend = (store: string): StorageBackend => ({
     get: async () => JSON.parse((await MMKVManager.getItem(store)) ?? "{}"),
@@ -20,10 +17,10 @@ export const createFileBackend = (file: string): StorageBackend => {
     let created: boolean;
     return {
         get: async () => {
-            const path = `${DCDFileManager.getConstants().DocumentsDirPath}/${file}`;
-            if (!created && !(await DCDFileManager.fileExists(path))) return (created = true), DCDFileManager.writeFile("documents", filePathFixer(file), "{}", "utf8");
-            return JSON.parse(await DCDFileManager.readFile(path, "utf8"));
+            const path = `${FileManager.getConstants().DocumentsDirPath}/${file}`;
+            if (!created && !(await FileManager.fileExists(path))) return (created = true), FileManager.writeFile("documents", filePathFixer(file), "{}", "utf8");
+            return JSON.parse(await FileManager.readFile(path, "utf8"));
         },
-        set: (data) => void DCDFileManager.writeFile("documents", filePathFixer(file), JSON.stringify(data), "utf8"),
+        set: (data) => void FileManager.writeFile("documents", filePathFixer(file), JSON.stringify(data), "utf8"),
     };
 };

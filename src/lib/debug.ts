@@ -1,6 +1,7 @@
 import { RNConstants } from "@types";
 import { ReactNative as RN } from "@metro/common";
 import { after } from "@lib/patcher";
+import { ClientInfoManager, DeviceManager } from "@lib/native";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
 import logger from "@lib/logger";
@@ -47,12 +48,6 @@ export function patchLogHook() {
 export const versionHash: string = __vendettaVersion;
 
 export function getDebugInfo() {
-    // Discord
-    //! 173.13 renamed this to RTNClientInfoManager.
-    const InfoDictionaryManager = RN.NativeModules.InfoDictionaryManager ?? RN.NativeModules.RTNClientInfoManager;
-    //! 173.14 renamed this to RTNDeviceManager.
-    const DCDDeviceManager = RN.NativeModules.DCDDeviceManager ?? RN.NativeModules.RTNDeviceManager;
-
     // Hermes
     const hermesProps = window.HermesInternal.getRuntimeProperties();
     const hermesVer = hermesProps["OSS Release Version"];
@@ -68,8 +63,8 @@ export function getDebugInfo() {
             loader: window.__vendetta_loader?.name ?? "Unknown",
         },
         discord: {
-            version: InfoDictionaryManager.Version,
-            build: InfoDictionaryManager.Build,
+            version: ClientInfoManager.Version,
+            build: ClientInfoManager.Build,
         },
         react: {
             version: React.version,
@@ -104,15 +99,15 @@ export function getDebugInfo() {
                         manufacturer: PlatformConstants.Manufacturer,
                         brand: PlatformConstants.Brand,
                         model: PlatformConstants.Model,
-                        codename: DCDDeviceManager.device
+                        codename: DeviceManager.device
                     }
                 },
                 ios: {
                     device: {
-                        manufacturer: DCDDeviceManager.deviceManufacturer,
-                        brand: DCDDeviceManager.deviceBrand,
-                        model: DCDDeviceManager.deviceModel,
-                        codename: DCDDeviceManager.device
+                        manufacturer: DeviceManager.deviceManufacturer,
+                        brand: DeviceManager.deviceBrand,
+                        model: DeviceManager.deviceModel,
+                        codename: DeviceManager.device
                     }
                 }
             }

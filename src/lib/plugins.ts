@@ -1,9 +1,8 @@
-import { Indexable, PluginManifest, Plugin, MMKVManager } from "@types";
+import { Indexable, PluginManifest, Plugin } from "@types";
 import { awaitSyncWrapper, createMMKVBackend, createStorage, wrapSync } from "@lib/storage";
+import { MMKVManager } from "@lib/native";
 import logger, { logModule } from "@lib/logger";
 import safeFetch from "@utils/safeFetch";
-
-const MMKVManager = window.nativeModuleProxy.MMKVManager as MMKVManager;
 
 type EvaledPlugin = {
     onLoad?(): void;

@@ -1,4 +1,4 @@
-import { DCDFileManager, Indexable, Theme, ThemeData } from "@types";
+import { Indexable, Theme, ThemeData } from "@types";
 import { findByProps } from "@metro/filters";
 import { ReactNative, chroma } from "@metro/common";
 import { instead } from "@lib/patcher";
@@ -9,7 +9,6 @@ import { safeFetch } from "@utils";
 // Somehow, this is late enough, though?
 export const color = findByProps("SemanticColor");
 
-const DCDFileManager = window.nativeModuleProxy.DCDFileManager as DCDFileManager;
 export const themes = wrapSync(createStorage<Indexable<Theme>>(createMMKVBackend("VENDETTA_THEMES")));
 
 async function writeTheme(theme: Theme | {}) {

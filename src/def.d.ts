@@ -239,7 +239,7 @@ interface MMKVManager {
     clear: () => void;
 }
 
-interface DCDFileManager {
+interface FileManager {
     /**
      * @param path **Full** path to file
      */

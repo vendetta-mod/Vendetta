@@ -1,6 +1,7 @@
 import { ButtonColors, Theme } from "@types";
 import { ReactNative as RN, clipboard } from "@metro/common";
 import { fetchTheme, removeTheme, selectTheme } from "@lib/themes";
+import { BundleUpdaterManager } from "@lib/native";
 import { getAssetIDByName } from "@ui/assets";
 import { showConfirmationAlert } from "@ui/alerts";
 import { showToast } from "@ui/toasts";
@@ -13,7 +14,7 @@ interface ThemeCardProps {
 
 async function selectAndReload(value: boolean, id: string) {
     await selectTheme(value ? id : "default");
-    RN.NativeModules.BundleUpdaterManager.reload();
+    BundleUpdaterManager.reload();
 }
 
 export default function ThemeCard({ theme, index }: ThemeCardProps) {
@@ -48,7 +49,7 @@ export default function ThemeCard({ theme, index }: ThemeCardProps) {
                                     confirmText: "Reload",
                                     cancelText: "Cancel",
                                     confirmColor: ButtonColors.RED,
-                                    onConfirm: () => RN.NativeModules.BundleUpdaterManager.reload(),
+                                    onConfirm: () => BundleUpdaterManager.reload(),
                                 })
                             } else {
                                 showToast("Successfully refetched theme.", getAssetIDByName("toast_image_saved"));

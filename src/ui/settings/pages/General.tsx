@@ -4,6 +4,7 @@ import { Forms, Summary } from "@ui/components";
 import { DISCORD_SERVER, GITHUB } from "@lib/constants";
 import { getDebugInfo } from "@lib/debug";
 import { useProxy } from "@lib/storage";
+import { BundleUpdaterManager } from "@lib/native";
 import settings from "@lib/settings";
 import Version from "@ui/settings/components/Version";
 import ErrorBoundary from "@ui/components/ErrorBoundary";
@@ -102,7 +103,7 @@ export default function General() {
                     <FormRow
                         label="Reload Discord"
                         leading={<FormRow.Icon source={getAssetIDByName("ic_message_retry")} />}
-                        onPress={() => RN.NativeModules.BundleUpdaterManager.reload()}
+                        onPress={() => BundleUpdaterManager.reload()}
                     />
                     <FormDivider />
                     <FormSwitchRow

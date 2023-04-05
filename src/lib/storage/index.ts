@@ -1,7 +1,5 @@
-import { Emitter, MMKVManager, StorageBackend } from "@types";
+import { Emitter, StorageBackend } from "@types";
 import createEmitter from "../emitter";
-
-const MMKVManager = window.nativeModuleProxy.MMKVManager as MMKVManager;
 
 const emitterSymbol = Symbol("emitter accessor");
 const syncAwaitSymbol = Symbol("wrapSync promise accessor");
@@ -115,4 +113,4 @@ export function wrapSync<T extends Promise<any>>(store: T): Awaited<T> {
 
 export const awaitSyncWrapper = (store: any) => new Promise<void>((res) => store[syncAwaitSymbol](res));
 
-export * from "./backends";
+export * from "@lib/storage/backends";
