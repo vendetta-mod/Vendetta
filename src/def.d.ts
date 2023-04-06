@@ -328,7 +328,7 @@ interface LoaderIdentity {
 
 interface DiscordStyleSheet {
     [index: string]: any, 
-    createThemedStyleSheet: typeof _RN.StyleSheet.create;
+    createThemedStyleSheet: typeof import("react-native").StyleSheet.create;
 }
 
 interface VendettaObject {
