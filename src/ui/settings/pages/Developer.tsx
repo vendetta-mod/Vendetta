@@ -75,7 +75,7 @@ export default function Developer() {
                 <FormSection title="Other">
                     <FormRow
                         label="Asset Browser"
-                        leading={<FormRow.Icon source={getAssetIDByName("ic_media_upload")} />}
+                        leading={<FormRow.Icon source={getAssetIDByName("ic_image")} />}
                         trailing={FormRow.Arrow}
                         onPress={() => navigation.push("VendettaAssetBrowser")}
                     />
