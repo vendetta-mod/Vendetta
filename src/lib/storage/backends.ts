@@ -10,7 +10,7 @@ export const createMMKVBackend = (store: string): StorageBackend => ({
 export const createFileBackend = (file: string): StorageBackend => {
     const filePathFixer: (file: string) => string = RN.Platform.select({
         default: (f) => f,
-        ios: (f) => `Documents/${f}`,
+        ios: (f) => FileManager.saveFileToGallery ?  f : `Documents/${f}`,
     });
 
     let created: boolean;
