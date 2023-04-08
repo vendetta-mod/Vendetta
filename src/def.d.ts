@@ -253,6 +253,7 @@ interface FileManager {
      * @param encoding Set to `base64` in order to encode response
      */
     readFile(path: string, encoding: "base64" | "utf8"): Promise<string>;
+    saveFileToGallery?(uri: string, fileName: string, fileType: "PNG" | "JPEG"): Promise<string>;
     /**
      * Beware! This function has differing functionality on iOS and Android.
      * @param storageDir Either `cache` or `documents`.
