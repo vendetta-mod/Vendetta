@@ -17,18 +17,12 @@ import * as assets from "@ui/assets";
 import * as color from "@ui/color";
 import * as utils from "@utils";
 
-function without<O extends object, K extends readonly (keyof O)[]>(object: O, ...keys: K): Omit<O, typeof keys[number]> {
-    const cloned = { ...object };
-    keys.forEach((k) => delete cloned[k]);
-    return cloned;
-}
-
 export default async (unloads: any[]): Promise<VendettaObject> => ({
-    patcher: without(patcher, "unpatchAll"),
+    patcher: utils.without(patcher, "unpatchAll"),
     metro: { ...metro, common: { ...common } },
     constants,
     utils,
-    debug: without(debug, "versionHash", "patchLogHook"),
+    debug: utils.without(debug, "versionHash", "patchLogHook"),
     ui: {
         components,
         toasts,
@@ -36,9 +30,9 @@ export default async (unloads: any[]): Promise<VendettaObject> => ({
         assets,
         ...color,
     },
-    plugins: without(plugins, "initPlugins", "evalPlugin"),
-    themes: without(themes, "initThemes"),
-    commands: without(commands, "patchCommands"),
+    plugins: utils.without(plugins, "initPlugins", "evalPlugin"),
+    themes: utils.without(themes, "initThemes"),
+    commands: utils.without(commands, "patchCommands"),
     storage,
     settings,
     loader: {

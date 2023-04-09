@@ -390,6 +390,7 @@ interface VendettaObject {
         findInTree: (tree: SearchTree, filter: SearchFilter, options: FindInTreeOptions) => any;
         safeFetch: (input: RequestInfo | URL, options?: RequestInit) => Promise<Response>;
         unfreeze: (obj: object) => object;
+        without: <O extends object, K extends readonly (keyof O)[]>(object: O, ...keys: K) => Omit<O, typeof keys[number]>;
     };
     debug: {
         connectToDebugger: (url: string) => void;
