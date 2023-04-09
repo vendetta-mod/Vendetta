@@ -49,7 +49,7 @@ export default function initSettings() {
                 title: "Vendetta Page",
                 render: ({ render: PageView, ...options }: { render: React.ComponentType }) => {
                     const navigation = NavigationNative.useNavigation();
-                    React.useEffect(() => options && navigation.setOptions(options));
+                    React.useEffect(() => options && navigation.setOptions(options), []);
                     // TODO: Is wrapping this in ErrorBoundary a good idea?
                     return <ErrorBoundary><PageView /></ErrorBoundary>;
                 }
