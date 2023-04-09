@@ -4,6 +4,7 @@ import { after } from "@lib/patcher";
 import { installPlugin } from "@lib/plugins";
 import { installTheme } from "@lib/themes";
 import findInReactTree from "@utils/findInReactTree";
+import without from "@utils/without";
 import ErrorBoundary from "@ui/components/ErrorBoundary";
 import SettingsSection from "@ui/settings/components/SettingsSection";
 import InstallButton from "@ui/settings/components/InstallButton";
@@ -47,9 +48,9 @@ export default function initSettings() {
             },
             VendettaCustomPage: {
                 title: "Vendetta Page",
-                render: ({ render: PageView, ...options }: { render: React.ComponentType }) => {
+                render: ({ render: PageView, ...options }: { render: React.ComponentType } & Record<string, object>) => {
                     const navigation = NavigationNative.useNavigation();
-                    React.useEffect(() => options && navigation.setOptions(options), []);
+                    React.useEffect(() => options && navigation.setOptions(without(options, "render")), []);
                     // TODO: Is wrapping this in ErrorBoundary a good idea?
                     return <ErrorBoundary><PageView /></ErrorBoundary>;
                 }
