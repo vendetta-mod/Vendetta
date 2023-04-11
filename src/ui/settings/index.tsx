@@ -46,6 +46,11 @@ export default function initSettings() {
                 title: "Asset Browser",
                 render: AssetBrowser,
             },
+            VendettaErrorBoundaryTriggerer: {
+                title: "explosion.",
+                // @ts-ignore
+                render: <undefined></undefined>,
+            },
             VendettaCustomPage: {
                 title: "Vendetta Page",
                 render: ({ render: PageView, ...options }: { render: React.ComponentType } & Record<string, object>) => {
