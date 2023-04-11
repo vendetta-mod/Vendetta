@@ -123,11 +123,9 @@ export async function initPlugins() {
     await awaitSyncWrapper(plugins);
     const allIds = Object.keys(plugins);
 
-    // Wait for every plugin that is enabled and allowed to update to be fetched...
-    await Promise.allSettled(allIds.filter(pl => plugins[pl].enabled && plugins[pl].update).map(pl => fetchPlugin(pl)));
-    // ...then start ALL enabled plugins, regardless of whether they are allowed to update.
-    await Promise.allSettled(allIds.filter(pl => plugins[pl].enabled).map(pl => startPlugin(pl)));
-    // After this, fetch all disabled plugins that are allowed to update, without waiting for them to finish doing so.
+    // Loop over any plugin that is enabled, update it if allowed, then start it.
+    await Promise.allSettled(allIds.filter(pl => plugins[pl].enabled).map(async (pl) => (plugins[pl].update && await fetchPlugin(pl), await startPlugin(pl))));
+    // Wait for the above to finish, then update all disabled plugins that are allowed to.
     allIds.filter(pl => !plugins[pl].enabled && plugins[pl].update).forEach(pl => fetchPlugin(pl));
 
     return stopAllPlugins;
