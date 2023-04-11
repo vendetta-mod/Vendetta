@@ -1,15 +1,12 @@
 import { ErrorBoundaryProps } from "@types";
 import { React, ReactNative as RN, stylesheet, constants } from "@metro/common";
-import { findByProps } from "@metro/filters";
-import { Forms } from "@ui/components";
+import { Forms, Button } from "@ui/components";
 import { semanticColors } from "@ui/color";
 
 interface ErrorBoundaryState {
     hasErr: boolean;
     errText?: string;
 }
-
-const Button = findByProps("Looks", "Colors", "Sizes") as any;
 
 const styles = stylesheet.createThemedStyleSheet({
     view: {
