@@ -404,6 +404,7 @@ interface VendettaObject {
             General: PropIntellisense<"Button" | "Text" | "View">;
             Search: _React.ComponentType;
             Alert: _React.ComponentType;
+            Button: React.ComponentType<any> & { Looks: any, Colors: any, Sizes: any }
             // Vendetta
             Summary: _React.ComponentType<SummaryProps>;
             ErrorBoundary: _React.ComponentType<ErrorBoundaryProps>;
