@@ -48,13 +48,6 @@ export default function SettingsSection() {
                         />
                     </>
                 )}
-                <FormDivider />
-                <FormRow
-                    label="This will trigger Discord's ErrorBoundary"
-                    leading={<FormRow.Icon source={getAssetIDByName("ic_warning_24px")} />}
-                    trailing={FormRow.Arrow}
-                    onPress={() => navigation.push("VendettaErrorBoundaryTriggerer")}
-                />
             </FormSection>
         </ErrorBoundary>
     )
