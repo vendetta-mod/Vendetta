@@ -414,6 +414,7 @@ interface VendettaObject {
             // Vendetta
             Summary: _React.ComponentType<SummaryProps>;
             ErrorBoundary: _React.ComponentType<ErrorBoundaryProps>;
+            Codeblock: _React.ComponentType<CodeblockProps>;
         }
         toasts: {
             showToast: (content: string, asset: number) => void;
