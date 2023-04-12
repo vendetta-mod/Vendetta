@@ -10,3 +10,4 @@ export const Button = findByProps("Looks", "Colors", "Sizes") as React.Component
 // Vendetta
 export { default as Summary } from "@ui/components/Summary";
 export { default as ErrorBoundary } from "@ui/components/ErrorBoundary";
+export { default as Codeblock } from "@ui/components/Codeblock";

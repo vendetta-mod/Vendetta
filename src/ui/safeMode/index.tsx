@@ -2,7 +2,7 @@ import { ReactNative as RN, constants, stylesheet } from "@metro/common";
 import { findByName, findByProps, findByStoreName } from "@metro/filters";
 import { after } from "@lib/patcher";
 import { semanticColors } from "@ui/color";
-import { Button, ErrorBoundary as _ErrorBoundary } from "@ui/components";
+import { Button, Codeblock, ErrorBoundary as _ErrorBoundary } from "@ui/components";
 
 const ErrorBoundary = findByName("ErrorBoundary");
 
@@ -42,17 +42,6 @@ const styles = stylesheet.createThemedStyleSheet({
         flex: 6,
         paddingHorizontal: 16,
     },
-    codeBlock: {
-        flex: 1,
-        fontFamily: constants.Fonts.CODE_SEMIBOLD,
-        fontSize: 12,
-        backgroundColor: semanticColors.BACKGROUND_SECONDARY,
-        color: semanticColors.TEXT_NORMAL,
-        borderWidth: 1,
-        borderRadius: 4,
-        borderColor: semanticColors.BACKGROUND_TERTIARY,
-        padding: 10,
-    },
     footer: {
         justifyContent: "flex-end",
         paddingHorizontal: 32,
@@ -86,11 +75,7 @@ export default function initSafeMode() {
                                 onTabSelected={(tab: string) => { this.setState({ activeTab: tab }) }}
                             />
                         </RN.View>
-                        {/* This is what we must do for text selection on both platforms */}
-                        {RN.Platform.select({
-                            ios: <RN.TextInput editable={false} multiline style={styles.codeBlock} value={this.state.error[this.state.activeTab ?? "message"]} />,
-                            default: <RN.Text selectable style={styles.codeBlock}>{this.state.error[this.state.activeTab ?? "message"]}</RN.Text>,
-                        })}
+                        <Codeblock selectable style={{ flex: 1, textAlignVertical: "top" }}>{this.state.error[this.state.activeTab ?? "message"]}</Codeblock>
                     </RN.View>
                     <RN.View style={styles.footer}>
                         <Button text="Restart Discord" size="small" onPress={this.handleReload} />

@@ -18,7 +18,13 @@ interface SummaryProps {
 }
 
 interface ErrorBoundaryProps {
-    children: JSX.Element | JSX.Element[],
+    children: JSX.Element | JSX.Element[];
+}
+
+interface CodeblockProps {
+    selectable?: boolean;
+    style?: _RN.TextStyle;
+    children?: string;
 }
 
 // Helper types for API functions
