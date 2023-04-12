@@ -1,15 +1,14 @@
-import { findByName, findByProps, findByStoreName } from "@metro/filters";
 import { after } from "@lib/patcher";
 import { ReactNative, constants, stylesheet } from "@metro/common";
+import { findByName, findByProps, findByStoreName } from "@metro/filters";
 import { semanticColors } from "@ui/color";
+import { Button } from "@ui/components";
 
 const ErrorBoundary = findByName("ErrorBoundary");
 
 const { View, Image, Text, TextInput } = ReactNative;
 // React Native's included SafeAreaView only adds padding on iOS.
 const { SafeAreaView } = findByProps("useSafeAreaInsets");
-// We should be safe to use this, considering Discord themselves use it.
-const { default: Button } = findByProps("ButtonColors");
 // Let's just pray they have this.
 const { BadgableTabBar } = findByProps("BadgableTabBar");
 
