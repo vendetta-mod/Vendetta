@@ -46,18 +46,12 @@ export default function initSettings() {
                 title: "Asset Browser",
                 render: AssetBrowser,
             },
-            VendettaErrorBoundaryTriggerer: {
-                title: "explosion.",
-                // @ts-ignore
-                render: <undefined></undefined>,
-            },
             VendettaCustomPage: {
                 title: "Vendetta Page",
-                render: ({ render: PageView, ...options }: { render: React.ComponentType } & Record<string, object>) => {
+                render: ({ render: PageView, noErrorBoundary, ...options }: { render: React.ComponentType, noErrorBoundary: boolean } & Record<string, object>) => {
                     const navigation = NavigationNative.useNavigation();
-                    React.useEffect(() => options && navigation.setOptions(without(options, "render")), []);
-                    // TODO: Is wrapping this in ErrorBoundary a good idea?
-                    return <ErrorBoundary><PageView /></ErrorBoundary>;
+                    React.useEffect(() => options && navigation.setOptions(without(options, "render", "noErrorBoundary")), []);
+                    return noErrorBoundary ? <PageView /> : <ErrorBoundary><PageView /></ErrorBoundary>;
                 }
             }
         }
