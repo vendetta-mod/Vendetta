@@ -3,6 +3,7 @@ import { findByName } from "@metro/filters";
 import { after } from "@lib/patcher";
 import { installPlugin } from "@lib/plugins";
 import { installTheme } from "@lib/themes";
+import { Forms } from "@ui/components";
 import findInReactTree from "@utils/findInReactTree";
 import without from "@utils/without";
 import ErrorBoundary from "@ui/components/ErrorBoundary";
@@ -13,7 +14,7 @@ import Plugins from "@ui/settings/pages/Plugins";
 import Themes from "@ui/settings/pages/Themes";
 import Developer from "@ui/settings/pages/Developer";
 import AssetBrowser from "@ui/settings/pages/AssetBrowser";
-import { Forms } from "@ui/components";
+import settings from "@lib/settings";
 
 const screensModule = findByName("getScreens", false);
 const settingsModule = findByName("UserSettingsOverviewWrapper", false);
@@ -36,7 +37,7 @@ export default function initSettings() {
             VendettaThemes: {
                 title: "Themes",
                 render: Themes,
-                headerRight: () => <InstallButton alertTitle="Install Theme" installFunction={installTheme} />,
+                headerRight: !settings.safeMode.enabled && (() => <InstallButton alertTitle="Install Theme" installFunction={installTheme} />),
             },
             VendettaDeveloper: {
                 title: "Developer",

@@ -2,7 +2,7 @@ import { ReactNative as RN, url } from "@metro/common";
 import { getAssetIDByName } from "@ui/assets";
 import { Forms, Summary } from "@ui/components";
 import { DISCORD_SERVER, GITHUB } from "@lib/constants";
-import { getDebugInfo } from "@lib/debug";
+import { getDebugInfo, toggleSafeMode } from "@lib/debug";
 import { useProxy } from "@lib/storage";
 import { BundleUpdaterManager } from "@lib/native";
 import settings from "@lib/settings";
@@ -104,6 +104,13 @@ export default function General() {
                         label="Reload Discord"
                         leading={<FormRow.Icon source={getAssetIDByName("ic_message_retry")} />}
                         onPress={() => BundleUpdaterManager.reload()}
+                    />
+                    <FormDivider />
+                    <FormRow
+                        label={settings.safeMode.enabled ? "Return to Normal Mode" : "Reload in Safe Mode"}
+                        subLabel={`This will reload Discord ${settings.safeMode.enabled ? "normally." : "without loading plugins."}`}
+                        leading={<FormRow.Icon source={getAssetIDByName("ic_privacy_24px")} />}
+                        onPress={toggleSafeMode}
                     />
                     <FormDivider />
                     <FormSwitchRow

@@ -22,7 +22,7 @@ export default async (unloads: any[]): Promise<VendettaObject> => ({
     metro: { ...metro, common: { ...common } },
     constants,
     utils,
-    debug: utils.without(debug, "versionHash", "patchLogHook"),
+    debug: utils.without(debug, "versionHash", "patchLogHook", "toggleSafeMode"),
     ui: {
         components,
         toasts,

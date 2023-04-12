@@ -1,11 +1,27 @@
 import { RNConstants } from "@types";
 import { ReactNative as RN } from "@metro/common";
 import { after } from "@lib/patcher";
-import { ClientInfoManager, DeviceManager } from "@lib/native";
+import { ClientInfoManager, DeviceManager, BundleUpdaterManager } from "@lib/native";
+import { getCurrentTheme, selectTheme } from "@lib/themes";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
+import settings from "@lib/settings";
 import logger from "@lib/logger";
 export let socket: WebSocket;
+
+export async function toggleSafeMode() {
+    settings.safeMode.enabled = !settings.safeMode.enabled;
+    if (window.__vendetta_loader?.features.themes) {
+        if (getCurrentTheme()?.id) settings.safeMode.currentThemeId = getCurrentTheme()!.id;
+        if (settings.safeMode.enabled) {
+            await selectTheme("default");
+        } else if (settings.safeMode.currentThemeId) {
+            await selectTheme(settings.safeMode.currentThemeId);
+        }
+    }
+    // TODO: Is this consistent? Should we use setImmediate instead?
+    setTimeout(BundleUpdaterManager.reload, 400);
+}
 
 export function connectToDebugger(url: string) {
     if (socket !== undefined && socket.readyState !== WebSocket.CLOSED) socket.close();

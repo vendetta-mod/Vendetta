@@ -2,8 +2,10 @@ import { ButtonColors } from "@types";
 import { ReactNative as RN, clipboard, stylesheet } from "@metro/common";
 import { findByName, findByProps, findByStoreName } from "@metro/filters";
 import { after } from "@lib/patcher";
+import { toggleSafeMode } from "@lib/debug";
 import { semanticColors } from "@ui/color";
 import { Button, Codeblock, ErrorBoundary as _ErrorBoundary } from "@ui/components";
+import settings from "@lib/settings";
 
 const ErrorBoundary = findByName("ErrorBoundary");
 
@@ -79,9 +81,9 @@ export default function initSafeMode() {
         // This is in the patch and not outside of it so that we can use `this`, e.g. for setting state
         const buttons: Button[] = [
             { text: "Restart Discord", onPress: this.handleReload },
+            { text: `Restart in ${settings.safeMode.enabled ? "Normal Mode" : "Safe Mode"}`, onPress: toggleSafeMode },
             // { text: "Copy Error Info", onPress: () => alert("Soon™️") },
             { text: "Retry Render", color: ButtonColors.RED, onPress: () => this.setState({ info: null, error: null }) },
-            // { text: "Enter Safe Mode", color: ButtonColors.RED, onPress: () => alert("Soon™️") }
         ]
 
         return (
