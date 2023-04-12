@@ -1,4 +1,5 @@
-import { ReactNative as RN, constants, stylesheet } from "@metro/common";
+import { ButtonColors } from "@types";
+import { ReactNative as RN, clipboard, stylesheet } from "@metro/common";
 import { findByName, findByProps, findByStoreName } from "@metro/filters";
 import { after } from "@lib/patcher";
 import { semanticColors } from "@ui/color";
@@ -18,14 +19,14 @@ const styles = stylesheet.createThemedStyleSheet({
     container: {
         flex: 1,
         backgroundColor: semanticColors.BACKGROUND_PRIMARY,
+        paddingHorizontal: 16,
     },
     header: {
         flex: 1,
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        paddingHorizontal: 16,
-        paddingVertical: 8,
+        marginVertical: 8,
     },
     headerTitle: {
         ...TextStyleSheet["heading-md/semibold"],
@@ -38,22 +39,50 @@ const styles = stylesheet.createThemedStyleSheet({
         textAlign: "center",
         color: semanticColors.TEXT_MUTED,
     },
-    main: {
-        flex: 6,
-        paddingHorizontal: 16,
-    },
     footer: {
         justifyContent: "flex-end",
-        paddingHorizontal: 32,
-        paddingVertical: 8,
+        marginVertical: 8,
     },
 });
+
+interface Tab {
+    id: string;
+    title: string;
+    trimWhitespace?: boolean;
+}
+
+interface Button {
+    text: string;
+    // TODO: Proper types for the below
+    color?: string;
+    size?: string;
+    onPress: () => void;
+}
+
+const tabs: Tab[] = [
+    { id: "message",title: "Message" },
+    { id: "stack", title: "Stack Trace" },
+    { id: "componentStack", title: "Component", trimWhitespace: true },
+];
 
 export default function initSafeMode() {
     const patches = new Array<Function>;
 
     patches.push(after("render", ErrorBoundary.prototype, function (this: any, _, ret) {
         if (!this.state.error) return;
+
+        // Not using setState here as we don't want to cause a re-render, we want this to be set in the initial render
+        this.state.activeTab ??= "message";
+        const tabData = tabs.find(t => t.id === this.state.activeTab);
+        const errorText: string = this.state.error[this.state.activeTab];
+        
+        // This is in the patch and not outside of it so that we can use `this`, e.g. for setting state
+        const buttons: Button[] = [
+            { text: "Restart Discord", onPress: this.handleReload },
+            // { text: "Copy Error Info", onPress: () => alert("Soon™️") },
+            { text: "Retry Render", color: ButtonColors.RED, onPress: () => this.setState({ info: null, error: null }) },
+            // { text: "Enter Safe Mode", color: ButtonColors.RED, onPress: () => alert("Soon™️") }
+        ]
 
         return (
             <_ErrorBoundary>
@@ -65,21 +94,34 @@ export default function initSafeMode() {
                             <RN.Text style={styles.headerDescription}>{ret.props.body}</RN.Text>
                         </RN.View>
                     </RN.View>
-                    <RN.View style={styles.main}>
+                    <RN.View style={{ flex: 6 }}>
                         <RN.View style={{ paddingBottom: 8 }}>
-                            {/* Perhaps tabs should be moved out of this, and we should set the default active tab instead of falling back to messages.
-                            Are errors caught by errorboundary guaranteed to have component stack? */}
+                            {/* Are errors caught by ErrorBoundary guaranteed to have the component stack? */}
                             <BadgableTabBar
-                                tabs={[{ id: "message", title: "Message" }, { id: "stack", title: "Stack Trace" }, { id: "componentStack", title: "Component" }]}
-                                activeTab={this.state.activeTab ?? "message"}
+                                tabs={tabs}
+                                activeTab={this.state.activeTab}
                                 onTabSelected={(tab: string) => { this.setState({ activeTab: tab }) }}
                             />
                         </RN.View>
-                        <Codeblock selectable style={{ flex: 1, textAlignVertical: "top" }}>{this.state.error[this.state.activeTab ?? "message"]}</Codeblock>
+                        <Codeblock
+                            selectable
+                            style={{ flex: 1, textAlignVertical: "top" }}
+                        >
+                            {/*
+                                TODO: I tried to get this working as intended using regex and failed.
+                                When trimWhitespace is true, each line should have it's whitespace removed but with it's spaces kept.
+                            */}
+                            {tabData?.trimWhitespace ? errorText.split("\n").filter(i => i.length !== 0).map(i => i.trim()).join("\n") : errorText}
+                        </Codeblock>
                     </RN.View>
                     <RN.View style={styles.footer}>
-                        <Button text="Restart Discord" size="small" onPress={this.handleReload} />
-                        {/* <Button style={{ marginTop: 8 }} text="Enter Safe Mode" size="small" color="red" onPress={() => {}}} /> */}
+                        {buttons.map(button => <Button
+                            text={button.text}
+                            color={button.color ?? ButtonColors.BRAND}
+                            size={button.size ?? "small"}
+                            onPress={button.onPress}
+                            style={{ marginTop: buttons.indexOf(button) !== 0 ? 8 : 0 } }
+                        />)}
                     </RN.View>
                 </SafeAreaView>
             </_ErrorBoundary>
