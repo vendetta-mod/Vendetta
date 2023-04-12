@@ -131,6 +131,10 @@ interface Theme {
 interface Settings {
     debuggerUrl: string;
     developerSettings: boolean;
+    safeMode: {
+        enabled: boolean;
+        currentThemeId?: string;
+    };
 }
 
 interface ApplicationCommand {
@@ -410,7 +414,8 @@ interface VendettaObject {
             General: PropIntellisense<"Button" | "Text" | "View">;
             Search: _React.ComponentType;
             Alert: _React.ComponentType;
-            Button: React.ComponentType<any> & { Looks: any, Colors: ButtonColors, Sizes: any }
+            Button: _React.ComponentType<any> & { Looks: any, Colors: ButtonColors, Sizes: any };
+            HelpMessage: _React.ComponentType; 
             // Vendetta
             Summary: _React.ComponentType<SummaryProps>;
             ErrorBoundary: _React.ComponentType<ErrorBoundaryProps>;
