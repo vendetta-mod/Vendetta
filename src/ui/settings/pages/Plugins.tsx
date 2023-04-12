@@ -13,7 +13,7 @@ export default function Plugins() {
     return (
         <ErrorBoundary>
             <RN.View style={{ flex: 1 }}>
-                {settings.safeMode.enabled && <RN.View style={{ margin: 10 }}>
+                {settings.safeMode?.enabled && <RN.View style={{ margin: 10 }}>
                     <HelpMessage messageType={0}>You are in Safe Mode, so plugins cannot be loaded. Disable any misbehaving plugins, then return to Normal Mode from the General settings page. </HelpMessage>
                 </RN.View>}
                 <RN.FlatList

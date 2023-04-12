@@ -107,8 +107,8 @@ export default function General() {
                     />
                     <FormDivider />
                     <FormRow
-                        label={settings.safeMode.enabled ? "Return to Normal Mode" : "Reload in Safe Mode"}
-                        subLabel={`This will reload Discord ${settings.safeMode.enabled ? "normally." : "without loading plugins."}`}
+                        label={settings.safeMode?.enabled ? "Return to Normal Mode" : "Reload in Safe Mode"}
+                        subLabel={`This will reload Discord ${settings.safeMode?.enabled ? "normally." : "without loading plugins."}`}
                         leading={<FormRow.Icon source={getAssetIDByName("ic_privacy_24px")} />}
                         onPress={toggleSafeMode}
                     />

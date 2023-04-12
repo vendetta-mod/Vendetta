@@ -37,7 +37,7 @@ export default function initSettings() {
             VendettaThemes: {
                 title: "Themes",
                 render: Themes,
-                headerRight: !settings.safeMode.enabled && (() => <InstallButton alertTitle="Install Theme" installFunction={installTheme} />),
+                headerRight: !settings.safeMode?.enabled && (() => <InstallButton alertTitle="Install Theme" installFunction={installTheme} />),
             },
             VendettaDeveloper: {
                 title: "Developer",
