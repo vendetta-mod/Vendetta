@@ -1,12 +1,11 @@
-import { after } from "@lib/patcher";
-import { ReactNative, constants, stylesheet } from "@metro/common";
+import { ReactNative as RN, constants, stylesheet } from "@metro/common";
 import { findByName, findByProps, findByStoreName } from "@metro/filters";
+import { after } from "@lib/patcher";
 import { semanticColors } from "@ui/color";
 import { Button, ErrorBoundary as _ErrorBoundary } from "@ui/components";
 
 const ErrorBoundary = findByName("ErrorBoundary");
 
-const { View, Image, Text, TextInput } = ReactNative;
 // React Native's included SafeAreaView only adds padding on iOS.
 const { SafeAreaView } = findByProps("useSafeAreaInsets");
 // Let's just pray they have this.
@@ -23,20 +22,20 @@ const styles = stylesheet.createThemedStyleSheet({
     header: {
         flex: 1,
         flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
         paddingHorizontal: 16,
         paddingVertical: 8,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     headerTitle: {
-        textAlign: 'center',
         ...TextStyleSheet["heading-md/semibold"],
-        color: semanticColors.HEADER_PRIMARY,
+        textAlign: "center",
         textTransform: "uppercase",
+        color: semanticColors.HEADER_PRIMARY,
     },
     headerDescription: {
-        textAlign: 'center',
         ...TextStyleSheet["text-sm/medium"],
+        textAlign: "center",
         color: semanticColors.TEXT_MUTED,
     },
     main: {
@@ -55,9 +54,9 @@ const styles = stylesheet.createThemedStyleSheet({
         padding: 10,
     },
     footer: {
+        justifyContent: "flex-end",
         paddingHorizontal: 32,
         paddingVertical: 8,
-        justifyContent: 'flex-end',
     },
 });
 
@@ -70,15 +69,15 @@ export default function initSafeMode() {
         return (
             <_ErrorBoundary>
                 <SafeAreaView style={styles.container}>
-                    <View style={styles.header}>
-                        <Image style={{ flex: 1, resizeMode: "contain", paddingRight: 4 }} source={ThemeStore.theme === "light" ? ret.props.lightSource : ret.props.darkSource} />
-                        <View style={{ flex: 2, paddingLeft: 4 }}>
-                            <Text style={styles.headerTitle}>{ret.props.title}</Text>
-                            <Text style={styles.headerDescription}>{ret.props.body}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.main}>
-                        <View style={{ paddingBottom: 8 }}>
+                    <RN.View style={styles.header}>
+                        <RN.Image style={{ flex: 1, resizeMode: "contain", paddingRight: 4 }} source={ThemeStore.theme === "light" ? ret.props.lightSource : ret.props.darkSource} />
+                        <RN.View style={{ flex: 2, paddingLeft: 4 }}>
+                            <RN.Text style={styles.headerTitle}>{ret.props.title}</RN.Text>
+                            <RN.Text style={styles.headerDescription}>{ret.props.body}</RN.Text>
+                        </RN.View>
+                    </RN.View>
+                    <RN.View style={styles.main}>
+                        <RN.View style={{ paddingBottom: 8 }}>
                             {/* Perhaps tabs should be moved out of this, and we should set the default active tab instead of falling back to messages.
                             Are errors caught by errorboundary guaranteed to have component stack? */}
                             <BadgableTabBar
@@ -86,17 +85,17 @@ export default function initSafeMode() {
                                 activeTab={this.state.activeTab ?? "message"}
                                 onTabSelected={(tab: string) => { this.setState({ activeTab: tab }) }}
                             />
-                        </View>
+                        </RN.View>
                         {/* This is what we must do for text selection on both platforms */}
-                        {ReactNative.Platform.select({
-                            ios: <TextInput editable={false} multiline style={styles.codeBlock} value={this.state.error[this.state.activeTab ?? "message"]} />,
-                            default: <Text selectable style={styles.codeBlock}>{this.state.error[this.state.activeTab ?? "message"]}</Text>,
+                        {RN.Platform.select({
+                            ios: <RN.TextInput editable={false} multiline style={styles.codeBlock} value={this.state.error[this.state.activeTab ?? "message"]} />,
+                            default: <RN.Text selectable style={styles.codeBlock}>{this.state.error[this.state.activeTab ?? "message"]}</RN.Text>,
                         })}
-                    </View>
-                    <View style={styles.footer}>
+                    </RN.View>
+                    <RN.View style={styles.footer}>
                         <Button text="Restart Discord" size="small" onPress={this.handleReload} />
                         {/* <Button style={{ marginTop: 8 }} text="Enter Safe Mode" size="small" color="red" onPress={() => {}}} /> */}
-                    </View>
+                    </RN.View>
                 </SafeAreaView>
             </_ErrorBoundary>
         )
