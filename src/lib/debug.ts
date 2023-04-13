@@ -19,8 +19,7 @@ export async function toggleSafeMode() {
             await selectTheme(settings.safeMode?.currentThemeId);
         }
     }
-    // TODO: Is this consistent? Should we use setImmediate instead?
-    setTimeout(BundleUpdaterManager.reload, 400);
+    setTimeout(BundleUpdaterManager.reload);
 }
 
 export function connectToDebugger(url: string) {
