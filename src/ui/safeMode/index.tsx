@@ -1,7 +1,8 @@
 import { ButtonColors } from "@types";
-import { ReactNative as RN, clipboard, stylesheet } from "@metro/common";
+import { ReactNative as RN, stylesheet } from "@metro/common";
 import { findByName, findByProps, findByStoreName } from "@metro/filters";
 import { after } from "@lib/patcher";
+import { DeviceManager } from "@lib/native";
 import { toggleSafeMode } from "@lib/debug";
 import { semanticColors } from "@ui/color";
 import { Button, Codeblock, ErrorBoundary as _ErrorBoundary } from "@ui/components";
@@ -42,6 +43,7 @@ const styles = stylesheet.createThemedStyleSheet({
         color: semanticColors.TEXT_MUTED,
     },
     footer: {
+        flexDirection: DeviceManager.isTablet ? "row" : "column",
         justifyContent: "flex-end",
         marginVertical: 8,
     },
@@ -82,7 +84,6 @@ export default function initSafeMode() {
         const buttons: Button[] = [
             { text: "Restart Discord", onPress: this.handleReload },
             { text: `Restart in ${settings.safeMode?.enabled ? "Normal Mode" : "Safe Mode"}`, onPress: toggleSafeMode },
-            // { text: "Copy Error Info", onPress: () => alert("Soon™️") },
             { text: "Retry Render", color: ButtonColors.RED, onPress: () => this.setState({ info: null, error: null }) },
         ]
 
@@ -90,7 +91,7 @@ export default function initSafeMode() {
             <_ErrorBoundary>
                 <SafeAreaView style={styles.container}>
                     <RN.View style={styles.header}>
-                        <RN.Image style={{ flex: 1, resizeMode: "contain", paddingRight: 4 }} source={ThemeStore.theme === "light" ? ret.props.lightSource : ret.props.darkSource} />
+                        <RN.Image style={{ flex: 1, resizeMode: "contain", maxHeight: 96, paddingRight: 4 }} source={ThemeStore.theme === "light" ? ret.props.lightSource : ret.props.darkSource} />
                         <RN.View style={{ flex: 2, paddingLeft: 4 }}>
                             <RN.Text style={styles.headerTitle}>{ret.props.title}</RN.Text>
                             <RN.Text style={styles.headerDescription}>{ret.props.body}</RN.Text>
@@ -117,13 +118,17 @@ export default function initSafeMode() {
                         </Codeblock>
                     </RN.View>
                     <RN.View style={styles.footer}>
-                        {buttons.map(button => <Button
-                            text={button.text}
-                            color={button.color ?? ButtonColors.BRAND}
-                            size={button.size ?? "small"}
-                            onPress={button.onPress}
-                            style={{ marginTop: buttons.indexOf(button) !== 0 ? 8 : 0 } }
-                        />)}
+                        {buttons.map(button => {
+                            const buttonIndex = buttons.indexOf(button) !== 0 ? 8 : 0;
+
+                            return <Button
+                                text={button.text}
+                                color={button.color ?? ButtonColors.BRAND}
+                                size={button.size ?? "small"}
+                                onPress={button.onPress}
+                                style={DeviceManager.isTablet ? { flex: `0.${buttons.length}`, marginLeft: buttonIndex } : { marginTop: buttonIndex }}
+                            />
+                        })}
                     </RN.View>
                 </SafeAreaView>
             </_ErrorBoundary>
