@@ -1,4 +1,5 @@
 import { ReactNative as RN, NavigationNative } from "@metro/common";
+import { findByProps } from "@metro/filters";
 import { Forms } from "@ui/components";
 import { getAssetIDByName } from "@ui/assets";
 import { connectToDebugger } from "@lib/debug";
@@ -7,6 +8,8 @@ import settings, { loaderConfig } from "@lib/settings";
 import ErrorBoundary from "@ui/components/ErrorBoundary";
 
 const { FormSection, FormRow, FormSwitchRow, FormInput, FormDivider } = Forms;
+const { hideActionSheet } = findByProps("openLazy", "hideActionSheet");
+const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 
 export default function Developer() {
     const navigation = NavigationNative.useNavigation();
@@ -78,6 +81,26 @@ export default function Developer() {
                         leading={<FormRow.Icon source={getAssetIDByName("ic_image")} />}
                         trailing={FormRow.Arrow}
                         onPress={() => navigation.push("VendettaAssetBrowser")}
+                    />
+                    <FormDivider />
+                    <FormRow
+                        label="ErrorBoundary Tools"
+                        leading={<FormRow.Icon source={getAssetIDByName("ic_warning_24px")} />}
+                        trailing={FormRow.Arrow}
+                        onPress={() => showSimpleActionSheet({
+                            key: "ErrorBoundaryTools",
+                            header: {
+                                title: "Which ErrorBoundary do you want to trip?",
+                                icon: <FormRow.Icon style={{ marginRight: 8 }} source={getAssetIDByName("ic_warning_24px")} />,
+                                onClose: () => hideActionSheet(),
+                            },
+                            options: [
+                                // @ts-expect-error 
+                                // Of course, to trigger an error, we need to do something incorrectly. The below will do!
+                                { label: "Vendetta", onPress: () => navigation.push("VendettaCustomPage", { render: () => <undefined /> }) },
+                                { label: "Discord", isDestructive: true, onPress: () => navigation.push("VendettaCustomPage", { noErrorBoundary: true }) },
+                            ],
+                        })}
                     />
                 </FormSection>
             </RN.ScrollView>

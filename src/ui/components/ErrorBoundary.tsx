@@ -1,15 +1,12 @@
 import { ErrorBoundaryProps } from "@types";
 import { React, ReactNative as RN, stylesheet, constants } from "@metro/common";
-import { findByProps } from "@metro/filters";
-import { Forms } from "@ui/components";
+import { Forms, Button, Codeblock } from "@ui/components";
 import { semanticColors } from "@ui/color";
 
 interface ErrorBoundaryState {
     hasErr: boolean;
     errText?: string;
 }
-
-const Button = findByProps("Looks", "Colors", "Sizes") as any;
 
 const styles = stylesheet.createThemedStyleSheet({
     view: {
@@ -22,15 +19,6 @@ const styles = stylesheet.createThemedStyleSheet({
         textAlign: "center",
         marginBottom: 5,
     },
-    codeblock: {
-        fontFamily: constants.Fonts.CODE_SEMIBOLD,
-        includeFontPadding: false,
-        fontSize: 12,
-        backgroundColor: semanticColors.BACKGROUND_SECONDARY,
-        padding: 5,
-        borderRadius: 5,
-        marginBottom: 5,
-    }
 });
 
 export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
@@ -47,7 +35,7 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, E
         return (
             <RN.ScrollView style={styles.view}>
                 <Forms.FormText style={styles.title}>Uh oh.</Forms.FormText>
-                <Forms.FormText style={styles.codeblock}>{this.state.errText}</Forms.FormText>
+                <Codeblock selectable style={{ marginBottom: 5 }}>{this.state.errText}</Codeblock>
                 <Button
                     color={Button.Colors.RED}
                     size={Button.Sizes.MEDIUM}

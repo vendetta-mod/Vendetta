@@ -1,6 +1,7 @@
 import { Indexable, PluginManifest, Plugin } from "@types";
 import { awaitSyncWrapper, createMMKVBackend, createStorage, wrapSync } from "@lib/storage";
 import { MMKVManager } from "@lib/native";
+import settings from "@lib/settings";
 import logger, { logModule } from "@lib/logger";
 import safeFetch from "@utils/safeFetch";
 
@@ -76,9 +77,11 @@ export async function startPlugin(id: string) {
     if (!plugin) throw new Error("Attempted to start non-existent plugin");
 
     try {
-        const pluginRet: EvaledPlugin = await evalPlugin(plugin);
-        loadedPlugins[id] = pluginRet;
-        pluginRet.onLoad?.();
+        if (!settings.safeMode?.enabled) {
+            const pluginRet: EvaledPlugin = await evalPlugin(plugin);
+            loadedPlugins[id] = pluginRet;
+            pluginRet.onLoad?.();
+        }
         plugin.enabled = true;
     } catch(e) {
         logger.error(`Plugin ${plugin.id} errored whilst loading, and will be unloaded`, e);
@@ -99,15 +102,17 @@ export function stopPlugin(id: string, disable = true) {
     const plugin = plugins[id];
     const pluginRet = loadedPlugins[id];
     if (!plugin) throw new Error("Attempted to stop non-existent plugin");
-    if (!pluginRet) throw new Error("Attempted to stop a non-started plugin");
 
-    try {
-        pluginRet.onUnload?.();
-    } catch(e) {
-        logger.error(`Plugin ${plugin.id} errored whilst unloading`, e);
+    if (!settings.safeMode?.enabled) {
+        try {
+            pluginRet?.onUnload?.();
+        } catch(e) {
+            logger.error(`Plugin ${plugin.id} errored whilst unloading`, e);
+        }
+    
+        delete loadedPlugins[id];
     }
 
-    delete loadedPlugins[id];
     disable && (plugin.enabled = false);
 }
 
@@ -120,13 +125,16 @@ export function removePlugin(id: string) {
 }
 
 export async function initPlugins() {
+    await awaitSyncWrapper(settings);
     await awaitSyncWrapper(plugins);
     const allIds = Object.keys(plugins);
 
-    // Loop over any plugin that is enabled, update it if allowed, then start it.
-    await Promise.allSettled(allIds.filter(pl => plugins[pl].enabled).map(async (pl) => (plugins[pl].update && await fetchPlugin(pl), await startPlugin(pl))));
-    // Wait for the above to finish, then update all disabled plugins that are allowed to.
-    allIds.filter(pl => !plugins[pl].enabled && plugins[pl].update).forEach(pl => fetchPlugin(pl));
+    if (!settings.safeMode?.enabled) {
+        // Loop over any plugin that is enabled, update it if allowed, then start it.
+        await Promise.allSettled(allIds.filter(pl => plugins[pl].enabled).map(async (pl) => (plugins[pl].update && await fetchPlugin(pl), await startPlugin(pl))));
+        // Wait for the above to finish, then update all disabled plugins that are allowed to.
+        allIds.filter(pl => !plugins[pl].enabled && plugins[pl].update).forEach(pl => fetchPlugin(pl));
+    };
 
     return stopAllPlugins;
 }

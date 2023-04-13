@@ -18,7 +18,13 @@ interface SummaryProps {
 }
 
 interface ErrorBoundaryProps {
-    children: JSX.Element | JSX.Element[],
+    children: JSX.Element | JSX.Element[];
+}
+
+interface CodeblockProps {
+    selectable?: boolean;
+    style?: _RN.TextStyle;
+    children?: string;
 }
 
 // Helper types for API functions
@@ -125,6 +131,10 @@ interface Theme {
 interface Settings {
     debuggerUrl: string;
     developerSettings: boolean;
+    safeMode?: {
+        enabled: boolean;
+        currentThemeId?: string;
+    };
 }
 
 interface ApplicationCommand {
@@ -404,9 +414,12 @@ interface VendettaObject {
             General: PropIntellisense<"Button" | "Text" | "View">;
             Search: _React.ComponentType;
             Alert: _React.ComponentType;
+            Button: _React.ComponentType<any> & { Looks: any, Colors: ButtonColors, Sizes: any };
+            HelpMessage: _React.ComponentType; 
             // Vendetta
             Summary: _React.ComponentType<SummaryProps>;
             ErrorBoundary: _React.ComponentType<ErrorBoundaryProps>;
+            Codeblock: _React.ComponentType<CodeblockProps>;
         }
         toasts: {
             showToast: (content: string, asset: number) => void;

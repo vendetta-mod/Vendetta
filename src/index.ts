@@ -3,6 +3,7 @@ import { patchCommands } from "@lib/commands";
 import { initPlugins } from "@lib/plugins";
 import { patchAssets } from "@ui/assets";
 import initQuickInstall from "@ui/quickInstall";
+import initSafeMode from "@ui/safeMode";
 import initSettings from "@ui/settings";
 import initFixes from "@lib/fixes";
 import logger from "@lib/logger";
@@ -15,6 +16,7 @@ export default async () => {
         patchAssets(),
         patchCommands(),
         initFixes(),
+        initSafeMode(),
         initSettings(),
         initQuickInstall(),
     ]);

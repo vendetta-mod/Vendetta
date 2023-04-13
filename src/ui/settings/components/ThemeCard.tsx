@@ -2,9 +2,11 @@ import { ButtonColors, Theme } from "@types";
 import { clipboard } from "@metro/common";
 import { fetchTheme, removeTheme, selectTheme } from "@lib/themes";
 import { BundleUpdaterManager } from "@lib/native";
+import { useProxy } from "@lib/storage";
 import { getAssetIDByName } from "@ui/assets";
 import { showConfirmationAlert } from "@ui/alerts";
 import { showToast } from "@ui/toasts";
+import settings from "@lib/settings";
 import Card from "@ui/settings/components/Card";
 
 interface ThemeCardProps {
@@ -18,6 +20,7 @@ async function selectAndReload(value: boolean, id: string) {
 }
 
 export default function ThemeCard({ theme, index }: ThemeCardProps) {
+    useProxy(settings);
     const [removed, setRemoved] = React.useState(false);
 
     // This is needed because of React™
@@ -30,7 +33,7 @@ export default function ThemeCard({ theme, index }: ThemeCardProps) {
             index={index}
             headerLabel={`${theme.data.name} ${authors ? `by ${authors.map(i => i.name).join(", ")}` : ""}`}
             descriptionLabel={theme.data.description ?? "No description."}
-            toggleType="radio"
+            toggleType={!settings.safeMode?.enabled ? "radio" : undefined}
             toggleValue={theme.selected}
             onToggleChange={(v: boolean) => {
                 selectAndReload(v, theme.id);
