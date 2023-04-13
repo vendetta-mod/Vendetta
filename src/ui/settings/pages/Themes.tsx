@@ -13,14 +13,14 @@ export default function Themes() {
     return (
         <ErrorBoundary>
             <RN.View style={{ flex: 1 }}>
-                {settings.safeMode.enabled && <RN.View style={{ margin: 10 }}>
-                    <HelpMessage messageType={0}>You are in Safe Mode, meaning themes have been temporarily disabled.{settings.safeMode.currentThemeId && " If a theme appears to be causing the issue, you can press below to disable it persistently."}</HelpMessage>
-                    {settings.safeMode.currentThemeId && <Button
+                {settings.safeMode?.enabled && <RN.View style={{ margin: 10 }}>
+                    <HelpMessage messageType={0}>You are in Safe Mode, meaning themes have been temporarily disabled.{settings.safeMode?.currentThemeId && " If a theme appears to be causing the issue, you can press below to disable it persistently."}</HelpMessage>
+                    {settings.safeMode?.currentThemeId && <Button
                         text="Disable Theme"
                         color={ButtonColors.BRAND}
                         size="small"
                         onPress={() => {
-                            delete settings.safeMode.currentThemeId;
+                            delete settings.safeMode?.currentThemeId;
                         }}
                         style={{ marginTop: 8 }}
                     />}

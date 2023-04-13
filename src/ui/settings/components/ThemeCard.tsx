@@ -33,7 +33,7 @@ export default function ThemeCard({ theme, index }: ThemeCardProps) {
             index={index}
             headerLabel={`${theme.data.name} ${authors ? `by ${authors.map(i => i.name).join(", ")}` : ""}`}
             descriptionLabel={theme.data.description ?? "No description."}
-            toggleType={!settings.safeMode.enabled ? "radio" : undefined}
+            toggleType={!settings.safeMode?.enabled ? "radio" : undefined}
             toggleValue={theme.selected}
             onToggleChange={(v: boolean) => {
                 selectAndReload(v, theme.id);

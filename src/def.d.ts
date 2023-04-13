@@ -131,7 +131,7 @@ interface Theme {
 interface Settings {
     debuggerUrl: string;
     developerSettings: boolean;
-    safeMode: {
+    safeMode?: {
         enabled: boolean;
         currentThemeId?: string;
     };

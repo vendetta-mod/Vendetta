@@ -10,13 +10,13 @@ import logger from "@lib/logger";
 export let socket: WebSocket;
 
 export async function toggleSafeMode() {
-    settings.safeMode.enabled = !settings.safeMode.enabled;
+    settings.safeMode = { ...settings.safeMode, enabled: !settings.safeMode?.enabled }
     if (window.__vendetta_loader?.features.themes) {
-        if (getCurrentTheme()?.id) settings.safeMode.currentThemeId = getCurrentTheme()!.id;
-        if (settings.safeMode.enabled) {
+        if (getCurrentTheme()?.id) settings.safeMode!.currentThemeId = getCurrentTheme()!.id;
+        if (settings.safeMode?.enabled) {
             await selectTheme("default");
-        } else if (settings.safeMode.currentThemeId) {
-            await selectTheme(settings.safeMode.currentThemeId);
+        } else if (settings.safeMode?.currentThemeId) {
+            await selectTheme(settings.safeMode?.currentThemeId);
         }
     }
     // TODO: Is this consistent? Should we use setImmediate instead?
@@ -32,7 +32,7 @@ export function connectToDebugger(url: string) {
     }
 
     socket = new WebSocket(`ws://${url}`);
-    
+
     socket.addEventListener("open", () => showToast("Connected to debugger.", getAssetIDByName("Check")));
     socket.addEventListener("message", (message: any) => {
         try {
@@ -48,7 +48,7 @@ export function connectToDebugger(url: string) {
     });
 }
 
-export function patchLogHook() { 
+export function patchLogHook() {
     const unpatch = after("nativeLoggingHook", globalThis, (args) => {
         if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ message: args[0], level: args[1] }));
         logger.log(args[0]);

@@ -77,7 +77,7 @@ export async function startPlugin(id: string) {
     if (!plugin) throw new Error("Attempted to start non-existent plugin");
 
     try {
-        if (!settings.safeMode.enabled) {
+        if (!settings.safeMode?.enabled) {
             const pluginRet: EvaledPlugin = await evalPlugin(plugin);
             loadedPlugins[id] = pluginRet;
             pluginRet.onLoad?.();
@@ -103,7 +103,7 @@ export function stopPlugin(id: string, disable = true) {
     const pluginRet = loadedPlugins[id];
     if (!plugin) throw new Error("Attempted to stop non-existent plugin");
 
-    if (!settings.safeMode.enabled) {
+    if (!settings.safeMode?.enabled) {
         try {
             pluginRet?.onUnload?.();
         } catch(e) {
@@ -129,7 +129,7 @@ export async function initPlugins() {
     await awaitSyncWrapper(plugins);
     const allIds = Object.keys(plugins);
 
-    if (!settings.safeMode.enabled) {
+    if (!settings.safeMode?.enabled) {
         // Loop over any plugin that is enabled, update it if allowed, then start it.
         await Promise.allSettled(allIds.filter(pl => plugins[pl].enabled).map(async (pl) => (plugins[pl].update && await fetchPlugin(pl), await startPlugin(pl))));
         // Wait for the above to finish, then update all disabled plugins that are allowed to.

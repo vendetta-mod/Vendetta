@@ -81,7 +81,7 @@ export default function initSafeMode() {
         // This is in the patch and not outside of it so that we can use `this`, e.g. for setting state
         const buttons: Button[] = [
             { text: "Restart Discord", onPress: this.handleReload },
-            { text: `Restart in ${settings.safeMode.enabled ? "Normal Mode" : "Safe Mode"}`, onPress: toggleSafeMode },
+            { text: `Restart in ${settings.safeMode?.enabled ? "Normal Mode" : "Safe Mode"}`, onPress: toggleSafeMode },
             // { text: "Copy Error Info", onPress: () => alert("Soon™️") },
             { text: "Retry Render", color: ButtonColors.RED, onPress: () => this.setState({ info: null, error: null }) },
         ]
