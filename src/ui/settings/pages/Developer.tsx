@@ -82,6 +82,7 @@ export default function Developer() {
                         trailing={FormRow.Arrow}
                         onPress={() => navigation.push("VendettaAssetBrowser")}
                     />
+                    <FormDivider />
                     <FormRow
                         label="ErrorBoundary Tools"
                         leading={<FormRow.Icon source={getAssetIDByName("ic_warning_24px")} />}
