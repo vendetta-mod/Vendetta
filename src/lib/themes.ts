@@ -1,7 +1,7 @@
 import { Indexable, Theme, ThemeData } from "@types";
-import { findByProps } from "@metro/filters";
-import { ReactNative, chroma } from "@metro/common";
-import { instead } from "@lib/patcher";
+import { findByName, findByProps } from "@metro/filters";
+import { React, ReactNative, chroma } from "@metro/common";
+import { after, instead } from "@lib/patcher";
 import { createFileBackend, createMMKVBackend, createStorage, wrapSync, awaitSyncWrapper } from "@lib/storage";
 import { safeFetch } from "@utils";
 
@@ -17,6 +17,18 @@ async function writeTheme(theme: Theme | {}) {
     // Save the current theme as vendetta_theme.json. When supported by loader,
     // this json will be written to window.__vendetta_theme and be used to theme the native side.
     await createFileBackend("vendetta_theme.json").set(theme);
+}
+
+export function patchChatBackground() {
+    return instead("default", findByName("MessagesWrapperConnected", false), (args, orig) => {
+        return React.createElement(ReactNative.ImageBackground, {
+            style: { flex: 1, height: "100%" },
+            imageStyle: { opacity: 5 / 100 },
+            source: { uri: "https://cdn.discordapp.com/attachments/1089039746329747486/1096438846402605156/sfF1NQlx.jpg" },
+            // @ts-expect-error
+            children: orig.apply(this, args)
+        });
+    });
 }
 
 function normalizeToHex(colorString: string): string {
@@ -135,6 +147,11 @@ export async function initThemes() {
     // Awaiting the sync wrapper is too slow, to the point where semanticColors are not correctly overwritten.
     // We need a workaround, and it will unfortunately have to be done on the native side.
     // await awaitSyncWrapper(themes);
+
+    after("resolveSemanticColor", findByProps("unsafe_rawColors", "meta").meta, (args, res) => {
+        const [name] = extractInfo(args[0], args[1]);
+        return name === "CHAT_BACKGROUND" ? "#00000000" : res;
+    });
 
     const selectedTheme = getCurrentTheme();
     if (!selectedTheme) return;

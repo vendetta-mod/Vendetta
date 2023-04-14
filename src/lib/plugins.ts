@@ -32,7 +32,7 @@ export async function fetchPlugin(id: string) {
         try {
             // by polymanifest spec, plugins should always specify their main file, but just in case
             pluginJs = await (await safeFetch(id + (pluginManifest.main || "index.js"), { cache: "no-store" })).text();
-        } catch {} // Empty catch, checked below
+        } catch { } // Empty catch, checked below
     }
 
     if (!pluginJs && !existingPlugin) throw new Error(`Failed to fetch JS for ${id}`);
@@ -68,7 +68,7 @@ export async function evalPlugin(plugin: Plugin) {
 
     const raw = (0, eval)(pluginString)(vendettaForPlugins);
     const ret = typeof raw == "function" ? raw() : raw;
-    return ret.default || ret;
+    return ret?.default || ret || {};
 }
 
 export async function startPlugin(id: string) {
@@ -83,12 +83,12 @@ export async function startPlugin(id: string) {
             pluginRet.onLoad?.();
         }
         plugin.enabled = true;
-    } catch(e) {
+    } catch (e) {
         logger.error(`Plugin ${plugin.id} errored whilst loading, and will be unloaded`, e);
 
         try {
             loadedPlugins[plugin.id]?.onUnload?.();
-        } catch(e2) {
+        } catch (e2) {
             logger.error(`Plugin ${plugin.id} errored whilst unloading`, e2);
         }
 
@@ -106,10 +106,10 @@ export function stopPlugin(id: string, disable = true) {
     if (!settings.safeMode?.enabled) {
         try {
             pluginRet?.onUnload?.();
-        } catch(e) {
+        } catch (e) {
             logger.error(`Plugin ${plugin.id} errored whilst unloading`, e);
         }
-    
+
         delete loadedPlugins[id];
     }
 
