@@ -415,7 +415,8 @@ interface VendettaObject {
             Search: _React.ComponentType;
             Alert: _React.ComponentType;
             Button: _React.ComponentType<any> & { Looks: any, Colors: ButtonColors, Sizes: any };
-            HelpMessage: _React.ComponentType; 
+            HelpMessage: _React.ComponentType;
+            SafeAreaView: typeof _RN.SafeAreaView;
             // Vendetta
             Summary: _React.ComponentType<SummaryProps>;
             ErrorBoundary: _React.ComponentType<ErrorBoundaryProps>;

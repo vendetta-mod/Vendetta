@@ -5,13 +5,11 @@ import { after } from "@lib/patcher";
 import { DeviceManager } from "@lib/native";
 import { toggleSafeMode } from "@lib/debug";
 import { semanticColors } from "@ui/color";
-import { Button, Codeblock, ErrorBoundary as _ErrorBoundary } from "@ui/components";
+import { Button, Codeblock, ErrorBoundary as _ErrorBoundary, SafeAreaView } from "@ui/components";
 import settings from "@lib/settings";
 
 const ErrorBoundary = findByName("ErrorBoundary");
 
-// React Native's included SafeAreaView only adds padding on iOS.
-const { SafeAreaView } = findByProps("useSafeAreaInsets");
 // Let's just pray they have this.
 const { BadgableTabBar } = findByProps("BadgableTabBar");
 
