@@ -12,7 +12,7 @@ export default function SettingsSection() {
 
     return (
         <ErrorBoundary>
-            <FormSection key="Vendetta" title="Vendetta">
+            <FormSection key="Vendetta" title={`Vendetta${settings.safeMode?.enabled ? " (Safe Mode)" : ""}`}>
                 <FormRow
                     label="General"
                     leading={<FormRow.Icon source={getAssetIDByName("settings")} />}

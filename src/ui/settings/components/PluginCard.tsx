@@ -5,20 +5,15 @@ import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
 import { showConfirmationAlert } from "@ui/alerts";
 import { removePlugin, startPlugin, stopPlugin, getSettings, fetchPlugin } from "@lib/plugins";
-import Card from "@ui/settings/components/Card";
+import Card, { CardWrapper } from "@ui/settings/components/Card";
 
-interface PluginCardProps {
-    plugin: Plugin;
-    index: number;
-}
-
-async function stopThenStart(plugin: Plugin, func: Function) {
+async function stopThenStart(plugin: Plugin, callback: Function) {
     if (plugin.enabled) stopPlugin(plugin.id, false);
-    func();
+    callback();
     if (plugin.enabled) await startPlugin(plugin.id);
 }
 
-export default function PluginCard({ plugin, index }: PluginCardProps) {
+export default function PluginCard({ item: plugin, index }: CardWrapper<Plugin>) {
     const settings = getSettings(plugin.id);
     const navigation = NavigationNative.useNavigation();
     const [removed, setRemoved] = React.useState(false);
