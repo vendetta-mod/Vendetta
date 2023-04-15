@@ -1,7 +1,7 @@
 import { Theme, ThemeData } from "@types";
-import { ReactNative, chroma } from "@metro/common";
+import { ReactNative as RN, chroma } from "@metro/common";
 import { findByName, findByProps } from "@metro/filters";
-import { instead } from "@lib/patcher";
+import { instead, after } from "@lib/patcher";
 import { createFileBackend, createMMKVBackend, createStorage, wrapSync, awaitSyncWrapper } from "@lib/storage";
 import { safeFetch } from "@utils";
 
@@ -20,24 +20,24 @@ async function writeTheme(theme: Theme | {}) {
 }
 
 export function patchChatBackground() {
-    const currentTheme = getCurrentTheme()?.data?.background;
-    if (!currentTheme) return;
+    const currentBackground = getCurrentTheme()?.data?.background;
+    if (!currentBackground) return;
 
     const MessagesWrapperConnected = findByName("MessagesWrapperConnected", false);
     if (!MessagesWrapperConnected) return;
 
-    return instead("default", MessagesWrapperConnected, (args, orig) => React.createElement(ReactNative.ImageBackground, {
+    return after("default", MessagesWrapperConnected, (_, ret) => React.createElement(RN.ImageBackground, {
         style: { flex: 1, height: "100%" },
-        source: { uri: currentTheme.url },
-        blurRadius: currentTheme.blur,
-        children: orig(...args),
+        source: { uri: currentBackground.url },
+        blurRadius: currentBackground.blur,
+        children: ret,
     }));
 }
 
 function normalizeToHex(colorString: string): string {
     if (chroma.valid(colorString)) return chroma(colorString).hex();
 
-    const color = Number(ReactNative.processColor(colorString));
+    const color = Number(RN.processColor(colorString));
 
     return chroma.rgb(
         color >> 16 & 0xff, // red 
@@ -66,7 +66,7 @@ function processData(data: ThemeData) {
             data.rawColors[key] = normalizeToHex(rawColors[key]);
         }
 
-        if (ReactNative.Platform.OS === "android") applyAndroidAlphaKeys(rawColors);
+        if (RN.Platform.OS === "android") applyAndroidAlphaKeys(rawColors);
     }
 
     return data;
