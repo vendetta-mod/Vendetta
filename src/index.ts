@@ -2,6 +2,7 @@ import { patchLogHook } from "@lib/debug";
 import { patchCommands } from "@lib/commands";
 import { initPlugins } from "@lib/plugins";
 import { patchAssets } from "@ui/assets";
+import { patchChatBackground } from "@lib/themes";
 import initQuickInstall from "@ui/quickInstall";
 import initSafeMode from "@ui/safeMode";
 import initSettings from "@ui/settings";
@@ -15,6 +16,7 @@ export default async () => {
         patchLogHook(),
         patchAssets(),
         patchCommands(),
+        patchChatBackground(),
         initFixes(),
         initSafeMode(),
         initSettings(),

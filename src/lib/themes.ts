@@ -1,6 +1,6 @@
 import { Theme, ThemeData } from "@types";
-import { findByProps } from "@metro/filters";
 import { ReactNative, chroma } from "@metro/common";
+import { findByName, findByProps } from "@metro/filters";
 import { instead } from "@lib/patcher";
 import { createFileBackend, createMMKVBackend, createStorage, wrapSync, awaitSyncWrapper } from "@lib/storage";
 import { safeFetch } from "@utils";
@@ -17,6 +17,21 @@ async function writeTheme(theme: Theme | {}) {
     // Save the current theme as vendetta_theme.json. When supported by loader,
     // this json will be written to window.__vendetta_theme and be used to theme the native side.
     await createFileBackend("vendetta_theme.json").set(theme);
+}
+
+export function patchChatBackground() {
+    const currentTheme = getCurrentTheme()?.data?.background;
+    if (!currentTheme) return;
+
+    const MessagesWrapperConnected = findByName("MessagesWrapperConnected", false);
+    if (!MessagesWrapperConnected) return;
+
+    return instead("default", MessagesWrapperConnected, (args, orig) => React.createElement(ReactNative.ImageBackground, {
+        style: { flex: 1, height: "100%" },
+        source: { uri: currentTheme.url },
+        blurRadius: currentTheme.blur,
+        children: orig(...args),
+    }));
 }
 
 function normalizeToHex(colorString: string): string {
@@ -39,7 +54,7 @@ function processData(data: ThemeData) {
 
         for (const key in semanticColors) {
             for (const index in semanticColors[key]) {
-                semanticColors[key][index] = normalizeToHex(semanticColors[key][index]);
+                semanticColors[key][index] &&= normalizeToHex(semanticColors[key][index] as string);
             }
         }
     }
@@ -158,6 +173,10 @@ export async function initThemes() {
         const themeIndex = theme === "amoled" ? 2 : theme === "light" ? 1 : 0;
 
         const semanticColorVal = selectedTheme.data?.semanticColors?.[name]?.[themeIndex];
+        if (name === "CHAT_BACKGROUND" && typeof selectedTheme.data?.background?.alpha === "number") {
+            return chroma(semanticColorVal || "black").alpha(1 - selectedTheme.data.background.alpha).hex();
+        }
+
         if (semanticColorVal) return semanticColorVal;
 
         const rawValue = selectedTheme.data?.rawColors?.[colorDef.raw];
