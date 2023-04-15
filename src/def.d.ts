@@ -338,7 +338,7 @@ interface LoaderIdentity {
 }
 
 interface DiscordStyleSheet {
-    [index: string]: any, 
+    [index: string]: any,
     createThemedStyleSheet: typeof import("react-native").StyleSheet.create;
 }
 
@@ -398,7 +398,7 @@ interface VendettaObject {
     utils: {
         findInReactTree: (tree: SearchTree, filter: SearchFilter) => any;
         findInTree: (tree: SearchTree, filter: SearchFilter, options: FindInTreeOptions) => any;
-        safeFetch: (input: RequestInfo | URL, options?: RequestInit) => Promise<Response>;
+        safeFetch: (input: RequestInfo | URL, options?: RequestInit, timeout?: number) => Promise<Response>;
         unfreeze: (obj: object) => object;
         without: <O extends object, K extends readonly (keyof O)[]>(object: O, ...keys: K) => Omit<O, typeof keys[number]>;
     };
@@ -415,7 +415,7 @@ interface VendettaObject {
             Search: _React.ComponentType;
             Alert: _React.ComponentType;
             Button: _React.ComponentType<any> & { Looks: any, Colors: ButtonColors, Sizes: any };
-            HelpMessage: _React.ComponentType; 
+            HelpMessage: _React.ComponentType;
             // Vendetta
             Summary: _React.ComponentType<SummaryProps>;
             ErrorBoundary: _React.ComponentType<ErrorBoundaryProps>;
