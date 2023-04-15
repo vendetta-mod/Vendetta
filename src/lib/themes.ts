@@ -1,7 +1,7 @@
-import { Indexable, Theme, ThemeData } from "@types";
+import { Theme, ThemeData } from "@types";
 import { findByName, findByProps } from "@metro/filters";
 import { React, ReactNative, chroma } from "@metro/common";
-import { after, instead } from "@lib/patcher";
+import { instead } from "@lib/patcher";
 import { createFileBackend, createMMKVBackend, createStorage, wrapSync, awaitSyncWrapper } from "@lib/storage";
 import { safeFetch } from "@utils";
 
@@ -9,7 +9,7 @@ import { safeFetch } from "@utils";
 // Somehow, this is late enough, though?
 export const color = findByProps("SemanticColor");
 
-export const themes = wrapSync(createStorage<Indexable<Theme>>(createMMKVBackend("VENDETTA_THEMES")));
+export const themes = wrapSync(createStorage<Record<string, Theme>>(createMMKVBackend("VENDETTA_THEMES")));
 
 async function writeTheme(theme: Theme | {}) {
     if (typeof theme !== "object") throw new Error("Theme must be an object");

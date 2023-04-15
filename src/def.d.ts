@@ -27,6 +27,12 @@ interface CodeblockProps {
     children?: string;
 }
 
+interface SearchProps {
+    onChangeText?: (v: string) => void;
+    placeholder?: string;
+    style?: _RN.TextStyle;
+}
+
 // Helper types for API functions
 type PropIntellisense<P extends string | symbol> = Record<P, any> & Record<PropertyKey, any>;
 type PropsFinder = <T extends string | symbol>(...props: T[]) => PropIntellisense<T>;
@@ -118,15 +124,11 @@ interface ThemeData {
     description?: string;
     authors?: Author[];
     spec: number;
-    semanticColors?: Indexable<(string | false)[]>;
-    rawColors?: Indexable<string>;
+    semanticColors?: Record<string, (string | false)[]>;
+    rawColors?: Record<string, string>;
     background?: {
         url: string;
         blur?: number;
-        /**
-         * The alpha value of the background.
-         * `CHAT_BACKGROUND` of semanticColors alpha value will be ignored when this is specified 
-        */
         alpha?: number;
     }
 }
@@ -295,8 +297,6 @@ interface FileManager {
     DocumentsDirPath: string;
 }
 
-type Indexable<Type> = { [index: string]: Type }
-
 type EmitterEvent = "SET" | "GET" | "DEL";
 
 interface EmitterListenerData {
@@ -309,7 +309,7 @@ type EmitterListener = (
     data: EmitterListenerData | any
 ) => any;
 
-type EmitterListeners = Indexable<Set<EmitterListener>>;
+type EmitterListeners = Record<string, Set<EmitterListener>>
 
 interface Emitter {
     listeners: EmitterListeners;
@@ -421,7 +421,6 @@ interface VendettaObject {
             // Discord
             Forms: PropIntellisense<"Form" | "FormSection">;
             General: PropIntellisense<"Button" | "Text" | "View">;
-            Search: _React.ComponentType;
             Alert: _React.ComponentType;
             Button: _React.ComponentType<any> & { Looks: any, Colors: ButtonColors, Sizes: any };
             HelpMessage: _React.ComponentType;
@@ -429,6 +428,7 @@ interface VendettaObject {
             Summary: _React.ComponentType<SummaryProps>;
             ErrorBoundary: _React.ComponentType<ErrorBoundaryProps>;
             Codeblock: _React.ComponentType<CodeblockProps>;
+            Search: _React.ComponentType<SearchProps>;
         }
         toasts: {
             showToast: (content: string, asset: number) => void;
@@ -439,18 +439,18 @@ interface VendettaObject {
             showInputAlert: (options: InputAlertProps) => void;
         };
         assets: {
-            all: Indexable<Asset>;
+            all: Record<string, Asset>;
             find: (filter: (a: any) => void) => Asset | null | undefined;
             getAssetByName: (name: string) => Asset;
             getAssetByID: (id: number) => Asset;
             getAssetIDByName: (name: string) => number;
         };
         // TODO: Make a vain attempt to type these
-        semanticColors: Indexable<any>;
-        rawColors: Indexable<any>;
+        semanticColors: Record<string, any>;
+        rawColors: Record<string, any>;
     };
     plugins: {
-        plugins: Indexable<Plugin>;
+        plugins: Record<string, Plugin>;
         fetchPlugin: (id: string) => Promise<void>;
         installPlugin: (id: string, enabled?: boolean) => Promise<void>;
         startPlugin: (id: string) => Promise<void>;
@@ -459,7 +459,7 @@ interface VendettaObject {
         getSettings: (id: string) => JSX.Element;
     };
     themes: {
-        themes: Indexable<Theme>;
+        themes: Record<string, Theme>;
         fetchTheme: (id: string, selected?: boolean) => Promise<void>;
         installTheme: (id: string) => Promise<void>;
         selectTheme: (id: string) => Promise<void>;
@@ -492,7 +492,7 @@ interface VendettaObject {
 interface VendettaPluginObject {
     id: string;
     manifest: PluginManifest;
-    storage: Indexable<any>;
+    storage: Record<string, any>;
 }
 
 declare global {

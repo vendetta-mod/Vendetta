@@ -1,4 +1,4 @@
-import { Indexable, PluginManifest, Plugin } from "@types";
+import { PluginManifest, Plugin } from "@types";
 import { awaitSyncWrapper, createMMKVBackend, createStorage, wrapSync } from "@lib/storage";
 import { MMKVManager } from "@lib/native";
 import settings from "@lib/settings";
@@ -11,8 +11,8 @@ type EvaledPlugin = {
     settings: JSX.Element;
 };
 
-export const plugins = wrapSync(createStorage<Indexable<Plugin>>(createMMKVBackend("VENDETTA_PLUGINS")));
-const loadedPlugins: Indexable<EvaledPlugin> = {};
+export const plugins = wrapSync(createStorage<Record<string, Plugin>>(createMMKVBackend("VENDETTA_PLUGINS")));
+const loadedPlugins: Record<string, EvaledPlugin> = {};
 
 export async function fetchPlugin(id: string) {
     if (!id.endsWith("/")) id += "/";
@@ -60,7 +60,7 @@ export async function evalPlugin(plugin: Plugin) {
             id: plugin.id,
             manifest: plugin.manifest,
             // Wrapping this with wrapSync is NOT an option.
-            storage: await createStorage<Indexable<any>>(createMMKVBackend(plugin.id)),
+            storage: await createStorage<Record<string, any>>(createMMKVBackend(plugin.id)),
         },
         logger: new logModule(`Vendetta » ${plugin.manifest.name}`),
     };

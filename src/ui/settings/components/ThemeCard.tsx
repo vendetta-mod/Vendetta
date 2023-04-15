@@ -7,19 +7,14 @@ import { getAssetIDByName } from "@ui/assets";
 import { showConfirmationAlert } from "@ui/alerts";
 import { showToast } from "@ui/toasts";
 import settings from "@lib/settings";
-import Card from "@ui/settings/components/Card";
-
-interface ThemeCardProps {
-    theme: Theme;
-    index: number;
-}
+import Card, { CardWrapper } from "@ui/settings/components/Card";
 
 async function selectAndReload(value: boolean, id: string) {
     await selectTheme(value ? id : "default");
     BundleUpdaterManager.reload();
 }
 
-export default function ThemeCard({ theme, index }: ThemeCardProps) {
+export default function ThemeCard({ item: theme, index }: CardWrapper<Theme>) {
     useProxy(settings);
     const [removed, setRemoved] = React.useState(false);
 
