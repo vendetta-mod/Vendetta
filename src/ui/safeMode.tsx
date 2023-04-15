@@ -64,7 +64,7 @@ interface Button {
 }
 
 const tabs: Tab[] = [
-    { id: "message",title: "Message" },
+    { id: "message", title: "Message" },
     { id: "stack", title: "Stack Trace" },
     { id: "componentStack", title: "Component", trimWhitespace: true },
 ];
@@ -76,7 +76,7 @@ export default () => after("render", ErrorBoundary.prototype, function (this: an
     this.state.activeTab ??= "message";
     const tabData = tabs.find(t => t.id === this.state.activeTab);
     const errorText: string = this.state.error[this.state.activeTab];
-    
+
     // This is in the patch and not outside of it so that we can use `this`, e.g. for setting state
     const buttons: Button[] = [
         { text: "Restart Discord", onPress: this.handleReload },

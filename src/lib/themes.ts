@@ -31,8 +31,7 @@ export function patchChatBackground() {
             style: { flex: 1, height: "100%" },
             source: { uri: currentTheme.url },
             blurRadius: currentTheme.blur,
-            // @ts-expect-error - "An outer value of 'this' is shadowed by this container" ???
-            children: orig.apply(this, args)
+            children: orig(...args)
         });
     });
 }
