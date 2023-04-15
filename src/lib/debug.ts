@@ -19,7 +19,7 @@ export async function toggleSafeMode() {
             await selectTheme(settings.safeMode?.currentThemeId);
         }
     }
-    setTimeout(BundleUpdaterManager.reload);
+    setTimeout(BundleUpdaterManager.reload, 400);
 }
 
 export function connectToDebugger(url: string) {

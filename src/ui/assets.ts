@@ -1,8 +1,8 @@
-import { Asset, Indexable } from "@types";
+import { Asset } from "@types";
 import { assets } from "@metro/common";
 import { after } from "@lib/patcher";
 
-export const all: Indexable<Asset> = {};
+export const all: Record<string, Asset> = {};
 
 export function patchAssets() {
     const unpatch = after("registerAsset", assets, (args: Asset[], id: number) => {

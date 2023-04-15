@@ -13,8 +13,6 @@ const styles = stylesheet.createThemedStyleSheet({
     card: {
         backgroundColor: semanticColors?.BACKGROUND_SECONDARY,
         borderRadius: 5,
-        marginHorizontal: 10,
-        marginBottom: 10,
     },
     header: {
         padding: 0,
@@ -44,7 +42,12 @@ interface OverflowAction extends Action {
     isDestructive?: boolean;
 }
 
-type HeaderLabel = string | React.ComponentType | JSX.Element
+export interface CardWrapper<T> {
+    item: T;
+    index: number;
+}
+
+type HeaderLabel = string | React.ComponentType | JSX.Element;
 
 interface CardProps {
     index?: number;
@@ -63,7 +66,7 @@ export default function Card(props: CardProps) {
     let pressableState = props.toggleValue ?? false;
 
     return ( 
-        <RN.View style={[styles.card, { marginTop: props.index === 0 ? 10 : 0 }]}>
+        <RN.View style={[styles.card, { marginTop: props.index !== 0 ? 10 : 0 }]}>
             <FormRow
                 style={styles.header}
                 label={props.headerLabel}
