@@ -29,7 +29,7 @@ export function patchChatBackground() {
     return after("default", MessagesWrapperConnected, (_, ret) => React.createElement(RN.ImageBackground, {
         style: { flex: 1, height: "100%" },
         source: { uri: currentBackground.url },
-        blurRadius: currentBackground.blur,
+        blurRadius: typeof currentBackground.blur === "number" ? currentBackground.blur : 0,
         children: ret,
     }));
 }
