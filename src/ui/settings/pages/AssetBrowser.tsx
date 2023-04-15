@@ -6,7 +6,6 @@ import AssetDisplay from "@ui/settings/components/AssetDisplay";
 
 const { FormDivider } = Forms;
 
-
 export default function AssetBrowser() {
     const [search, setSearch] = React.useState("");
 
@@ -14,17 +13,14 @@ export default function AssetBrowser() {
         <ErrorBoundary>
             <RN.View style={{ flex: 1 }}>
                 <Search
+                    style={{ margin: 10 }}
                     onChangeText={(v: string) => setSearch(v)}
                     placeholder="Search"
                 />
                 <RN.FlatList
                     data={Object.values(all).filter(a => a.name.includes(search) || a.id.toString() === search)}
-                    renderItem={({ item }) => (
-                        <>
-                            <AssetDisplay asset={item} />
-                            <FormDivider />
-                        </>
-                    )}
+                    renderItem={({ item }) => <AssetDisplay asset={item} />}
+                    ItemSeparatorComponent={FormDivider}
                     keyExtractor={item => item.name}
                 />
             </RN.View>
