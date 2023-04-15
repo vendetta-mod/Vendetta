@@ -1,4 +1,4 @@
-import { Indexable, Theme, ThemeData } from "@types";
+import { Theme, ThemeData } from "@types";
 import { findByProps } from "@metro/filters";
 import { ReactNative, chroma } from "@metro/common";
 import { instead } from "@lib/patcher";
@@ -9,7 +9,7 @@ import { safeFetch } from "@utils";
 // Somehow, this is late enough, though?
 export const color = findByProps("SemanticColor");
 
-export const themes = wrapSync(createStorage<Indexable<Theme>>(createMMKVBackend("VENDETTA_THEMES")));
+export const themes = wrapSync(createStorage<Record<string, Theme>>(createMMKVBackend("VENDETTA_THEMES")));
 
 async function writeTheme(theme: Theme | {}) {
     if (typeof theme !== "object") throw new Error("Theme must be an object");

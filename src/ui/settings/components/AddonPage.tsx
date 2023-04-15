@@ -1,4 +1,3 @@
-import { Indexable } from "@types";
 import { ReactNative as RN } from "@metro/common";
 import { useProxy } from "@lib/storage";
 import { HelpMessage, ErrorBoundary, Search } from "@ui/components";
@@ -6,7 +5,7 @@ import { CardWrapper } from "@ui/settings/components/Card";
 import settings from "@lib/settings";
 
 interface AddonPageProps<T> {
-    items: Indexable<T & { id: string }>;
+    items: Record<string, T & { id: string }>;
     safeModeMessage: string;
     safeModeExtras?: JSX.Element | JSX.Element[];
     card: React.ComponentType<CardWrapper<T>>;
