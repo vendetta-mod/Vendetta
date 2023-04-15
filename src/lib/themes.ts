@@ -56,7 +56,7 @@ function processData(data: ThemeData) {
 
         for (const key in semanticColors) {
             for (const index in semanticColors[key]) {
-                semanticColors[key][index] = normalizeToHex(semanticColors[key][index]);
+                semanticColors[key][index] &&= normalizeToHex(semanticColors[key][index] as string);
             }
         }
     }
@@ -176,7 +176,7 @@ export async function initThemes() {
 
         const semanticColorVal = selectedTheme.data?.semanticColors?.[name]?.[themeIndex];
         if (name === "CHAT_BACKGROUND" && typeof selectedTheme.data?.background?.alpha === "number") {
-            return chroma(semanticColorVal ?? "black").alpha(1 - selectedTheme.data.background.alpha).hex();
+            return chroma(semanticColorVal || "black").alpha(1 - selectedTheme.data.background.alpha).hex();
         }
 
         if (semanticColorVal) return semanticColorVal;

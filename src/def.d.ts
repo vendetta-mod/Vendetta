@@ -118,7 +118,7 @@ interface ThemeData {
     description?: string;
     authors?: Author[];
     spec: number;
-    semanticColors?: Indexable<string[]>;
+    semanticColors?: Indexable<(string | false)[]>;
     rawColors?: Indexable<string>;
     background?: {
         url: string;
