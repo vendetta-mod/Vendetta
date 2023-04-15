@@ -44,9 +44,11 @@ interface OverflowAction extends Action {
     isDestructive?: boolean;
 }
 
+type HeaderLabel = string | React.ComponentType | JSX.Element
+
 interface CardProps {
     index?: number;
-    headerLabel: string | React.ComponentType;
+    headerLabel: HeaderLabel | HeaderLabel[];
     headerIcon?: string;
     toggleType?: "switch" | "radio";
     toggleValue?: boolean;

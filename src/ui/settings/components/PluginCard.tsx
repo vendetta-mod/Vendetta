@@ -1,5 +1,6 @@
 import { ButtonColors, Plugin } from "@types";
-import { NavigationNative, clipboard } from "@metro/common";
+import { ReactNative as RN, NavigationNative, clipboard } from "@metro/common";
+import { PROXY_PREFIX } from "@lib/constants";
 import { MMKVManager } from "@lib/native";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
@@ -30,7 +31,9 @@ export default function PluginCard({ plugin, index }: PluginCardProps) {
         <Card
             index={index}
             // TODO: Actually make use of user IDs
-            headerLabel={`${plugin.manifest.name} by ${plugin.manifest.authors.map(i => i.name).join(", ")}`}
+            headerLabel={[`${plugin.manifest.name} by ${plugin.manifest.authors.map(i => i.name).join(", ")}`,
+            ...(plugin.id.startsWith(PROXY_PREFIX) ?
+                [" ", <RN.Image style={{ width: 16, height: 16 }} source={getAssetIDByName("ic_verified_guild_icon_black_24px")} />] : [])]}
             headerIcon={plugin.manifest.vendetta?.icon || "ic_application_command_24px"}
             toggleType="switch"
             toggleValue={plugin.enabled}
@@ -65,7 +68,7 @@ export default function PluginCard({ plugin, index }: PluginCardProps) {
                         showToast("Copied plugin URL to clipboard.", getAssetIDByName("toast_copy_link"));
                     }
                 },
-                {   
+                {
                     icon: "ic_download_24px",
                     label: plugin.update ? "Disable updates" : "Enable updates",
                     onPress: () => {
