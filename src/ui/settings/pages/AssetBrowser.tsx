@@ -1,4 +1,4 @@
-import { ReactNative as RN, stylesheet } from "@metro/common";
+import { ReactNative as RN } from "@metro/common";
 import { all } from "@ui/assets";
 import { Forms, Search } from "@ui/components";
 import ErrorBoundary from "@ui/components/ErrorBoundary";
@@ -6,15 +6,6 @@ import AssetDisplay from "@ui/settings/components/AssetDisplay";
 
 const { FormDivider } = Forms;
 
-const styles = stylesheet.createThemedStyleSheet({
-    search: {
-        margin: 0,
-        padding: 15,
-        borderBottomWidth: 0,
-        background: "none",
-        backgroundColor: "none",
-    }
-});
 
 export default function AssetBrowser() {
     const [search, setSearch] = React.useState("");
@@ -23,7 +14,6 @@ export default function AssetBrowser() {
         <ErrorBoundary>
             <RN.View style={{ flex: 1 }}>
                 <Search
-                    style={styles.search}
                     onChangeText={(v: string) => setSearch(v)}
                     placeholder="Search"
                 />
