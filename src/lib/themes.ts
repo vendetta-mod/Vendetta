@@ -1,6 +1,6 @@
 import { Theme, ThemeData } from "@types";
+import { ReactNative, chroma } from "@metro/common";
 import { findByName, findByProps } from "@metro/filters";
-import { React, ReactNative, chroma } from "@metro/common";
 import { instead } from "@lib/patcher";
 import { createFileBackend, createMMKVBackend, createStorage, wrapSync, awaitSyncWrapper } from "@lib/storage";
 import { safeFetch } from "@utils";
@@ -26,14 +26,12 @@ export function patchChatBackground() {
     const MessagesWrapperConnected = findByName("MessagesWrapperConnected", false);
     if (!MessagesWrapperConnected) return;
 
-    return instead("default", MessagesWrapperConnected, (args, orig) => {
-        return React.createElement(ReactNative.ImageBackground, {
-            style: { flex: 1, height: "100%" },
-            source: { uri: currentTheme.url },
-            blurRadius: currentTheme.blur,
-            children: orig(...args)
-        });
-    });
+    return instead("default", MessagesWrapperConnected, (args, orig) => React.createElement(ReactNative.ImageBackground, {
+        style: { flex: 1, height: "100%" },
+        source: { uri: currentTheme.url },
+        blurRadius: currentTheme.blur,
+        children: orig(...args),
+    }));
 }
 
 function normalizeToHex(colorString: string): string {

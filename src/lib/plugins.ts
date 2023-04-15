@@ -32,7 +32,7 @@ export async function fetchPlugin(id: string) {
         try {
             // by polymanifest spec, plugins should always specify their main file, but just in case
             pluginJs = await (await safeFetch(id + (pluginManifest.main || "index.js"), { cache: "no-store" })).text();
-        } catch { } // Empty catch, checked below
+        } catch {} // Empty catch, checked below
     }
 
     if (!pluginJs && !existingPlugin) throw new Error(`Failed to fetch JS for ${id}`);
@@ -68,7 +68,7 @@ export async function evalPlugin(plugin: Plugin) {
 
     const raw = (0, eval)(pluginString)(vendettaForPlugins);
     const ret = typeof raw == "function" ? raw() : raw;
-    return ret?.default || ret || {};
+    return ret?.default || ret;
 }
 
 export async function startPlugin(id: string) {
