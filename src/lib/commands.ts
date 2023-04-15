@@ -5,7 +5,7 @@ import { after } from "@lib/patcher";
 let commands: ApplicationCommand[] = [];
 
 export function patchCommands() {
-    const unpatch = after("getBuiltInCommands", commandsModule, (args, res) => res.concat(commands));
+    const unpatch = after("getBuiltInCommands", commandsModule, (_, res) => res.concat(commands));
     return () => {
         commands = [];
         unpatch();

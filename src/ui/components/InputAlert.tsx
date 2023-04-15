@@ -1,6 +1,6 @@
+import { InputAlertProps } from "@types";
 import { findByProps } from "@metro/filters";
 import { Forms, Alert } from "@ui/components";
-import { InputAlertProps } from "@types";
 
 const { FormInput } = Forms;
 const Alerts = findByProps("openLazy", "close");

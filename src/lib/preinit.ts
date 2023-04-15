@@ -1,7 +1,7 @@
+import { initThemes } from "@lib/themes";
+
 // Hoist required modules
 // This used to be in filters.ts, but things became convoluted
-
-import { initThemes } from "@lib/themes";
 
 // Early find logic
 const basicFind = (prop: string) => Object.values(window.modules).find(m => m?.publicModule.exports?.[prop])?.publicModule?.exports;

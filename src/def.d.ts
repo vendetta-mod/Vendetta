@@ -436,7 +436,7 @@ interface VendettaObject {
             Search: _React.ComponentType<SearchProps>;
         }
         toasts: {
-            showToast: (content: string, asset: number) => void;
+            showToast: (content: string, asset?: number) => void;
         };
         alerts: {
             showConfirmationAlert: (options: ConfirmationAlertOptions) => void;

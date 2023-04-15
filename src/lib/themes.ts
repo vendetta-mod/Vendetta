@@ -3,7 +3,7 @@ import { ReactNative as RN, chroma } from "@metro/common";
 import { findByName, findByProps } from "@metro/filters";
 import { instead, after } from "@lib/patcher";
 import { createFileBackend, createMMKVBackend, createStorage, wrapSync, awaitSyncWrapper } from "@lib/storage";
-import { safeFetch } from "@utils";
+import { safeFetch } from "@lib/utils";
 
 //! As of 173.10, early-finding this does not work.
 // Somehow, this is late enough, though?

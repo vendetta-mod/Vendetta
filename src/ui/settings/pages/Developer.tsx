@@ -1,11 +1,10 @@
 import { ReactNative as RN, NavigationNative } from "@metro/common";
 import { findByProps } from "@metro/filters";
-import { Forms } from "@ui/components";
-import { getAssetIDByName } from "@ui/assets";
 import { connectToDebugger } from "@lib/debug";
 import { useProxy } from "@lib/storage";
+import { getAssetIDByName } from "@ui/assets";
+import { Forms, ErrorBoundary } from "@ui/components";
 import settings, { loaderConfig } from "@lib/settings";
-import ErrorBoundary from "@ui/components/ErrorBoundary";
 
 const { FormSection, FormRow, FormSwitchRow, FormInput, FormDivider } = Forms;
 const { hideActionSheet } = findByProps("openLazy", "hideActionSheet");

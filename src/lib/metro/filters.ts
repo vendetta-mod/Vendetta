@@ -4,14 +4,12 @@ import { MetroModules, PropsFinder, PropsFinderAll } from "@types";
 declare const __r: (moduleId: number) => any;
 
 // Function to blacklist a module, preventing it from being searched again
-function blacklist(id: number) {
-    Object.defineProperty(window.modules, id, {
-        value: window.modules[id],
-        enumerable: false,
-        configurable: true,
-        writable: true
-    })
-}
+const blacklist = (id: number) => Object.defineProperty(window.modules, id, {
+    value: window.modules[id],
+    enumerable: false,
+    configurable: true,
+    writable: true
+});
 
 // Blacklist any "bad-actor" modules, e.g. the dreaded null proxy, the window itself, or undefined modules
 for (const key in window.modules) {
@@ -34,25 +32,21 @@ const filterModules = (modules: MetroModules, single = false) => (filter: (m: an
 
         if (!modules[id].isInitialized) try {
             __r(id);
-        } catch {};
+        } catch {}
 
         if (!module) {
             blacklist(id);
             continue;
-        };
+        }
 
-        try {
-            if (module.default && module.__esModule && filter(module.default)) {
-                if (single) return module.default;
-                found.push(module.default);
-            }
+        if (module.default && module.__esModule && filter(module.default)) {
+            if (single) return module.default;
+            found.push(module.default);
+        }
 
-            if (filter(module)) {
-                if (single) return module;
-                else found.push(module);
-            }
-        } catch (e: Error | any) {
-            console.error(`Failed to filter modules... ${e.stack || e.toString()}`);
+        if (filter(module)) {
+            if (single) return module;
+            else found.push(module);
         }
     }
 

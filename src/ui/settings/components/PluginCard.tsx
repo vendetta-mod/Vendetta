@@ -1,10 +1,10 @@
 import { ButtonColors, Plugin } from "@types";
 import { NavigationNative, clipboard } from "@metro/common";
+import { removePlugin, startPlugin, stopPlugin, getSettings, fetchPlugin } from "@lib/plugins";
 import { MMKVManager } from "@lib/native";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
 import { showConfirmationAlert } from "@ui/alerts";
-import { removePlugin, startPlugin, stopPlugin, getSettings, fetchPlugin } from "@lib/plugins";
 import Card, { CardWrapper } from "@ui/settings/components/Card";
 
 async function stopThenStart(plugin: Plugin, callback: Function) {

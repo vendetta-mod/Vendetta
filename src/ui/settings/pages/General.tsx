@@ -1,13 +1,12 @@
 import { ReactNative as RN, url } from "@metro/common";
-import { getAssetIDByName } from "@ui/assets";
-import { Forms, Summary } from "@ui/components";
 import { DISCORD_SERVER, GITHUB } from "@lib/constants";
 import { getDebugInfo, toggleSafeMode } from "@lib/debug";
 import { useProxy } from "@lib/storage";
 import { BundleUpdaterManager } from "@lib/native";
+import { getAssetIDByName } from "@ui/assets";
+import { Forms, Summary, ErrorBoundary } from "@ui/components";
 import settings from "@lib/settings";
 import Version from "@ui/settings/components/Version";
-import ErrorBoundary from "@ui/components/ErrorBoundary";
 
 const { FormRow, FormSwitchRow, FormSection, FormDivider } = Forms;
 const debugInfo = getDebugInfo();

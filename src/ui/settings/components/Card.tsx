@@ -1,8 +1,8 @@
 import { ReactNative as RN, stylesheet } from "@metro/common";
 import { findByProps } from "@metro/filters";
-import { Forms } from "@ui/components";
 import { getAssetIDByName } from "@ui/assets";
 import { semanticColors } from "@ui/color";
+import { Forms } from "@ui/components";
 
 const { FormRow, FormSwitch, FormRadio } = Forms;
 const { hideActionSheet } = findByProps("openLazy", "hideActionSheet");

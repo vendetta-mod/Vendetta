@@ -4,9 +4,7 @@ import { showToast } from "@ui/toasts";
 import { getAssetIDByName } from "@ui/assets";
 import { Forms } from "@ui/components";
 
-interface AssetDisplayProps {
-    asset: Asset;
-}
+interface AssetDisplayProps { asset: Asset }
 
 const { FormRow } = Forms;
 

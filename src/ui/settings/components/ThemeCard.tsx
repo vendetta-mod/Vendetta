@@ -1,8 +1,8 @@
 import { ButtonColors, Theme } from "@types";
 import { clipboard } from "@metro/common";
 import { fetchTheme, removeTheme, selectTheme } from "@lib/themes";
-import { BundleUpdaterManager } from "@lib/native";
 import { useProxy } from "@lib/storage";
+import { BundleUpdaterManager } from "@lib/native";
 import { getAssetIDByName } from "@ui/assets";
 import { showConfirmationAlert } from "@ui/alerts";
 import { showToast } from "@ui/toasts";

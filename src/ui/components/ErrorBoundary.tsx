@@ -1,7 +1,6 @@
 import { ErrorBoundaryProps } from "@types";
-import { React, ReactNative as RN, stylesheet, constants } from "@metro/common";
+import { React, ReactNative as RN, stylesheet } from "@metro/common";
 import { Forms, Button, Codeblock } from "@ui/components";
-import { semanticColors } from "@ui/color";
 
 interface ErrorBoundaryState {
     hasErr: boolean;

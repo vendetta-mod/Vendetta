@@ -1,8 +1,8 @@
 import { RNConstants } from "@types";
 import { ReactNative as RN } from "@metro/common";
 import { after } from "@lib/patcher";
-import { ClientInfoManager, DeviceManager, BundleUpdaterManager } from "@lib/native";
 import { getCurrentTheme, selectTheme } from "@lib/themes";
+import { ClientInfoManager, DeviceManager, BundleUpdaterManager } from "@lib/native";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
 import settings from "@lib/settings";

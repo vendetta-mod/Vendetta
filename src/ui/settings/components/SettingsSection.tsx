@@ -1,7 +1,7 @@
 import { NavigationNative } from "@metro/common";
-import { ErrorBoundary, Forms } from "@ui/components";
-import { getAssetIDByName } from "@ui/assets";
 import { useProxy } from "@lib/storage";
+import { getAssetIDByName } from "@ui/assets";
+import { ErrorBoundary, Forms } from "@ui/components";
 import settings from "@lib/settings";
 
 const { FormRow, FormSection, FormDivider } = Forms;

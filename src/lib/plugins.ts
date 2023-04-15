@@ -1,9 +1,9 @@
 import { PluginManifest, Plugin } from "@types";
+import { safeFetch } from "@lib/utils";
 import { awaitSyncWrapper, createMMKVBackend, createStorage, wrapSync } from "@lib/storage";
 import { MMKVManager } from "@lib/native";
-import settings from "@lib/settings";
 import logger, { logModule } from "@lib/logger";
-import safeFetch from "@utils/safeFetch";
+import settings from "@lib/settings";
 
 type EvaledPlugin = {
     onLoad?(): void;

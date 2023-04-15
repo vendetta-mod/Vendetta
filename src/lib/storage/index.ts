@@ -1,5 +1,5 @@
 import { Emitter, StorageBackend } from "@types";
-import createEmitter from "../emitter";
+import createEmitter from "@lib/emitter";
 
 const emitterSymbol = Symbol("emitter accessor");
 const syncAwaitSymbol = Symbol("wrapSync promise accessor");

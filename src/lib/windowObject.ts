@@ -15,7 +15,7 @@ import * as toasts from "@ui/toasts";
 import * as alerts from "@ui/alerts";
 import * as assets from "@ui/assets";
 import * as color from "@ui/color";
-import * as utils from "@utils";
+import * as utils from "@lib/utils";
 
 export default async (unloads: any[]): Promise<VendettaObject> => ({
     patcher: utils.without(patcher, "unpatchAll"),
