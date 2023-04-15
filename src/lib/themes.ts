@@ -20,12 +20,18 @@ async function writeTheme(theme: Theme | {}) {
 }
 
 export function patchChatBackground() {
-    return instead("default", findByName("MessagesWrapperConnected", false), (args, orig) => {
+    const currentTheme = getCurrentTheme()?.data?.background;
+    if (!currentTheme) return;
+
+    const MessagesWrapperConnected = findByName("MessagesWrapperConnected", false);
+    if (!MessagesWrapperConnected) return;
+
+    return instead("default", MessagesWrapperConnected, (args, orig) => {
         return React.createElement(ReactNative.ImageBackground, {
             style: { flex: 1, height: "100%" },
-            imageStyle: { opacity: 5 / 100 },
-            source: { uri: "https://cdn.discordapp.com/attachments/1089039746329747486/1096438846402605156/sfF1NQlx.jpg" },
-            // @ts-expect-error
+            source: { uri: currentTheme.url },
+            blurRadius: currentTheme.blur,
+            // @ts-expect-error - "An outer value of 'this' is shadowed by this container" ???
             children: orig.apply(this, args)
         });
     });
@@ -148,11 +154,6 @@ export async function initThemes() {
     // We need a workaround, and it will unfortunately have to be done on the native side.
     // await awaitSyncWrapper(themes);
 
-    after("resolveSemanticColor", findByProps("unsafe_rawColors", "meta").meta, (args, res) => {
-        const [name] = extractInfo(args[0], args[1]);
-        return name === "CHAT_BACKGROUND" ? "#00000000" : res;
-    });
-
     const selectedTheme = getCurrentTheme();
     if (!selectedTheme) return;
 
@@ -175,6 +176,10 @@ export async function initThemes() {
         const themeIndex = theme === "amoled" ? 2 : theme === "light" ? 1 : 0;
 
         const semanticColorVal = selectedTheme.data?.semanticColors?.[name]?.[themeIndex];
+        if (name === "CHAT_BACKGROUND" && typeof selectedTheme.data?.background?.alpha === "number") {
+            return chroma(semanticColorVal ?? "black").alpha(1 - selectedTheme.data.background.alpha).hex();
+        }
+
         if (semanticColorVal) return semanticColorVal;
 
         const rawValue = selectedTheme.data?.rawColors?.[colorDef.raw];

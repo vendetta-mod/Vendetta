@@ -120,6 +120,15 @@ interface ThemeData {
     spec: number;
     semanticColors?: Indexable<string[]>;
     rawColors?: Indexable<string>;
+    background?: {
+        url: string;
+        blur?: number;
+        /**
+         * The alpha value of the background.
+         * `CHAT_BACKGROUND` of semanticColors alpha value will be ignored when this is specified 
+        */
+        alpha?: number;
+    }
 }
 
 interface Theme {
@@ -338,7 +347,7 @@ interface LoaderIdentity {
 }
 
 interface DiscordStyleSheet {
-    [index: string]: any, 
+    [index: string]: any,
     createThemedStyleSheet: typeof import("react-native").StyleSheet.create;
 }
 
@@ -415,7 +424,7 @@ interface VendettaObject {
             Search: _React.ComponentType;
             Alert: _React.ComponentType;
             Button: _React.ComponentType<any> & { Looks: any, Colors: ButtonColors, Sizes: any };
-            HelpMessage: _React.ComponentType; 
+            HelpMessage: _React.ComponentType;
             // Vendetta
             Summary: _React.ComponentType<SummaryProps>;
             ErrorBoundary: _React.ComponentType<ErrorBoundaryProps>;
