@@ -68,7 +68,7 @@ export async function evalPlugin(plugin: Plugin) {
 
     const raw = (0, eval)(pluginString)(vendettaForPlugins);
     const ret = typeof raw == "function" ? raw() : raw;
-    return ret?.default || ret;
+    return ret?.default ?? ret ?? {};
 }
 
 export async function startPlugin(id: string) {
