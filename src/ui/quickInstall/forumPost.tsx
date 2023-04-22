@@ -1,5 +1,5 @@
-import { findByName, findByProps } from "@metro/filters";
 import { DISCORD_SERVER_ID, PLUGINS_CHANNEL_ID, THEMES_CHANNEL_ID, HTTP_REGEX_MULTI, PROXY_PREFIX } from "@lib/constants";
+import { findByName, findByProps } from "@metro/filters";
 import { after } from "@lib/patcher";
 import { installPlugin } from "@lib/plugins";
 import { installTheme } from "@lib/themes";
@@ -20,7 +20,7 @@ export default () => after("default", ForumPostLongPressActionSheet, ([{ thread 
     if (thread.guild_id !== DISCORD_SERVER_ID) return;
 
     // Determine what type of addon this is.
-    let postType: string;
+    let postType: "Plugin" | "Theme";
     if (thread.parent_id === PLUGINS_CHANNEL_ID) {
         postType = "Plugin";
     } else if (thread.parent_id === THEMES_CHANNEL_ID && window.__vendetta_loader?.features.themes) {
