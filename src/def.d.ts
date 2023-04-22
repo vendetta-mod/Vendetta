@@ -76,11 +76,14 @@ export enum ButtonColors {
 
 interface ConfirmationAlertOptions {
     title?: string;
-    content: string | JSX.Element | JSX.Element[];
+    content: string | JSX.Element | (string | JSX.Element)[];
     confirmText?: string;
     confirmColor?: ButtonColors;
     onConfirm: () => void;
+    secondaryConfirmText?: string;
+    onConfirmSecondary?: () => void;
     cancelText?: string;
+    isDismissable?: boolean;
 }
 
 interface InputAlertProps {

@@ -5,21 +5,18 @@ import InputAlert from "@ui/components/InputAlert";
 const Alerts = findByProps("openLazy", "close");
 
 interface InternalConfirmationAlertOptions extends Omit<ConfirmationAlertOptions, "content"> {
-    content: string | JSX.Element | JSX.Element[] | undefined;
-    body: string | undefined;
-    children: JSX.Element | JSX.Element[];
+    content?: ConfirmationAlertOptions["content"];
+    body?: ConfirmationAlertOptions["content"];
 };
 
 export function showConfirmationAlert(options: ConfirmationAlertOptions) {
     const internalOptions = options as InternalConfirmationAlertOptions;
 
-    if (typeof options.content === "string") {
-        internalOptions.body = options.content;
-    } else {
-        internalOptions.children = options.content;
-    };
-
+    internalOptions.body = options.content;
     delete internalOptions.content;
+
+    internalOptions.isDismissable ??= true;
+
     return Alerts.show(internalOptions);
 };
 
