@@ -1,12 +1,12 @@
-import { PROXY_PREFIX, THEMES_CHANNEL_ID } from "@lib/constants";
 import { findByProps } from "@metro/filters";
 import { ReactNative as RN, channels, url } from "@metro/common";
+import { PROXY_PREFIX, THEMES_CHANNEL_ID } from "@lib/constants";
 import { after, instead } from "@lib/patcher";
 import { installPlugin } from "@lib/plugins";
 import { installTheme } from "@lib/themes";
+import { showConfirmationAlert } from "@ui/alerts";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
-import { showConfirmationAlert } from "../alerts";
 
 const showSimpleActionSheet = findByProps("showSimpleActionSheet");
 const handleClick = findByProps("handleClick");
@@ -60,7 +60,7 @@ export default () => {
 
         showConfirmationAlert({
             title: "Hold Up",
-            content: [`This link is a `, <RN.Text style={TextStyleSheet["text-md/semibold"]}>{urlType}</RN.Text>, `, would you like to install it?`],
+            content: ["This link is a ", <RN.Text style={TextStyleSheet["text-md/semibold"]}>{urlType}</RN.Text>, ", would you like to install it?"],
             onConfirm: () => installWithToast(urlType, url),
             confirmText: "Install",
             cancelText: "Cancel",
