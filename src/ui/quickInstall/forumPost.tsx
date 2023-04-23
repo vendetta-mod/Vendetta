@@ -1,5 +1,5 @@
-import { DISCORD_SERVER_ID, PLUGINS_CHANNEL_ID, THEMES_CHANNEL_ID, HTTP_REGEX_MULTI, PROXY_PREFIX } from "@lib/constants";
 import { findByName, findByProps } from "@metro/filters";
+import { DISCORD_SERVER_ID, PLUGINS_CHANNEL_ID, THEMES_CHANNEL_ID, HTTP_REGEX_MULTI, PROXY_PREFIX } from "@lib/constants";
 import { after } from "@lib/patcher";
 import { installPlugin } from "@lib/plugins";
 import { installTheme } from "@lib/themes";
