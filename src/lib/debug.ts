@@ -59,7 +59,6 @@ export function patchLogHook() {
     }
 }
 
-// @ts-expect-error
 export const versionHash: string = __vendettaVersion;
 
 export function getDebugInfo() {
