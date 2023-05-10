@@ -9,6 +9,14 @@ Vendetta's codebase is platform-agnostic, but you need a platform-specific loade
 * Non-root - [VendettaManager](https://github.com/vendetta-mod/VendettaManager)
     - Manager not working? No problem! Pre-built APKs are provided [here](https://discord.k6.tf/).
 
+#### Any differences between VendettaXposed and VendettaManager? Which I should pick?
+For most users we recommend to use Vendetta manager as it don't require root.
+    
+A brief explanation of differences below:
+
+* VendettaXposed module allows to inject the modification in applications. It is also possible to inject in apps installed from Google Play, so they will continue receiving updates from the store. For already installed apps root required, as this is not a permitted Android behaviour and such method relies on Xposed Framework.
+* VendettaManager uses the xposed module as standalone application which can download all required files and repackage them with the modifcation for further installation or update. This method don't require root and installs Vendetta next to original Discord (if you use any from Google Play or somewhere else).
+
 ### iOS
 * [VendettaTweak](https://github.com/vendetta-mod/VendettaTweak)
     - You can get prebuilt `.deb` files from GitHub Actions.
