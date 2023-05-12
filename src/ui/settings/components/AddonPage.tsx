@@ -18,20 +18,24 @@ export default function AddonPage<T>({ items, safeModeMessage, safeModeExtras, c
 
     return (
         <ErrorBoundary>
-            <RN.ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 10 }}>
-                {settings.safeMode?.enabled && <RN.View style={{ marginBottom: 10 }}>
-                    <HelpMessage messageType={0}>{safeModeMessage}</HelpMessage>
-                    {safeModeExtras}
-                </RN.View>}
-                <Search
-                    style={{ marginBottom: 10 }}
-                    onChangeText={(v: string) => setSearch(v.toLowerCase())}
-                    placeholder="Search"
-                />
-                {/* TODO: When I am more awake, implement better searching than just by ID */}
-                {/* TODO: Also when I am more awake, make the search bar not scroll with the cards */}
-                {Object.values(items).filter(i => i.id?.toLowerCase().includes(search)).map((i, id) => <CardComponent item={i} index={id} />)}
-            </RN.ScrollView>
+            {/* TODO: Implement better searching than just by ID */}
+            <RN.FlatList
+                ListHeaderComponent={<>
+                    {settings.safeMode?.enabled && <RN.View style={{ marginBottom: 10 }}>
+                        <HelpMessage messageType={0}>{safeModeMessage}</HelpMessage>
+                        {safeModeExtras}
+                    </RN.View>}
+                    <Search
+                        style={{ marginBottom: 10 }}
+                        onChangeText={(v: string) => setSearch(v.toLowerCase())}
+                        placeholder="Search"
+                    />
+                </>}
+                style={{ paddingHorizontal: 10, paddingTop: 10 }}
+                contentContainerStyle={{ paddingBottom: 20 }}
+                data={Object.values(items).filter(i => i.id?.toLowerCase().includes(search))}
+                renderItem={({ item, index }) => <CardComponent item={item} index={index} />}
+            />
         </ErrorBoundary>
     )
 }
