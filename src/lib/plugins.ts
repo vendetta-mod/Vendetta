@@ -131,7 +131,7 @@ export async function initPlugins() {
 
     if (!settings.safeMode?.enabled) {
         // Loop over any plugin that is enabled, update it if allowed, then start it.
-        await Promise.allSettled(allIds.filter(pl => plugins[pl].enabled).map(async (pl) => (plugins[pl].update && await fetchPlugin(pl), await startPlugin(pl))));
+        await Promise.allSettled(allIds.filter(pl => plugins[pl].enabled).map(async (pl) => (plugins[pl].update && await fetchPlugin(pl).catch((e: Error) => logger.error(e.message)), await startPlugin(pl))));
         // Wait for the above to finish, then update all disabled plugins that are allowed to.
         allIds.filter(pl => !plugins[pl].enabled && plugins[pl].update).forEach(pl => fetchPlugin(pl));
     };
