@@ -388,6 +388,7 @@ interface VendettaObject {
             invites: PropIntellisense<"acceptInviteAndTransitionToInviteChannel">;
             commands: PropIntellisense<"getBuiltInCommands">;
             navigation: PropIntellisense<"pushLazy">;
+            messageUtil: PropIntellisense<"sendBotMessage">;
             navigationStack: PropIntellisense<"createStackNavigator">;
             NavigationNative: PropIntellisense<"NavigationContainer">;
             // You may ask: "Why not just install Flux's types?"
