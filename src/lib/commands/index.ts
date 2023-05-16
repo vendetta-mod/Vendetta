@@ -4,6 +4,7 @@ import { ApplicationCommand } from "@types";
 
 import evalCommand from "@lib/commands/eval";
 import debugCommand from "@lib/commands/debug";
+import pluginCommand from "@lib/commands/plugins";
 
 let commands: ApplicationCommand[] = [];
 
@@ -11,7 +12,7 @@ export function patchCommands() {
 	const unpatch = after("getBuiltInCommands", commandsModule, (_, res) => res.concat(commands));
 
 	// Register core commands
-	[evalCommand, debugCommand].forEach(registerCommand);
+	[evalCommand, debugCommand, pluginCommand].forEach(registerCommand);
 
 	return () => {
 		commands = [];
