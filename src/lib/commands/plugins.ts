@@ -27,10 +27,14 @@ export default <ApplicationCommand>{
 
         const content = [
             `**__Installed Plugins (${plugins.length})__**`,
-            `Enabled (${enabled.length}):`,
-            "> " + enabled.join(", "),
-            `Disabled (${disabled.length}):`,
-            "> " + disabled.join(", "),
+            ...(enabled.length > 0 ? [
+                `Enabled (${enabled.length}):`,
+                "> " + enabled.join(", "),
+            ] : []),
+            ...(disabled.length > 0 ? [
+                `Disabled (${disabled.length}):`,
+                "> " + disabled.join(", "),
+            ] : []),
         ].join("\n");
 
         if (ephemeral?.value) {
