@@ -1,8 +1,6 @@
 import { ApplicationCommand, ApplicationCommandInputType, ApplicationCommandOptionType, ApplicationCommandType } from "@types";
 import { getDebugInfo } from "@lib/debug";
-import { findByProps } from "@metro/filters";
-
-const messageUtil = findByProps("sendBotMessage");
+import { messageUtil } from "@metro/common";
 
 export default <ApplicationCommand>{
     name: "debug",
