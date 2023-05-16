@@ -5,8 +5,10 @@ import { ApplicationCommand, ApplicationCommandInputType, ApplicationCommandOpti
 const util = findByProps("inspect");
 const AsyncFunction = (async () => void 0).constructor;
 
+const ZERO_WIDTH_SPACE_CHARACTER = "\u200B";
+
 function wrapInJSCodeblock(resString: string) {
-    return "```js\n" + resString + "\n```";
+    return "```js\n" + resString.replaceAll("`", "`" + ZERO_WIDTH_SPACE_CHARACTER) + "\n```";
 }
 
 export default <ApplicationCommand>{
