@@ -5,6 +5,7 @@ import { useProxy } from "@lib/storage";
 import { getAssetIDByName } from "@ui/assets";
 import { Forms, ErrorBoundary } from "@ui/components";
 import settings, { loaderConfig } from "@lib/settings";
+import AssetBrowser from "@ui/settings/pages/AssetBrowser";
 
 const { FormSection, FormRow, FormSwitchRow, FormInput, FormDivider } = Forms;
 const { hideActionSheet } = findByProps("openLazy", "hideActionSheet");
@@ -79,7 +80,10 @@ export default function Developer() {
                         label="Asset Browser"
                         leading={<FormRow.Icon source={getAssetIDByName("ic_image")} />}
                         trailing={FormRow.Arrow}
-                        onPress={() => navigation.push("VendettaAssetBrowser")}
+                        onPress={() => navigation.push("VendettaCustomPage", {
+                            title: "Asset Browser",
+                            render: AssetBrowser,
+                        })}
                     />
                     <FormDivider />
                     <FormRow

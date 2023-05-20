@@ -1,6 +1,7 @@
 import { NavigationNative } from "@metro/common";
 import { useProxy } from "@lib/storage";
 import { getAssetIDByName } from "@ui/assets";
+import { getScreens } from "@ui/settings/data";
 import { ErrorBoundary, Forms } from "@ui/components";
 import settings from "@lib/settings";
 
@@ -10,44 +11,22 @@ export default function SettingsSection() {
     const navigation = NavigationNative.useNavigation();
     useProxy(settings);
 
+    const screens = getScreens();
+
     return (
         <ErrorBoundary>
             <FormSection key="Vendetta" title={`Vendetta${settings.safeMode?.enabled ? " (Safe Mode)" : ""}`}>
-                <FormRow
-                    label="General"
-                    leading={<FormRow.Icon source={getAssetIDByName("settings")} />}
-                    trailing={FormRow.Arrow}
-                    onPress={() => navigation.push("VendettaSettings")}
-                />
-                <FormDivider />
-                <FormRow
-                    label="Plugins"
-                    leading={<FormRow.Icon source={getAssetIDByName("debug")} />}
-                    trailing={FormRow.Arrow}
-                    onPress={() => navigation.push("VendettaPlugins")}
-                />
-                {window.__vendetta_loader?.features.themes && (
+                {screens.filter(s => s.shouldRender ?? true).map((s, i) => (
                     <>
-                        <FormDivider />
                         <FormRow
-                            label="Themes"
-                            leading={<FormRow.Icon source={getAssetIDByName("ic_theme_24px")} />}
+                            label={s.title}
+                            leading={<FormRow.Icon source={getAssetIDByName(s.icon!)} />}
                             trailing={FormRow.Arrow}
-                            onPress={() => navigation.push("VendettaThemes")}
+                            onPress={() => navigation.push(s.key)}
                         />
+                        {i !== screens.length - 1 && <FormDivider />}
                     </>
-                )}
-                {settings.developerSettings && (
-                    <>
-                        <FormDivider />
-                        <FormRow
-                            label="Developer"
-                            leading={<FormRow.Icon source={getAssetIDByName("ic_progress_wrench_24px")} />}
-                            trailing={FormRow.Arrow}
-                            onPress={() => navigation.push("VendettaDeveloper")}
-                        />
-                    </>
-                )}
+                ))}
             </FormSection>
         </ErrorBoundary>
     )
