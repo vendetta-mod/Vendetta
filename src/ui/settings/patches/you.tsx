@@ -1,7 +1,7 @@
 import { i18n } from "@metro/common";
 import { findByProps } from "@metro/filters";
 import { after } from "@lib/patcher";
-import { getScreens, getYouData } from "@ui/settings/data";
+import { getRenderableScreens, getScreens, getYouData } from "@ui/settings/data";
 
 const layoutModule = findByProps("useOverviewSettings");
 const titleConfigModule = findByProps("getSettingTitleConfig");
@@ -11,6 +11,7 @@ const miscModule = findByProps("SETTING_RELATIONSHIPS", "SETTING_RENDERER_CONFIG
 export default function patchYou() {
     const patches = new Array<Function>;
     const screens = getScreens(true);
+    const renderableScreens = getRenderableScreens(true);
     const data = getYouData();
 
     patches.push(after("useOverviewSettings", layoutModule, (_, ret) => {
@@ -29,7 +30,7 @@ export default function patchYou() {
     })));
 
     patches.push(after("getSettingSearchListItems", gettersModule, ([settings], ret) => [
-        ...(screens.filter(s => settings.includes(s.key) && (s.shouldRender ?? true))).map(s => ({
+        ...(renderableScreens.filter(s => settings.includes(s.key))).map(s => ({
             type: "setting_search_result",
             ancestorRendererData: data.rendererConfigs[s.key],
             setting: s.key,
@@ -42,8 +43,9 @@ export default function patchYou() {
 
     // TODO: We could use a proxy for these
     const oldRelationships = miscModule.SETTING_RELATIONSHIPS;
-    const oldRendererConfigs = miscModule.SETTING_RENDERER_CONFIGS;
     miscModule.SETTING_RELATIONSHIPS = { ...oldRelationships, ...data.relationships };
+
+    const oldRendererConfigs = miscModule.SETTING_RENDERER_CONFIGS;
     miscModule.SETTING_RENDERER_CONFIGS = { ...oldRendererConfigs, ...data.rendererConfigs };
 
     return () => {

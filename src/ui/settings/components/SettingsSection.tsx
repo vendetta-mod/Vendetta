@@ -1,7 +1,7 @@
 import { NavigationNative } from "@metro/common";
 import { useProxy } from "@lib/storage";
 import { getAssetIDByName } from "@ui/assets";
-import { getScreens } from "@ui/settings/data";
+import { getRenderableScreens } from "@ui/settings/data";
 import { ErrorBoundary, Forms } from "@ui/components";
 import settings from "@lib/settings";
 
@@ -11,12 +11,12 @@ export default function SettingsSection() {
     const navigation = NavigationNative.useNavigation();
     useProxy(settings);
 
-    const screens = getScreens();
+    const screens = getRenderableScreens()
 
     return (
         <ErrorBoundary>
             <FormSection key="Vendetta" title={`Vendetta${settings.safeMode?.enabled ? " (Safe Mode)" : ""}`}>
-                {screens.filter(s => s.shouldRender ?? true).map((s, i) => (
+                {screens.map((s, i) => (
                     <>
                         <FormRow
                             label={s.title}

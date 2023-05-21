@@ -5,7 +5,7 @@ import patchYou from "@ui/settings/patches/you";
 export default function initSettings() {
     const patches = [
         patchPanels(),
-        ...(findByProps("useOverviewSettings") ? [patchYou()] : []),
+        ...(findByProps("getSettingSearchListItems") ? [patchYou()] : []),
     ]
 
     return () => patches.forEach(p => p());
