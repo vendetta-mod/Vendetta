@@ -1,33 +1,52 @@
-import { NavigationNative } from "@metro/common";
-import { useProxy } from "@lib/storage";
-import { getAssetIDByName } from "@ui/assets";
-import { getRenderableScreens } from "@ui/settings/data";
+import { SettingsItem, SettingsScreen, SettingsPressable, SettingsSwitch } from "@types";
+import { ReactNative as RN, NavigationNative } from "@metro/common";
+import { sections } from "@ui/settings";
 import { ErrorBoundary, Forms } from "@ui/components";
-import settings from "@lib/settings";
 
-const { FormRow, FormSection, FormDivider } = Forms;
+const { FormRow, FormSwitchRow, FormSection, FormDivider } = Forms;
 
 export default function SettingsSection() {
     const navigation = NavigationNative.useNavigation();
-    useProxy(settings);
 
-    const screens = getRenderableScreens()
+    // TODO: Deduplicate code
+    // TODO: This is bad and we probably should find another way
+    const typeToComponent: Record<SettingsItem["type"], React.ComponentType<any>> = {
+        screen: ({ item }: { item: SettingsScreen }) => <FormRow 
+            label={item.label}
+            subLabel={item.description}
+            leading={item.icon ? typeof item.icon === "number" ? <FormRow.Icon source={item.icon} /> : <RN.Image source={item.icon} /> : undefined}
+            trailing={FormRow.Arrow}
+            onPress={() => navigation.push(item.route)}
+        />,
+        pressable: ({ item }: { item: SettingsPressable }) => <FormRow 
+            label={item.label}
+            subLabel={item.description}
+            leading={item.icon ? typeof item.icon === "number" ? <FormRow.Icon source={item.icon} /> : <RN.Image source={item.icon} /> : undefined}
+            onPress={item.onPress}
+        />,
+        switch: ({ item }: { item: SettingsSwitch }) => <FormSwitchRow
+            label={item.label}
+            subLabel={item.description}
+            leading={item.icon ? typeof item.icon === "number" ? <FormRow.Icon source={item.icon} /> : <RN.Image source={item.icon} /> : undefined}
+            value={item.value}
+            onValueChange={item.onValueChange}
+        />
+    }
 
     return (
         <ErrorBoundary>
-            <FormSection key="Vendetta" title={`Vendetta${settings.safeMode?.enabled ? " (Safe Mode)" : ""}`}>
-                {screens.map((s, i) => (
-                    <>
-                        <FormRow
-                            label={s.title}
-                            leading={<FormRow.Icon source={getAssetIDByName(s.icon!)} />}
-                            trailing={FormRow.Arrow}
-                            onPress={() => navigation.push(s.key)}
-                        />
-                        {i !== screens.length - 1 && <FormDivider />}
-                    </>
-                ))}
-            </FormSection>
+            {sections.map(section => (
+                <FormSection title={section.title}>
+                    {section.items.filter(item => item.renderCondition?.() ?? true).map((item, index) => {
+                        const RowComponent = typeToComponent[item.type];
+
+                        return (<>
+                            <RowComponent item={item} />
+                            {index !== section.items.length - 1 && <FormDivider />}
+                        </>)
+                    })}
+                </FormSection>
+            ))}
         </ErrorBoundary>
     )
 }

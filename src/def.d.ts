@@ -1,6 +1,6 @@
 import * as _spitroast from "spitroast";
 import _React from "react";
-import _RN from "react-native";
+import _RN, { ImageURISource } from "react-native";
 import _Clipboard from "@react-native-clipboard/clipboard";
 import _moment from "moment";
 import _chroma from "chroma-js";
@@ -94,6 +94,34 @@ interface InputAlertProps {
     cancelText?: string;
     placeholder?: string;
     initialValue?: string;
+}
+
+interface SettingsBase { label: string; description?: string; icon?: number | ImageURISource; renderCondition?: () => boolean; }
+
+interface SettingsScreen extends SettingsBase {
+    type: "screen";
+    route: string;
+    component: React.ComponentType<any>;
+    // TODO: Navigation option typing
+    options?: Record<string, any>;
+}
+
+interface SettingsPressable extends SettingsBase {
+    type: "pressable";
+    onPress: () => void;
+}
+
+interface SettingsSwitch extends SettingsBase {
+    type: "switch";
+    value: boolean;
+    onValueChange: (v: boolean) => void;
+}
+
+type SettingsItem = SettingsScreen | SettingsPressable | SettingsSwitch;
+
+interface SettingsSection {
+    title: string;
+    items: SettingsItem[];
 }
 
 interface Author {
@@ -453,6 +481,12 @@ interface VendettaObject {
             getAssetByID: (id: number) => Asset;
             getAssetIDByName: (name: string) => number;
         };
+        settings: {
+            sections: SettingsSection[],
+            registerSection: (section: SettingsSection) => () => void;
+            // TODO: Does this need to be exported?
+            getScreens: () => SettingsScreen[];
+        },
         // TODO: Make a vain attempt to type these
         semanticColors: Record<string, any>;
         rawColors: Record<string, any>;

@@ -2,7 +2,7 @@ import { i18n } from "@metro/common";
 import { findByName } from "@metro/filters";
 import { after } from "@lib/patcher";
 import { findInReactTree } from "@lib/utils";
-import { getPanelsScreens } from "@ui/settings/data";
+import { getScreens } from "@ui/settings";
 import SettingsSection from "@ui/settings/components/SettingsSection";
 
 const screensModule = findByName("getScreens", false);
@@ -11,9 +11,15 @@ const settingsModule = findByName("UserSettingsOverviewWrapper", false);
 export default function patchPanels() {
     const patches = new Array<Function>;
 
+    // TODO: getScreens is called once, that being when UserSettingsOverview is first rendered.
+    // ^ If a plugin adds a screen after this point, navigator will not update accordingly.
     patches.push(after("default", screensModule, (_, existingScreens) => ({
         ...existingScreens,
-        ...getPanelsScreens(),
+        ...Object.fromEntries(getScreens().map(s => [s.route, ({
+            title: s.label,
+            render: s.component,
+            ...s.options,
+        })])),
     })));
 
     after("default", settingsModule, (_, ret) => {
