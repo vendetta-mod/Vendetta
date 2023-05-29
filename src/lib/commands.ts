@@ -5,9 +5,10 @@ import { after } from "@lib/patcher";
 let commands: ApplicationCommand[] = [];
 
 export function patchCommands() {
-    const unpatch = after("getBuiltInCommands", commandsModule, ([type]: [type: ApplicationCommandType], res: ApplicationCommand[]) => {
+    const unpatch = after("getBuiltInCommands", commandsModule, ([type], res: ApplicationCommand[]) => {
         if (type === ApplicationCommandType.CHAT) return res.concat(commands);
     });
+
     return () => {
         commands = [];
         unpatch();
@@ -17,9 +18,7 @@ export function patchCommands() {
 export function registerCommand(command: ApplicationCommand): () => void {
     // Get built in commands
     const builtInCommands = commandsModule.getBuiltInCommands(ApplicationCommandType.CHAT, true, false);
-    builtInCommands.sort(function (a: ApplicationCommand, b: ApplicationCommand) {
-        return parseInt(b.id!) - parseInt(a.id!);
-    });
+    builtInCommands.sort((a: ApplicationCommand, b: ApplicationCommand) => parseInt(b.id!) - parseInt(a.id!));
 
     const lastCommand = builtInCommands[builtInCommands.length - 1];
 
