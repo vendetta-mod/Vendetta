@@ -16,7 +16,6 @@ export default <ApplicationCommand>{
             displayDescription: "Send plugins list ephemerally.",
         }
     ],
-    applicationId: "-1",
     inputType: ApplicationCommandInputType.BUILT_IN_TEXT,
     type: ApplicationCommandType.CHAT,
     execute([ephemeral], ctx) {
