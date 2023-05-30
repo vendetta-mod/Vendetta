@@ -134,7 +134,7 @@ interface ThemeData {
         blur?: number;
         /**
          * The alpha value of the background.
-         * `CHAT_BACKGROUND` of semanticColors alpha value will be ignored when this is specified 
+         * `CHAT_BACKGROUND` of semanticColors alpha value will be ignored when this is specified
         */
         alpha?: number;
     }
@@ -505,6 +505,8 @@ interface VendettaPluginObject {
 
 declare global {
     type React = typeof _React;
+    const __vendettaVersion: string;
+
     interface Window {
         [key: PropertyKey]: any;
         modules: MetroModules;

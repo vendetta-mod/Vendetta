@@ -8,7 +8,6 @@ import(".").then((m) => m.default()).catch((e) => {
     alert([
         "Failed to load Vendetta!\n",
         `Build Number: ${ClientInfoManager.Build}`,
-        // @ts-expect-error, replaced in build script
         `Vendetta: ${__vendettaVersion}`,
         e?.stack || e.toString(),
     ].join("\n"));
