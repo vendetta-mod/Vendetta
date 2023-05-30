@@ -377,7 +377,7 @@ interface VendettaObject {
         findByTypeNameAll: (typeName: string, defaultExp?: boolean) => any[];
         findByStoreName: (name: string) => any;
         common: {
-            constants: PropIntellisense<"API_HOST">;
+            constants: PropIntellisense<"Fonts" | "Permissions">;
             channels: PropIntellisense<"getVoiceChannelId">;
             i18n: PropIntellisense<"Messages">;
             url: PropIntellisense<"openURL">;

@@ -45,5 +45,5 @@ export default async (unloads: any[]): Promise<VendettaObject> => ({
         unloads.filter(i => typeof i === "function").forEach(p => p());
         // @ts-expect-error explode
         delete window.vendetta;
-    }
+    },
 });
