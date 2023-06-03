@@ -13,7 +13,9 @@ Vendetta's codebase is platform-agnostic, but you need a platform-specific loade
 * [VendettaTweak](https://github.com/vendetta-mod/VendettaTweak)
     - You can get prebuilt `.deb` files from GitHub Actions.
     - Both an IPA and an APT repo will be provided in future.
-
+* Jailed
+    - For Vendetta IPAs to sideload, you can join the [Discord Server](https://discord.gg/n9QQ4XhhJP), and head to the [#Vendetta IPAs](https://discord.com/channels/1015931589865246730/1087295482667208766) thread in #ios-updates
+    - Or visit the host directly at https://discord.k6.tf/ios/
 ## Contributing
 1. Install a Vendetta loader with loader config support (any mentioned in the [Installing](#installing) section).
 
