@@ -10,9 +10,9 @@ Vendetta's codebase is platform-agnostic, but you need a platform-specific loade
     - Manager not working? No problem! Pre-built APKs are provided [here](https://discord.k6.tf/).
 
 ### iOS
-* [VendettaTweak](https://github.com/vendetta-mod/VendettaTweak)
+* Jailbroken - [VendettaTweak](https://github.com/vendetta-mod/VendettaTweak)
     - You can get prebuilt `.deb` files from GitHub Actions.
-    - Both an IPA and an APT repo will be provided in future.
+* Jailed - You can get IPAs from [the thread](https://discord.com/channels/1015931589865246730/1087295482667208766) in our [Discord server](https://discord.gg/n9QQ4XhhJP) or from our [host](https://discord.k6.tf/ios/)
 
 ## Contributing
 1. Install a Vendetta loader with loader config support (any mentioned in the [Installing](#installing) section).
