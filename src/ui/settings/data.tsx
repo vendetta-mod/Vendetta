@@ -11,10 +11,13 @@ import General from "@ui/settings/pages/General";
 import Plugins from "@ui/settings/pages/Plugins";
 import Themes from "@ui/settings/pages/Themes";
 import Developer from "@ui/settings/pages/Developer";
+import { PROXY_PREFIX } from "@/lib/constants";
+import { showConfirmationAlert } from "../alerts";
+import { showToast } from "../toasts";
 
 interface Screen {
     [index: string]: any;
-    key: string,
+    key: string;
     title: string;
     icon?: string;
     shouldRender?: () => boolean;
@@ -23,11 +26,11 @@ interface Screen {
 }
 
 const styles = stylesheet.createThemedStyleSheet({ container: { flex: 1, backgroundColor: semanticColors.BACKGROUND_MOBILE_PRIMARY } });
-const formatKey = (key: string, youKeys: boolean) => youKeys ? lodash.snakeCase(key).toUpperCase() : key;
+const formatKey = (key: string, youKeys: boolean) => (youKeys ? lodash.snakeCase(key).toUpperCase() : key);
 // If a function is passed, it is called with the screen object, and the return value is mapped. If a string is passed, we map to the value of the property with that name on the screen. Else, just map to the given data.
 // Question: Isn't this overengineered?
 // Answer: Maybe.
-const keyMap = (screens: Screen[], data: string | ((s: Screen) => any) | null) => Object.fromEntries(screens.map(s => [s.key, typeof data === "function" ? data(s) : typeof data === "string" ? s[data] : data]));
+const keyMap = (screens: Screen[], data: string | ((s: Screen) => any) | null) => Object.fromEntries(screens.map((s) => [s.key, typeof data === "function" ? data(s) : typeof data === "string" ? s[data] : data]));
 
 export const getScreens = (youKeys = false): Screen[] => [
     {
@@ -41,7 +44,25 @@ export const getScreens = (youKeys = false): Screen[] => [
         title: "Plugins",
         icon: "debug",
         options: {
-            headerRight: () => <InstallButton alertTitle="Install Plugin" installFunction={installPlugin} />,
+            headerRight: () => (
+                <InstallButton
+                    alertTitle="Install Plugin"
+                    installFunction={async (input) => {
+                        if (!input.startsWith(PROXY_PREFIX))
+                            showConfirmationAlert({
+                                title: "Unproxied Plugin",
+                                content: "The plugin you are trying to install has not been proxied/verified by Vendetta staff. Are you sure you want to continue?",
+                                confirmText: "Install",
+                                onConfirm: () =>
+                                    installPlugin(input)
+                                        .then(() => showToast("Installed plugin", getAssetIDByName("Check")))
+                                        .catch((x) => showToast(x.toString(), getAssetIDByName("Small"))),
+                                cancelText: "Cancel",
+                            });
+                        else return await installPlugin(input);
+                    }}
+                />
+            ),
         },
         render: Plugins,
     },
@@ -67,29 +88,36 @@ export const getScreens = (youKeys = false): Screen[] => [
         key: formatKey("VendettaCustomPage", youKeys),
         title: "Vendetta Page",
         shouldRender: () => false,
-        render: ({ render: PageView, noErrorBoundary, ...options }: { render: React.ComponentType, noErrorBoundary: boolean } & Record<string, object>) => {
+        render: ({ render: PageView, noErrorBoundary, ...options }: { render: React.ComponentType; noErrorBoundary: boolean } & Record<string, object>) => {
             const navigation = NavigationNative.useNavigation();
 
             navigation.addListener("focus", () => navigation.setOptions(without(options, "render", "noErrorBoundary")));
-            return noErrorBoundary ? <PageView /> : <ErrorBoundary><PageView /></ErrorBoundary>;
-        }
-    }
-]
+            return noErrorBoundary ? (
+                <PageView />
+            ) : (
+                <ErrorBoundary>
+                    <PageView />
+                </ErrorBoundary>
+            );
+        },
+    },
+];
 
-export const getRenderableScreens = (youKeys = false) => getScreens(youKeys).filter(s => s.shouldRender?.() ?? true);
+export const getRenderableScreens = (youKeys = false) => getScreens(youKeys).filter((s) => s.shouldRender?.() ?? true);
 
-export const getPanelsScreens = () => keyMap(getScreens(), (s => ({
-    title: s.title,
-    render: s.render,
-    ...s.options,
-})));
+export const getPanelsScreens = () =>
+    keyMap(getScreens(), (s) => ({
+        title: s.title,
+        render: s.render,
+        ...s.options,
+    }));
 
 export const getYouData = () => {
     const screens = getScreens(true);
     const renderableScreens = getRenderableScreens(true);
 
     return {
-        layout: { title: "Vendetta", settings: renderableScreens.map(s => s.key) }, // We can't use our keyMap function here since `settings` is an array not an object
+        layout: { title: "Vendetta", settings: renderableScreens.map((s) => s.key) }, // We can't use our keyMap function here since `settings` is an array not an object
         titleConfig: keyMap(screens, "title"),
         relationships: keyMap(screens, null),
         rendererConfigs: keyMap(screens, (s) => ({
@@ -99,12 +127,18 @@ export const getYouData = () => {
                 // TODO: This is bad, we should not re-convert the key casing
                 // For some context, just using the key here would make the route key be VENDETTA_CUSTOM_PAGE in you tab, which breaks compat with panels UI navigation
                 route: lodash.chain(s.key).camelCase().upperFirst().value(),
-                getComponent: () => ({ navigation, route }: any) => {
-                    navigation.addListener("focus", () => navigation.setOptions(s.options));
-                    // TODO: Some ungodly issue causes the keyboard to automatically close in TextInputs on Android. Why?!
-                    return <RN.View style={styles.container}><s.render {...route.params} /></RN.View>;
-                }
-            }
-        }))
-    }
-}
+                getComponent:
+                    () =>
+                    ({ navigation, route }: any) => {
+                        navigation.addListener("focus", () => navigation.setOptions(s.options));
+                        // TODO: Some ungodly issue causes the keyboard to automatically close in TextInputs on Android. Why?!
+                        return (
+                            <RN.View style={styles.container}>
+                                <s.render {...route.params} />
+                            </RN.View>
+                        );
+                    },
+            },
+        })),
+    };
+};
