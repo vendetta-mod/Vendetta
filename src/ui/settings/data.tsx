@@ -48,7 +48,7 @@ export const getScreens = (youKeys = false): Screen[] => [
                 <InstallButton
                     alertTitle="Install Plugin"
                     installFunction={async (input) => {
-                        if (!input.startsWith(PROXY_PREFIX))
+                        if (!input.startsWith(PROXY_PREFIX) && !settings.developerSettings)
                             showConfirmationAlert({
                                 title: "Unproxied Plugin",
                                 content: "The plugin you are trying to install has not been proxied/verified by Vendetta staff. Are you sure you want to continue?",
