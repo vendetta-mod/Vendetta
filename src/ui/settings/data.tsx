@@ -11,10 +11,13 @@ import General from "@ui/settings/pages/General";
 import Plugins from "@ui/settings/pages/Plugins";
 import Themes from "@ui/settings/pages/Themes";
 import Developer from "@ui/settings/pages/Developer";
+import { PROXY_PREFIX } from "@/lib/constants";
+import { showConfirmationAlert } from "../alerts";
+import { showToast } from "../toasts";
 
 interface Screen {
     [index: string]: any;
-    key: string,
+    key: string;
     title: string;
     icon?: string;
     shouldRender?: () => boolean;
@@ -41,7 +44,25 @@ export const getScreens = (youKeys = false): Screen[] => [
         title: "Plugins",
         icon: "debug",
         options: {
-            headerRight: () => <InstallButton alertTitle="Install Plugin" installFunction={installPlugin} />,
+            headerRight: () => (
+                <InstallButton
+                    alertTitle="Install Plugin"
+                    installFunction={async (input) => {
+                        if (!input.startsWith(PROXY_PREFIX) && !settings.developerSettings)
+                            showConfirmationAlert({
+                                title: "Unproxied Plugin",
+                                content: "The plugin you are trying to install has not been proxied/verified by Vendetta staff. Are you sure you want to continue?",
+                                confirmText: "Install",
+                                onConfirm: () =>
+                                    installPlugin(input)
+                                        .then(() => showToast("Installed plugin", getAssetIDByName("Check")))
+                                        .catch((x) => showToast(x.toString(), getAssetIDByName("Small"))),
+                                cancelText: "Cancel",
+                            });
+                        else return await installPlugin(input);
+                    }}
+                />
+            ),
         },
         render: Plugins,
     },
@@ -67,22 +88,22 @@ export const getScreens = (youKeys = false): Screen[] => [
         key: formatKey("VendettaCustomPage", youKeys),
         title: "Vendetta Page",
         shouldRender: () => false,
-        render: ({ render: PageView, noErrorBoundary, ...options }: { render: React.ComponentType, noErrorBoundary: boolean } & Record<string, object>) => {
+        render: ({ render: PageView, noErrorBoundary, ...options }: { render: React.ComponentType; noErrorBoundary: boolean } & Record<string, object>) => {
             const navigation = NavigationNative.useNavigation();
 
             navigation.addListener("focus", () => navigation.setOptions(without(options, "render", "noErrorBoundary")));
-            return noErrorBoundary ? <PageView /> : <ErrorBoundary><PageView /></ErrorBoundary>;
-        }
-    }
-]
+            return noErrorBoundary ? <PageView /> : <ErrorBoundary><PageView /></ErrorBoundary>
+        },
+    },
+];
 
 export const getRenderableScreens = (youKeys = false) => getScreens(youKeys).filter(s => s.shouldRender?.() ?? true);
 
-export const getPanelsScreens = () => keyMap(getScreens(), (s => ({
+export const getPanelsScreens = () => keyMap(getScreens(), (s) => ({
     title: s.title,
     render: s.render,
     ...s.options,
-})));
+}));
 
 export const getYouData = () => {
     const screens = getScreens(true);
@@ -102,9 +123,9 @@ export const getYouData = () => {
                 getComponent: () => ({ navigation, route }: any) => {
                     navigation.addListener("focus", () => navigation.setOptions(s.options));
                     // TODO: Some ungodly issue causes the keyboard to automatically close in TextInputs on Android. Why?!
-                    return <RN.View style={styles.container}><s.render {...route.params} /></RN.View>;
-                }
-            }
-        }))
-    }
-}
+                    return <RN.View style={styles.container}><s.render {...route.params} /></RN.View>
+                },
+            },
+        })),
+    };
+};

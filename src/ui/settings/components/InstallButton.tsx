@@ -1,5 +1,5 @@
 import { ReactNative as RN, stylesheet, clipboard } from "@metro/common";
-import { HTTP_REGEX } from "@lib/constants";
+import { HTTP_REGEX_MULTI } from "@lib/constants";
 import { showInputAlert } from "@ui/alerts";
 import { getAssetIDByName } from "@ui/assets";
 import { semanticColors } from "@ui/color";
@@ -8,7 +8,7 @@ const styles = stylesheet.createThemedStyleSheet({
     icon: {
         marginRight: 10,
         tintColor: semanticColors.HEADER_PRIMARY,
-    }
+    },
 });
 
 interface InstallButtonProps {
@@ -22,11 +22,11 @@ export default function InstallButton({ alertTitle, installFunction: fetchFuncti
             clipboard.getString().then((content) =>
                 showInputAlert({
                     title: alertTitle,
-                    initialValue: HTTP_REGEX.test(content) ? content : "",
+                    initialValue: content.match(HTTP_REGEX_MULTI)?.[0] ?? "",
                     placeholder: "https://example.com/",
                     onConfirm: (input: string) => fetchFunction(input),
                     confirmText: "Install",
-                    cancelText: "Cancel"
+                    cancelText: "Cancel",
                 })
             )
         }>
