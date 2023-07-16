@@ -83,6 +83,7 @@ interface ConfirmationAlertOptions {
     secondaryConfirmText?: string;
     onConfirmSecondary?: () => void;
     cancelText?: string;
+    onCancel?: () => void;
     isDismissable?: boolean;
 }
 
