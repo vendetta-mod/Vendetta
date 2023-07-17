@@ -1,8 +1,10 @@
 import { ReactNative as RN, NavigationNative, stylesheet, lodash } from "@metro/common";
 import { installPlugin } from "@lib/plugins";
 import { installTheme } from "@lib/themes";
-import { without } from "@lib/utils";
+import { showConfirmationAlert } from "@ui/alerts";
 import { semanticColors } from "@ui/color";
+import { showToast } from "@ui/toasts";
+import { without } from "@lib/utils";
 import { getAssetIDByName } from "@ui/assets";
 import settings from "@lib/settings";
 import ErrorBoundary from "@ui/components/ErrorBoundary";
@@ -12,8 +14,6 @@ import Plugins from "@ui/settings/pages/Plugins";
 import Themes from "@ui/settings/pages/Themes";
 import Developer from "@ui/settings/pages/Developer";
 import { PROXY_PREFIX } from "@/lib/constants";
-import { showConfirmationAlert } from "../alerts";
-import { showToast } from "../toasts";
 
 interface Screen {
     [index: string]: any;
@@ -107,25 +107,31 @@ export const getPanelsScreens = () => keyMap(getScreens(), (s) => ({
 
 export const getYouData = () => {
     const screens = getScreens(true);
-    const renderableScreens = getRenderableScreens(true);
 
     return {
-        layout: { title: "Vendetta", settings: renderableScreens.map(s => s.key) }, // We can't use our keyMap function here since `settings` is an array not an object
+        getLayout: () => ({
+            title: "Vendetta",
+            // We can't use our keyMap function here since `settings` is an array not an object
+            settings: getRenderableScreens(true).map(s => s.key)
+        }),
         titleConfig: keyMap(screens, "title"),
         relationships: keyMap(screens, null),
-        rendererConfigs: keyMap(screens, (s) => ({
-            type: "route",
-            icon: s.icon ? getAssetIDByName(s.icon) : null,
-            screen: {
-                // TODO: This is bad, we should not re-convert the key casing
-                // For some context, just using the key here would make the route key be VENDETTA_CUSTOM_PAGE in you tab, which breaks compat with panels UI navigation
-                route: lodash.chain(s.key).camelCase().upperFirst().value(),
-                getComponent: () => ({ navigation, route }: any) => {
-                    navigation.addListener("focus", () => navigation.setOptions(s.options));
-                    // TODO: Some ungodly issue causes the keyboard to automatically close in TextInputs on Android. Why?!
-                    return <RN.View style={styles.container}><s.render {...route.params} /></RN.View>
-                },
-            },
-        })),
+        rendererConfigs: keyMap(screens, (s) => {
+            const WrappedComponent = React.memo(({ navigation, route }: any) => {
+                navigation.addListener("focus", () => navigation.setOptions(s.options));
+                return <RN.View style={styles.container}><s.render {...route.params} /></RN.View>
+            });
+
+            return {
+                type: "route",
+                icon: s.icon ? getAssetIDByName(s.icon) : null,
+                screen: {
+                    // TODO: This is bad, we should not re-convert the key casing
+                    // For some context, just using the key here would make the route key be VENDETTA_CUSTOM_PAGE in you tab, which breaks compat with panels UI navigation
+                    route: lodash.chain(s.key).camelCase().upperFirst().value(),
+                    getComponent: () => WrappedComponent,
+                }
+            }
+        }),
     };
 };

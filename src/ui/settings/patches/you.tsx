@@ -17,7 +17,7 @@ export default function patchYou() {
     patches.push(after("useOverviewSettings", layoutModule, (_, ret) => {
         // Add our settings
         const accountSettingsIndex = ret.findIndex((i: any) => i.title === i18n.Messages.ACCOUNT_SETTINGS);
-        ret.splice(accountSettingsIndex + 1, 0, data.layout);
+        ret.splice(accountSettingsIndex + 1, 0, data.getLayout());
 
         // Upload Logs button be gone
         const supportCategory = ret.find((i: any) => i.title === i18n.Messages.SUPPORT);
