@@ -18,7 +18,7 @@ const getterFunctionName = usingNewGettersModule ? NEW_GETTER_FUNCTION : OLD_GET
 const gettersModule = oldGettersModule ?? findByProps(NEW_GETTER_FUNCTION);
 
 export default function patchYou() {
-    if (!gettersModule) return [];
+    if (!gettersModule) return;
 
     const patches = new Array<Function>;
     const screens = getScreens(true);
@@ -50,9 +50,7 @@ export default function patchYou() {
             icon: data.rendererConfigs[s.key].icon,
         })),
         // .filter can be removed when dropping support for 189.3 and below (unless Discord changes things again)
-        ...ret.filter((i: any) => (
-          usingNewGettersModule || !screens.map(s => s.key).includes(i.setting))
-        )
+        ...ret.filter((i: any) => (usingNewGettersModule || !screens.map(s => s.key).includes(i.setting)))
     ].map((item, index, parent) => ({ ...item, index, total: parent.length }))));
 
     // TODO: We could use a proxy for these
@@ -62,9 +60,9 @@ export default function patchYou() {
     const oldRendererConfigs = miscModule.SETTING_RENDERER_CONFIGS;
     miscModule.SETTING_RENDERER_CONFIGS = { ...oldRendererConfigs, ...data.rendererConfigs };
 
-    return [() => {
+    return () => {
         miscModule.SETTING_RELATIONSHIPS = oldRelationships;
         miscModule.SETTING_RENDERER_CONFIGS = oldRendererConfigs;
         patches.forEach(p => p());
-    }];
+    };
 }

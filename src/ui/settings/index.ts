@@ -4,7 +4,7 @@ import patchYou from "@ui/settings/patches/you";
 export default function initSettings() {
     const patches = [
         patchPanels(),
-        ...patchYou(),
+        patchYou(),
     ]
 
     return () => patches.forEach(p => p());
