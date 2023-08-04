@@ -13,7 +13,7 @@ interface AddonPageProps<T> {
 }
 
 export default function AddonPage<T>({ items, safeModeMessage, safeModeExtras, card: CardComponent }: AddonPageProps<T>) {
-    useProxy(settings)
+    useProxy(settings);
     useProxy(items);
     const [search, setSearch] = React.useState("");
 
@@ -41,5 +41,5 @@ export default function AddonPage<T>({ items, safeModeMessage, safeModeExtras, c
                 renderItem={({ item, index }) => <CardComponent item={item} index={index} />}
             />
         </ErrorBoundary>
-    )
+    );
 }
