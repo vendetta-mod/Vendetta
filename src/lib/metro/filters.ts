@@ -1,5 +1,4 @@
 import { MetroModules, PropsFinder, PropsFinderAll } from "@types";
-import { instead } from "@lib/patcher";
 
 // Metro require
 declare const __r: (moduleId: number) => any;
