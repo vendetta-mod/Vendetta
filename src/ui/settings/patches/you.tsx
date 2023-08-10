@@ -5,10 +5,21 @@ import { getRenderableScreens, getScreens, getYouData } from "@ui/settings/data"
 
 const layoutModule = findByProps("useOverviewSettings");
 const titleConfigModule = findByProps("getSettingTitleConfig");
-const gettersModule = findByProps("getSettingSearchListItems");
 const miscModule = findByProps("SETTING_RELATIONSHIPS", "SETTING_RENDERER_CONFIGS");
 
+// Checks for 189.4 and above
+// When dropping support for 189.3 and below, following can be done: (unless Discord changes things again)
+// const gettersModule = findByProps("getSettingListItems");
+const OLD_GETTER_FUNCTION = "getSettingSearchListItems";
+const NEW_GETTER_FUNCTION = "getSettingListItems";
+const oldGettersModule = findByProps(OLD_GETTER_FUNCTION);
+const usingNewGettersModule = !oldGettersModule;
+const getterFunctionName = usingNewGettersModule ? NEW_GETTER_FUNCTION : OLD_GETTER_FUNCTION;
+const gettersModule = oldGettersModule ?? findByProps(NEW_GETTER_FUNCTION);
+
 export default function patchYou() {
+    if (!gettersModule) return;
+
     const patches = new Array<Function>;
     const screens = getScreens(true);
     const renderableScreens = getRenderableScreens(true);
@@ -29,7 +40,7 @@ export default function patchYou() {
         ...data.titleConfig,
     })));
 
-    patches.push(after("getSettingSearchListItems", gettersModule, ([settings], ret) => [
+    patches.push(after(getterFunctionName, gettersModule, ([settings], ret) => [
         ...(renderableScreens.filter(s => settings.includes(s.key))).map(s => ({
             type: "setting_search_result",
             ancestorRendererData: data.rendererConfigs[s.key],
@@ -38,7 +49,8 @@ export default function patchYou() {
             breadcrumbs: ["Vendetta"],
             icon: data.rendererConfigs[s.key].icon,
         })),
-        ...ret.filter((i: any) => !screens.map(s => s.key).includes(i.setting)),
+        // .filter can be removed when dropping support for 189.3 and below (unless Discord changes things again)
+        ...ret.filter((i: any) => (usingNewGettersModule || !screens.map(s => s.key).includes(i.setting)))
     ].map((item, index, parent) => ({ ...item, index, total: parent.length }))));
 
     // TODO: We could use a proxy for these

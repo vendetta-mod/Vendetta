@@ -3,6 +3,9 @@ import { MetroModules, PropsFinder, PropsFinderAll } from "@types";
 // Metro require
 declare const __r: (moduleId: number) => any;
 
+// Internal Metro error reporting logic
+const originalHandler = window.ErrorUtils.getGlobalHandler();
+
 // Function to blacklist a module, preventing it from being searched again
 const blacklist = (id: number) => Object.defineProperty(window.modules, id, {
     value: window.modules[id],
@@ -30,8 +33,12 @@ const filterModules = (modules: MetroModules, single = false) => (filter: (m: an
         const id = Number(key);
         const module = modules[id]?.publicModule?.exports;
 
+        // HACK: Override the function used to report fatal JavaScript errors (that crash the app) to prevent module-requiring side effects
+        // Credit to @pylixonly (492949202121261067) for the initial version of this fix
         if (!modules[id].isInitialized) try {
+            window.ErrorUtils.setGlobalHandler(() => {});
             __r(id);
+            window.ErrorUtils.setGlobalHandler(originalHandler);
         } catch {}
 
         if (!module) {
