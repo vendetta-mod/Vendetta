@@ -480,6 +480,8 @@ interface VendettaObject {
         registerCommand: (command: ApplicationCommand) => () => void;
     };
     storage: {
+        emitterSymbol: Symbol,
+        syncAwaitSymbol: Symbol,
         createProxy: <T>(target: T) => { proxy: T, emitter: Emitter };
         useProxy: <T>(storage: T) => T;
         createStorage: <T>(backend: StorageBackend) => Promise<Awaited<T>>;
