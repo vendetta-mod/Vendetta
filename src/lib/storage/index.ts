@@ -1,8 +1,8 @@
 import { Emitter, StorageBackend } from "@types";
 import createEmitter from "@lib/emitter";
 
-export const emitterSymbol = Symbol("emitter accessor");
-export const syncAwaitSymbol = Symbol("wrapSync promise accessor");
+const emitterSymbol = Symbol.for("emitter accessor");
+const syncAwaitSymbol = Symbol.for("wrapSync promise accessor");
 
 export function createProxy(target: any = {}): { proxy: any; emitter: Emitter } {
     const emitter = createEmitter();
