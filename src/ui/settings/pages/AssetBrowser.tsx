@@ -11,18 +11,14 @@ export default function AssetBrowser() {
     return (
         <ErrorBoundary>
             <RN.View style={{ flex: 1 }}>
-                <Search
-                    style={{ margin: 10 }}
-                    onChangeText={(v: string) => setSearch(v.toLowerCase())}
-                    placeholder="Search"
-                />
+                <Search style={{ margin: 10 }} onChangeText={(v: string) => setSearch(v[0] === "*" ? v : v.toLowerCase())} placeholder="Search" />
                 <RN.FlatList
-                    data={Object.values(all).filter(a => a.name.toLowerCase().includes(search) || a.id.toString() === search)}
+                    data={Object.values(all).filter((a) => (search[0] === "*" ? a.name.includes(search.slice(1)) : a.name.toLowerCase().includes(search)) || a.id.toString() === search)}
                     renderItem={({ item }) => <AssetDisplay asset={item} />}
                     ItemSeparatorComponent={FormDivider}
-                    keyExtractor={item => item.name}
+                    keyExtractor={(item) => item.name}
                 />
             </RN.View>
         </ErrorBoundary>
-    )
+    );
 }
