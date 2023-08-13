@@ -173,7 +173,7 @@ export async function initThemes() {
         const themeIndex = theme === "amoled" ? 2 : theme === "light" ? 1 : 0;
         
         //! As of 192.7, Tabs v2 uses BG_ semantic colors instead of BACKGROUND_ ones (i think lol)
-        const alternativeName = name.startsWith("BG_") ? `BACKGROUND_${name.split("_").slice(1).join("_")}` : name;
+        const alternativeName = getAlternativeName(name) ?? name;
 
         const semanticColorVal = (selectedTheme.data?.semanticColors?.[name] ?? selectedTheme.data?.semanticColors?.[alternativeName])?.[themeIndex];
         if (name === "CHAT_BACKGROUND" && typeof selectedTheme.data?.background?.alpha === "number") {
@@ -201,4 +201,21 @@ function extractInfo(themeMode: string, colorObj: any): [name: string, colorDef:
     const colorDef = color.SemanticColor[propName];
 
     return [propName, colorDef[themeMode.toLowerCase()]];
+}
+
+function getAlternativeName(semantic: string): string | undefined {
+    const map: Record<string, string> = {
+        "BG_BACKDROP": "BACKGROUND_FLOATING",
+        "BG_BASE_PRIMARY": "BACKGROUND_PRIMARY",
+        "BG_BASE_SECONDARY": "BACKGROUND_SECONDARY",
+        "BG_BASE_TERTIARY": "BACKGROUND_SECONDARY_ALT",
+        "BG_MOD_FAINT": "BACKGROUND_MODIFIER_ACCENT",
+        "BG_MOD_STRONG": "BACKGROUND_MODIFIER_ACCENT",
+        "BG_MOD_SUBTLE": "BACKGROUND_MODIFIER_ACCENT",
+        "BG_SURFACE_OVERLAY": "BACKGROUND_FLOATING",
+        "BG_SURFACE_OVERLAY_TMP": "BACKGROUND_FLOATING",
+        "BG_SURFACE_RAISED": "BACKGROUND_MOBILE_PRIMARY"
+    }
+
+    return map[semantic];
 }
