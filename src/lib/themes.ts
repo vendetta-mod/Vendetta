@@ -169,10 +169,13 @@ export async function initThemes() {
 
         const [theme, propIndex] = args;
         const [name, colorDef] = extractInfo(theme, propIndex);
-
+        
         const themeIndex = theme === "amoled" ? 2 : theme === "light" ? 1 : 0;
+        
+        //! As of 192.7, Tabs v2 uses BG_ semantic colors instead of BACKGROUND_ ones (i think lol)
+        const alternativeName = name.startsWith("BG_") ? `BACKGROUND_${name.split("_").slice(1).join("_")}` : name;
 
-        const semanticColorVal = selectedTheme.data?.semanticColors?.[name]?.[themeIndex];
+        const semanticColorVal = (selectedTheme.data?.semanticColors?.[name] ?? selectedTheme.data?.semanticColors?.[alternativeName])?.[themeIndex];
         if (name === "CHAT_BACKGROUND" && typeof selectedTheme.data?.background?.alpha === "number") {
             return chroma(semanticColorVal || "black").alpha(1 - selectedTheme.data.background.alpha).hex();
         }
