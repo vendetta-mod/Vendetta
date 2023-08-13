@@ -37,3 +37,8 @@ jobs:
                   git add .
                   git commit -m "Build $GITHUB_SHA" || exit 0
                   git push
+
+            - name: Purge CDN cache
+              run: |
+                  curl https://purge.jsdelivr.net/gh/vendetta-mod/builds
+                  
