@@ -18,7 +18,7 @@ const getterFunctionName = usingNewGettersModule ? NEW_GETTER_FUNCTION : OLD_GET
 const gettersModule = oldGettersModule ?? findByProps(NEW_GETTER_FUNCTION);
 
 export default function patchYou() {
-    if (!gettersModule) return;
+    if (!gettersModule || !layoutModule) return;
 
     const patches = new Array<Function>;
     const screens = getScreens(true);
