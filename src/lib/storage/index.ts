@@ -1,8 +1,8 @@
 import { Emitter, StorageBackend } from "@types";
 import createEmitter from "@lib/emitter";
 
-const emitterSymbol = Symbol("emitter accessor");
-const syncAwaitSymbol = Symbol("wrapSync promise accessor");
+const emitterSymbol = Symbol.for("vendetta.storage.emitter");
+const syncAwaitSymbol = Symbol.for("vendetta.storage.accessor");
 
 export function createProxy(target: any = {}): { proxy: any; emitter: Emitter } {
     const emitter = createEmitter();

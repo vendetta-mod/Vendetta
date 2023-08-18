@@ -7,5 +7,5 @@ export default function initSettings() {
         patchYou(),
     ]
 
-    return () => patches.forEach(p => p());
+    return () => patches.forEach(p => p?.());
 }
