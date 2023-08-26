@@ -1,15 +1,29 @@
 import { Theme, ThemeData } from "@types";
 import { ReactNative as RN, chroma } from "@metro/common";
+import { findInReactTree, safeFetch } from "@lib/utils";
 import { findByName, findByProps } from "@metro/filters";
 import { instead, after } from "@lib/patcher";
 import { createFileBackend, createMMKVBackend, createStorage, wrapSync, awaitSyncWrapper } from "@lib/storage";
-import { safeFetch } from "@lib/utils";
+import logger from "./logger";
 
 //! As of 173.10, early-finding this does not work.
 // Somehow, this is late enough, though?
 export const color = findByProps("SemanticColor");
 
 export const themes = wrapSync(createStorage<Record<string, Theme>>(createMMKVBackend("VENDETTA_THEMES")));
+
+const semanticAlternativeMap: Record<string, string> = {
+    "BG_BACKDROP": "BACKGROUND_FLOATING",
+    "BG_BASE_PRIMARY": "BACKGROUND_PRIMARY",
+    "BG_BASE_SECONDARY": "BACKGROUND_SECONDARY",
+    "BG_BASE_TERTIARY": "BACKGROUND_SECONDARY_ALT",
+    "BG_MOD_FAINT": "BACKGROUND_MODIFIER_ACCENT",
+    "BG_MOD_STRONG": "BACKGROUND_MODIFIER_ACCENT",
+    "BG_MOD_SUBTLE": "BACKGROUND_MODIFIER_ACCENT",
+    "BG_SURFACE_OVERLAY": "BACKGROUND_FLOATING",
+    "BG_SURFACE_OVERLAY_TMP": "BACKGROUND_FLOATING",
+    "BG_SURFACE_RAISED": "BACKGROUND_MOBILE_PRIMARY"
+}
 
 async function writeTheme(theme: Theme | {}) {
     if (typeof theme !== "object") throw new Error("Theme must be an object");
@@ -25,13 +39,31 @@ export function patchChatBackground() {
 
     const MessagesWrapperConnected = findByName("MessagesWrapperConnected", false);
     if (!MessagesWrapperConnected) return;
+    const { MessagesWrapper } = findByProps("MessagesWrapper");
+    if (!MessagesWrapper) return;
 
-    return after("default", MessagesWrapperConnected, (_, ret) => React.createElement(RN.ImageBackground, {
-        style: { flex: 1, height: "100%" },
-        source: { uri: currentBackground.url },
-        blurRadius: typeof currentBackground.blur === "number" ? currentBackground.blur : 0,
-        children: ret,
-    }));
+    const patches = [
+        after("default", MessagesWrapperConnected, (_, ret) => React.createElement(RN.ImageBackground, {
+            style: { flex: 1, height: "100%" },
+            source: { uri: currentBackground.url },
+            blurRadius: typeof currentBackground.blur === "number" ? currentBackground.blur : 0,
+            children: ret,
+        })),
+        after("render", MessagesWrapper.prototype, (_, ret) => {
+            const Messages = findInReactTree(ret, (x) => "HACK_fixModalInteraction" in x?.props && x?.props?.style);
+            if (Messages) 
+                Messages.props.style = Object.assign(
+                    RN.StyleSheet.flatten(Messages.props.style ?? {}),
+                    {
+                        backgroundColor: "#0000"
+                    }
+                );
+            else
+                logger.error("Didn't find Messages when patching MessagesWrapper!");
+        })
+    ];
+
+    return () => patches.forEach(x => x());
 }
 
 function normalizeToHex(colorString: string): string {
@@ -169,10 +201,13 @@ export async function initThemes() {
 
         const [theme, propIndex] = args;
         const [name, colorDef] = extractInfo(theme, propIndex);
-
+        
         const themeIndex = theme === "amoled" ? 2 : theme === "light" ? 1 : 0;
+        
+        //! As of 192.7, Tabs v2 uses BG_ semantic colors instead of BACKGROUND_ ones
+        const alternativeName = semanticAlternativeMap[name] ?? name;
 
-        const semanticColorVal = selectedTheme.data?.semanticColors?.[name]?.[themeIndex];
+        const semanticColorVal = (selectedTheme.data?.semanticColors?.[name] ?? selectedTheme.data?.semanticColors?.[alternativeName])?.[themeIndex];
         if (name === "CHAT_BACKGROUND" && typeof selectedTheme.data?.background?.alpha === "number") {
             return chroma(semanticColorVal || "black").alpha(1 - selectedTheme.data.background.alpha).hex();
         }
