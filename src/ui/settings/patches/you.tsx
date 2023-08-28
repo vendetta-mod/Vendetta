@@ -1,39 +1,37 @@
-import { i18n } from "@metro/common";
 import { findByProps } from "@metro/filters";
-import { after } from "@lib/patcher";
+import { after, before } from "@lib/patcher";
 import { getRenderableScreens, getScreens, getYouData } from "@ui/settings/data";
-
-const layoutModule = findByProps("useOverviewSettings");
-const titleConfigModule = findByProps("getSettingTitleConfig");
-const miscModule = findByProps("SETTING_RELATIONSHIPS", "SETTING_RENDERER_CONFIGS");
-
-// Checks for 189.4 and above
-// When dropping support for 189.3 and below, following can be done: (unless Discord changes things again)
-// const gettersModule = findByProps("getSettingListItems");
-const OLD_GETTER_FUNCTION = "getSettingSearchListItems";
-const NEW_GETTER_FUNCTION = "getSettingListItems";
-const oldGettersModule = findByProps(OLD_GETTER_FUNCTION);
-const usingNewGettersModule = !oldGettersModule;
-const getterFunctionName = usingNewGettersModule ? NEW_GETTER_FUNCTION : OLD_GETTER_FUNCTION;
-const gettersModule = oldGettersModule ?? findByProps(NEW_GETTER_FUNCTION);
+import { i18n } from "@lib/metro/common";
 
 export default function patchYou() {
+    const patches = new Array<Function>;
+
+    newYouPatch(patches) || oldYouPatch(patches);
+    return () => patches.forEach(p => p?.());
+}
+
+function oldYouPatch(patches: Function[]) {
+    const layoutModule = findByProps("useOverviewSettings");
+    const titleConfigModule = findByProps("getSettingTitleConfig");
+    const miscModule = findByProps("SETTING_RELATIONSHIPS", "SETTING_RENDERER_CONFIGS");
+
+    // Checks for 189.4 and above
+    // When dropping support for 189.3 and below, following can be done: (unless Discord changes things again)
+    // const gettersModule = findByProps("getSettingListItems");
+    const OLD_GETTER_FUNCTION = "getSettingSearchListItems";
+    const NEW_GETTER_FUNCTION = "getSettingListItems";
+    const oldGettersModule = findByProps(OLD_GETTER_FUNCTION);
+    const usingNewGettersModule = !oldGettersModule;
+    const getterFunctionName = usingNewGettersModule ? NEW_GETTER_FUNCTION : OLD_GETTER_FUNCTION;
+    const gettersModule = oldGettersModule ?? findByProps(NEW_GETTER_FUNCTION);
+
     if (!gettersModule || !layoutModule) return;
 
-    const patches = new Array<Function>;
     const screens = getScreens(true);
     const renderableScreens = getRenderableScreens(true);
     const data = getYouData();
 
-    patches.push(after("useOverviewSettings", layoutModule, (_, ret) => {
-        // Add our settings
-        const accountSettingsIndex = ret.findIndex((i: any) => i.title === i18n.Messages.ACCOUNT_SETTINGS);
-        ret.splice(accountSettingsIndex + 1, 0, data.getLayout());
-
-        // Upload Logs button be gone
-        const supportCategory = ret.find((i: any) => i.title === i18n.Messages.SUPPORT);
-        supportCategory.settings = supportCategory.settings.filter((s: string) => s !== "UPLOAD_DEBUG_LOGS");
-    }));
+    patches.push(after("useOverviewSettings", layoutModule, (_, ret) => manipulateSections(ret, data.getLayout())));
 
     patches.push(after("getSettingTitleConfig", titleConfigModule, (_, ret) => ({
         ...ret,
@@ -53,16 +51,56 @@ export default function patchYou() {
         ...ret.filter((i: any) => (usingNewGettersModule || !screens.map(s => s.key).includes(i.setting)))
     ].map((item, index, parent) => ({ ...item, index, total: parent.length }))));
 
-    // TODO: We could use a proxy for these
     const oldRelationships = miscModule.SETTING_RELATIONSHIPS;
-    miscModule.SETTING_RELATIONSHIPS = { ...oldRelationships, ...data.relationships };
-
     const oldRendererConfigs = miscModule.SETTING_RENDERER_CONFIGS;
+    
+    miscModule.SETTING_RELATIONSHIPS = { ...oldRelationships, ...data.relationships };
     miscModule.SETTING_RENDERER_CONFIGS = { ...oldRendererConfigs, ...data.rendererConfigs };
 
-    return () => {
+    patches.push(() => {
         miscModule.SETTING_RELATIONSHIPS = oldRelationships;
         miscModule.SETTING_RENDERER_CONFIGS = oldRendererConfigs;
-        patches.forEach(p => p());
-    };
+    });
+
+    return true;
+}
+
+function newYouPatch(patches: Function[]) {
+    const settingsListComponents = findByProps("SearchableSettingsList");
+    const settingConstantsModule = findByProps("SETTING_RENDERER_CONFIG");
+    const gettersModule = findByProps("getSettingListItems");
+
+    if (!gettersModule || !settingsListComponents || !settingConstantsModule) return false;
+
+    const screens = getScreens(true);
+    const data = getYouData();
+
+    patches.push(before("type", settingsListComponents.SearchableSettingsList, ([{ sections }]) => manipulateSections(sections, data.getLayout())));
+
+    patches.push(after("getSettingListSearchResultItems", gettersModule, (_, ret) => {
+        ret.forEach((s: any) => screens.some(b => b.key === s.setting) && (s.breadcrumbs = ["Vendetta"]))
+    }));
+
+    const oldRendererConfig = settingConstantsModule.SETTING_RENDERER_CONFIG;
+    settingConstantsModule.SETTING_RENDERER_CONFIG = { ...oldRendererConfig, ...data.rendererConfigs };
+
+    patches.push(() => {
+        settingConstantsModule.SETTING_RENDERER_CONFIG = oldRendererConfig;
+    });
+
+    return true;
+}
+
+const isLabel = (i: any, name: string) => i?.label === name || i?.title === name;
+
+function manipulateSections(sections: any[], layout: any) {
+    if (!Array.isArray(sections) || sections.find((i: any) => isLabel(i, "Vendetta"))) return;
+
+    // Add our settings
+    const accountSettingsIndex = sections.findIndex((i: any) => isLabel(i, i18n.Messages.ACCOUNT_SETTINGS));
+    sections.splice(accountSettingsIndex + 1, 0, layout);
+
+    // Upload Logs button be gone
+    const supportCategory = sections.find((i: any) => isLabel(i, i18n.Messages.SUPPORT));
+    if (supportCategory) supportCategory.settings = supportCategory.settings.filter((s: string) => s !== "UPLOAD_DEBUG_LOGS")
 }

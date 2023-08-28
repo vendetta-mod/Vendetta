@@ -111,6 +111,7 @@ export const getYouData = () => {
     return {
         getLayout: () => ({
             title: "Vendetta",
+            label: "Vendetta",
             // We can't use our keyMap function here since `settings` is an array not an object
             settings: getRenderableScreens(true).map(s => s.key)
         }),
@@ -124,6 +125,7 @@ export const getYouData = () => {
 
             return {
                 type: "route",
+                title: () => s.title,
                 icon: s.icon ? getAssetIDByName(s.icon) : null,
                 screen: {
                     // TODO: This is bad, we should not re-convert the key casing
