@@ -1,4 +1,4 @@
-import { findByProps } from "@metro/filters";
+import { findByProps, find } from "@metro/filters";
 import { ReactNative as RN, channels, url } from "@metro/common";
 import { PROXY_PREFIX, THEMES_CHANNEL_ID } from "@lib/constants";
 import { after, instead } from "@lib/patcher";
@@ -8,7 +8,7 @@ import { showConfirmationAlert } from "@ui/alerts";
 import { getAssetIDByName } from "@ui/assets";
 import { showToast } from "@ui/toasts";
 
-const showSimpleActionSheet = findByProps("showSimpleActionSheet");
+const showSimpleActionSheet = find((m) => m?.showSimpleActionSheet && !Object.getOwnPropertyDescriptor(m, "showSimpleActionSheet")?.get);
 const handleClick = findByProps("handleClick");
 const { openURL } = url;
 const { getChannelId } = channels;
@@ -25,49 +25,57 @@ function typeFromUrl(url: string) {
 }
 
 function installWithToast(type: "Plugin" | "Theme", url: string) {
-    (type === "Plugin" ? installPlugin : installTheme)(url).then(() => {
-        showToast("Successfully installed", getAssetIDByName("Check"));
-    }).catch((e: Error) => {
-        showToast(e.message, getAssetIDByName("Small"));
-    });
+    (type === "Plugin" ? installPlugin : installTheme)(url)
+        .then(() => {
+            showToast("Successfully installed", getAssetIDByName("Check"));
+        })
+        .catch((e: Error) => {
+            showToast(e.message, getAssetIDByName("Small"));
+        });
 }
 
 export default () => {
-    const patches = new Array<Function>;
-    
-    patches.push(after("showSimpleActionSheet", showSimpleActionSheet, (args) => {
-        if (args[0].key !== "LongPressUrl") return;
-        const { header: { title: url }, options } = args[0];
+    const patches = new Array<Function>();
 
-        const urlType = typeFromUrl(url);
-        if (!urlType) return;
+    patches.push(
+        after("showSimpleActionSheet", showSimpleActionSheet, (args) => {
+            if (args[0].key !== "LongPressUrl") return;
+            const {
+                header: { title: url },
+                options,
+            } = args[0];
 
-        options.push({
-            label: `Install ${urlType}`,
-            onPress: () => installWithToast(urlType, url),
-        });
-    }));
+            const urlType = typeFromUrl(url);
+            if (!urlType) return;
 
-    patches.push(instead("handleClick", handleClick, async function (this: any, args, orig) {
-        const { href: url } = args[0];
+            options.push({
+                label: `Install ${urlType}`,
+                onPress: () => installWithToast(urlType, url),
+            });
+        })
+    );
 
-        const urlType = typeFromUrl(url);
-        if (!urlType) return orig.apply(this, args);
+    patches.push(
+        instead("handleClick", handleClick, async function (this: any, args, orig) {
+            const { href: url } = args[0];
 
-        // Make clicking on theme links only work in #themes, should there be a theme proxy in the future, this can be removed.
-        if (urlType === "Theme" && getChannel(getChannelId())?.parent_id !== THEMES_CHANNEL_ID)
-            return orig.apply(this, args);
+            const urlType = typeFromUrl(url);
+            if (!urlType) return orig.apply(this, args);
 
-        showConfirmationAlert({
-            title: "Hold Up",
-            content: ["This link is a ", <RN.Text style={TextStyleSheet["text-md/semibold"]}>{urlType}</RN.Text>, ", would you like to install it?"],
-            onConfirm: () => installWithToast(urlType, url),
-            confirmText: "Install",
-            cancelText: "Cancel",
-            secondaryConfirmText: "Open in Browser",
-            onConfirmSecondary: () => openURL(url),
-        });
-    }));
+            // Make clicking on theme links only work in #themes, should there be a theme proxy in the future, this can be removed.
+            if (urlType === "Theme" && getChannel(getChannelId())?.parent_id !== THEMES_CHANNEL_ID) return orig.apply(this, args);
+
+            showConfirmationAlert({
+                title: "Hold Up",
+                content: ["This link is a ", <RN.Text style={TextStyleSheet["text-md/semibold"]}>{urlType}</RN.Text>, ", would you like to install it?"],
+                onConfirm: () => installWithToast(urlType, url),
+                confirmText: "Install",
+                cancelText: "Cancel",
+                secondaryConfirmText: "Open in Browser",
+                onConfirmSecondary: () => openURL(url),
+            });
+        })
+    );
 
     return () => patches.forEach((p) => p());
 };
