@@ -49,16 +49,16 @@ export const getScreens = (youKeys = false): Screen[] => [
                     alertTitle="Install Plugin"
                     installFunction={async (input) => {
                         if (!input.startsWith(PROXY_PREFIX) && !settings.developerSettings)
-                            showConfirmationAlert({
+                            setImmediate(() => showConfirmationAlert({
                                 title: "Unproxied Plugin",
                                 content: "The plugin you are trying to install has not been proxied/verified by Vendetta staff. Are you sure you want to continue?",
                                 confirmText: "Install",
                                 onConfirm: () =>
                                     installPlugin(input)
                                         .then(() => showToast("Installed plugin", getAssetIDByName("Check")))
-                                        .catch((x) => showToast(x.toString(), getAssetIDByName("Small"))),
+                                        .catch((x) => showToast(x?.message ?? `${x}`, getAssetIDByName("Small"))),
                                 cancelText: "Cancel",
-                            });
+                            }));
                         else return await installPlugin(input);
                     }}
                 />
