@@ -27,8 +27,8 @@ function oldYouPatch(patches: Function[]) {
 
     if (!gettersModule || !layoutModule) return;
 
-    const screens = getScreens(true);
-    const renderableScreens = getRenderableScreens(true);
+    const screens = getScreens();
+    const renderableScreens = getRenderableScreens();
     const data = getYouData();
 
     patches.push(after("useOverviewSettings", layoutModule, (_, ret) => manipulateSections(ret, data.getLayout())));
@@ -72,7 +72,7 @@ function newYouPatch(patches: Function[]) {
 
     if (!gettersModule || !settingsListComponents || !settingConstantsModule) return false;
 
-    const screens = getScreens(true);
+    const screens = getScreens();
     const data = getYouData();
 
     patches.push(before("type", settingsListComponents.SearchableSettingsList, ([{ sections }]) => manipulateSections(sections, data.getLayout())));
