@@ -1,5 +1,32 @@
-import { DiscordStyleSheet } from "@types";
-import { find, findByProps } from "@metro/filters";
+import { find, findByProps, findByPropsAll, findByStoreName } from "@metro/filters";
+import type { StyleSheet } from "react-native";
+import { ReactNative as RN } from "./common";
+
+const ThemeStore = findByStoreName("ThemeStore");
+const colorResolver = findByProps("colors", "meta").meta;
+
+// Reimplementation of Discord's createThemedStyleSheet, which was removed since 204201
+// Not exactly a 1:1 reimplementation, but sufficient to keep compatibility with existing plugins
+function createThemedStyleSheet<T extends StyleSheet.NamedStyles<T>>(sheet: Styles<T>) {
+    Object.values(sheet).forEach(s => {
+        const style = RN.StyleSheet.flatten(s);
+
+        Object.keys(style).forEach((key) => {
+            if (colorResolver.isSemanticColor(style[key])) {
+                const symbol = style[key];
+
+                // Listen to theme changes
+                ThemeStore.addChangeListener(() => {
+                    style[key] = colorResolver.resolveSemanticColor(ThemeStore.theme, symbol);
+                });
+
+                style[key] = colorResolver.resolveSemanticColor(ThemeStore.theme, symbol);
+            }
+        });
+    });
+
+    return sheet;
+}
 
 // Discord
 export const constants = findByProps("Fonts", "Permissions");
@@ -7,7 +34,17 @@ export const channels = findByProps("getVoiceChannelId");
 export const i18n = findByProps("Messages");
 export const url = findByProps("openURL", "openDeeplink");
 export const toasts = find(m => m.open && m.close && !m.startDrag && !m.init && !m.openReplay && !m.setAlwaysOnTop);
-export const stylesheet = findByProps("createThemedStyleSheet") as DiscordStyleSheet;
+
+type Styles<T> = T | StyleSheet.NamedStyles<T> | (() => T | StyleSheet.NamedStyles<T>);
+
+export const stylesheet = {
+    ...find(m => m.createStyles && !m.ActionSheet),
+    createThemedStyleSheet: findByProps("createThemedStyleSheet")?.createThemedStyleSheet ?? createThemedStyleSheet
+} as unknown as {
+    createStyles: <T extends StyleSheet.NamedStyles<T>>(sheet: Styles<T>) => () => T,
+    [index: string]: any
+}
+
 export const clipboard = findByProps("setString", "getString", "hasString") as typeof import("@react-native-clipboard/clipboard").default;
 export const assets = findByProps("registerAsset");
 export const invites = findByProps("acceptInviteAndTransitionToInviteChannel");

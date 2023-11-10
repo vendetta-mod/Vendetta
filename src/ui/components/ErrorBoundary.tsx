@@ -7,7 +7,7 @@ interface ErrorBoundaryState {
     errText?: string;
 }
 
-const styles = stylesheet.createThemedStyleSheet({
+const useStyles = stylesheet.createStyles({
     view: {
         flex: 1,
         flexDirection: "column",
@@ -28,9 +28,9 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, E
 
     static getDerivedStateFromError = (error: Error) => ({ hasErr: true, errText: error.message });
 
-    render() {
-        if (!this.state.hasErr) return this.props.children;
-
+    BoundaryScreen = () => {
+        const styles = useStyles();
+        
         return (
             <RN.ScrollView style={styles.view}>
                 <Forms.FormText style={styles.title}>Uh oh.</Forms.FormText>
@@ -43,6 +43,12 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, E
                     text="Retry"
                 />
             </RN.ScrollView>
-        )
+        );
+    }
+
+    render() {
+        if (!this.state.hasErr) return this.props.children;
+
+        return <this.BoundaryScreen />
     }
 }
