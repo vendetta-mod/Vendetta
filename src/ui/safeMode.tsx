@@ -17,7 +17,7 @@ const ThemeStore = findByStoreName("ThemeStore");
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
 
-const styles = stylesheet.createThemedStyleSheet({
+const useStyles = stylesheet.createStyles({
     container: {
         flex: 1,
         backgroundColor: semanticColors.BACKGROUND_PRIMARY,
@@ -70,7 +70,7 @@ const tabs: Tab[] = [
 
 
 function BoundaryScreen({ self, ret }: { self: any, ret: any }) {
-    // const styles = useStyles();
+    const styles = useStyles();
 
     // Not using setState here as we don't want to cause a re-render, we want this to be set in the initial render
     self.state.activeTab ??= "message";
