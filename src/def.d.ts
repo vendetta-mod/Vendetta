@@ -356,6 +356,7 @@ interface LoaderIdentity {
 
 interface DiscordStyleSheet {
     [index: string]: any,
+    createStyles: <T extends _RN.StyleSheet.NamedStyles<T>>(sheet: T | (() => T)) => () => T;
     createThemedStyleSheet: typeof import("react-native").StyleSheet.create;
 }
 

@@ -1,15 +1,16 @@
 import { find, findByProps, findByPropsAll, findByStoreName } from "@metro/filters";
-import type { StyleSheet } from "react-native";
+import type { ImageStyle, StyleSheet, TextStyle, ViewStyle } from "react-native";
 import { ReactNative as RN } from "./common";
+import { DiscordStyleSheet } from "@/def";
 
 const ThemeStore = findByStoreName("ThemeStore");
 const colorResolver = findByProps("colors", "meta").meta;
 
 // Reimplementation of Discord's createThemedStyleSheet, which was removed since 204201
 // Not exactly a 1:1 reimplementation, but sufficient to keep compatibility with existing plugins
-function createThemedStyleSheet<T extends StyleSheet.NamedStyles<T>>(sheet: Styles<T>) {
+function createThemedStyleSheet<T extends StyleSheet.NamedStyles<T>>(sheet: T) {
     Object.values(sheet).forEach(s => {
-        const style = RN.StyleSheet.flatten(s);
+        const style = RN.StyleSheet.flatten<any>(s);
 
         Object.keys(style).forEach((key) => {
             if (colorResolver.isSemanticColor(style[key])) {
@@ -35,15 +36,10 @@ export const i18n = findByProps("Messages");
 export const url = findByProps("openURL", "openDeeplink");
 export const toasts = find(m => m.open && m.close && !m.startDrag && !m.init && !m.openReplay && !m.setAlwaysOnTop);
 
-type Styles<T> = T | StyleSheet.NamedStyles<T> | (() => T | StyleSheet.NamedStyles<T>);
-
 export const stylesheet = {
     ...find(m => m.createStyles && !m.ActionSheet),
     createThemedStyleSheet: findByProps("createThemedStyleSheet")?.createThemedStyleSheet ?? createThemedStyleSheet
-} as unknown as {
-    createStyles: <T extends StyleSheet.NamedStyles<T>>(sheet: Styles<T>) => () => T,
-    [index: string]: any
-}
+} as DiscordStyleSheet;
 
 export const clipboard = findByProps("setString", "getString", "hasString") as typeof import("@react-native-clipboard/clipboard").default;
 export const assets = findByProps("registerAsset");
