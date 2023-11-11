@@ -1,7 +1,7 @@
-import { find, findByProps, findByPropsAll, findByStoreName } from "@metro/filters";
-import type { ImageStyle, StyleSheet, TextStyle, ViewStyle } from "react-native";
-import { ReactNative as RN } from "./common";
-import { DiscordStyleSheet } from "@/def";
+import { find, findByProps, findByStoreName } from "@metro/filters";
+import { DiscordStyleSheet } from "@types";
+import { ReactNative as RN } from "@lib/preinit";
+import type { StyleSheet } from "react-native";
 
 const ThemeStore = findByStoreName("ThemeStore");
 const colorResolver = findByProps("colors", "meta").meta;
@@ -9,22 +9,17 @@ const colorResolver = findByProps("colors", "meta").meta;
 // Reimplementation of Discord's createThemedStyleSheet, which was removed since 204201
 // Not exactly a 1:1 reimplementation, but sufficient to keep compatibility with existing plugins
 function createThemedStyleSheet<T extends StyleSheet.NamedStyles<T>>(sheet: T) {
-    Object.values(sheet).forEach(s => {
-        const style = RN.StyleSheet.flatten<any>(s);
-
-        Object.keys(style).forEach((key) => {
-            if (colorResolver.isSemanticColor(style[key])) {
-                const symbol = style[key];
-
-                // Listen to theme changes
-                ThemeStore.addChangeListener(() => {
-                    style[key] = colorResolver.resolveSemanticColor(ThemeStore.theme, symbol);
-                });
-
-                style[key] = colorResolver.resolveSemanticColor(ThemeStore.theme, symbol);
+    for (const key in sheet) {
+        // @ts-ignore
+        sheet[key] = new Proxy(RN.StyleSheet.flatten(sheet[key]), {
+            get(target, prop, receiver) { 
+                const res = Reflect.get(target, prop, receiver);
+                return colorResolver.isSemanticColor(res) 
+                    ? colorResolver.resolveSemanticColor(ThemeStore.theme, res)
+                    : res
             }
         });
-    });
+    }
 
     return sheet;
 }
