@@ -1,5 +1,5 @@
 import { FluxDispatcher, moment } from "@metro/common";
-import { findByProps, findByStoreName } from "./metro/filters";
+import { findByProps, findByStoreName } from "@metro/filters";
 import logger from "@lib/logger";
 
 const ThemeManager = findByProps("updateTheme", "overrideTheme");
