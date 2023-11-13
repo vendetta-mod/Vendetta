@@ -401,6 +401,7 @@ interface VendettaObject {
             moment: typeof _moment;
             chroma: typeof _chroma;
             lodash: typeof _lodash;
+            util: PropIntellisense<"inspect" | "isNullOrUndefined">;
         };
     };
     constants: {

@@ -62,3 +62,7 @@ export { chroma } from "@lib/preinit";
 
 // Lodash
 export const lodash = findByProps("forEachRight") as typeof import("lodash");
+
+// The node:util polyfill for RN
+// TODO: Find types for this
+export const util = findByProps("inspect", "isNullOrUndefined");
