@@ -1,24 +1,22 @@
-import { ReactNative as RN, clipboard, stylesheet } from "@metro/common";
+import { ReactNative as RN, stylesheet, clipboard } from "@metro/common";
 import { HTTP_REGEX_MULTI } from "@lib/constants";
 import { showInputAlert } from "@ui/alerts";
 import { getAssetIDByName } from "@ui/assets";
 import { semanticColors } from "@ui/color";
 
-interface InstallButtonProps {
-    alertTitle: string;
-    installFunction: (id: string) => Promise<void>;
-}
-
-const useStyles = stylesheet.createStyles({
+const styles = stylesheet.createThemedStyleSheet({
     icon: {
         marginRight: 10,
         tintColor: semanticColors.HEADER_PRIMARY,
     },
 });
 
-export default function InstallButton({ alertTitle, installFunction: fetchFunction }: InstallButtonProps) {
-    const styles = useStyles();
+interface InstallButtonProps {
+    alertTitle: string;
+    installFunction: (id: string) => Promise<void>;
+}
 
+export default function InstallButton({ alertTitle, installFunction: fetchFunction }: InstallButtonProps) {
     return (
         <RN.TouchableOpacity onPress={() =>
             clipboard.getString().then((content) =>

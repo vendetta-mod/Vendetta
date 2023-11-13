@@ -9,7 +9,7 @@ const { hideActionSheet } = findByProps("openLazy", "hideActionSheet");
 const { showSimpleActionSheet } = findByProps("showSimpleActionSheet");
 
 // TODO: These styles work weirdly. iOS has cramped text, Android with low DPI probably does too. Fix?
-const useStyles = stylesheet.createStyles({
+const styles = stylesheet.createThemedStyleSheet({
     card: {
         backgroundColor: semanticColors?.BACKGROUND_SECONDARY,
         borderRadius: 5,
@@ -30,7 +30,7 @@ const useStyles = stylesheet.createStyles({
         marginLeft: 5,
         tintColor: semanticColors?.INTERACTIVE_NORMAL,
     },
-});
+})
 
 interface Action {
     icon: string;
@@ -61,7 +61,6 @@ interface CardProps {
 }
 
 export default function Card(props: CardProps) {
-    const styles = useStyles();
     let pressableState = props.toggleValue ?? false;
 
     return ( 

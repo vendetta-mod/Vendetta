@@ -31,9 +31,11 @@ export const i18n = findByProps("Messages");
 export const url = findByProps("openURL", "openDeeplink");
 export const toasts = find(m => m.open && m.close && !m.startDrag && !m.init && !m.openReplay && !m.setAlwaysOnTop);
 
+// Compatible with pre-204201 versions since createThemedStyleSheet is undefined.
 export const stylesheet = {
     ...find(m => m.createStyles && !m.ActionSheet),
-    createThemedStyleSheet: findByProps("createThemedStyleSheet")?.createThemedStyleSheet ?? createThemedStyleSheet
+    createThemedStyleSheet,
+    ...findByProps("createThemedStyleSheet") as {},
 } as DiscordStyleSheet;
 
 export const clipboard = findByProps("setString", "getString", "hasString") as typeof import("@react-native-clipboard/clipboard").default;

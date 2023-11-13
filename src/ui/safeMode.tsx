@@ -16,8 +16,7 @@ const { BadgableTabBar } = findByProps("BadgableTabBar");
 const ThemeStore = findByStoreName("ThemeStore");
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
-
-const useStyles = stylesheet.createStyles({
+const styles = stylesheet.createThemedStyleSheet({
     container: {
         flex: 1,
         backgroundColor: semanticColors.BACKGROUND_PRIMARY,
@@ -68,22 +67,21 @@ const tabs: Tab[] = [
     { id: "componentStack", title: "Component", trimWhitespace: true },
 ];
 
-
-function BoundaryScreen({ self, ret }: { self: any, ret: any }) {
-    const styles = useStyles();
+export default () => after("render", ErrorBoundary.prototype, function (this: any, _, ret) {
+    if (!this.state.error) return;
 
     // Not using setState here as we don't want to cause a re-render, we want this to be set in the initial render
-    self.state.activeTab ??= "message";
-    const tabData = tabs.find(t => t.id === self.state.activeTab);
-    const errorText: string = self.state.error[self.state.activeTab];
+    this.state.activeTab ??= "message";
+    const tabData = tabs.find(t => t.id === this.state.activeTab);
+    const errorText: string = this.state.error[this.state.activeTab];
 
     // This is in the patch and not outside of it so that we can use `this`, e.g. for setting state
     const buttons: Button[] = [
-        { text: "Restart Discord", onPress: self.handleReload },
+        { text: "Restart Discord", onPress: this.handleReload },
         ...!settings.safeMode?.enabled ? [{ text: "Restart in Safe Mode", onPress: toggleSafeMode }] : [],
-        { text: "Retry Render", color: ButtonColors.RED, onPress: () => self.setState({ info: null, error: null }) },
-    ];
-    
+        { text: "Retry Render", color: ButtonColors.RED, onPress: () => this.setState({ info: null, error: null }) },
+    ]
+
     return (
         <_ErrorBoundary>
             <SafeAreaView style={styles.container}>
@@ -99,8 +97,8 @@ function BoundaryScreen({ self, ret }: { self: any, ret: any }) {
                         {/* Are errors caught by ErrorBoundary guaranteed to have the component stack? */}
                         <BadgableTabBar
                             tabs={tabs}
-                            activeTab={self.state.activeTab}
-                            onTabSelected={(tab: string) => { self.setState({ activeTab: tab }) }}
+                            activeTab={this.state.activeTab}
+                            onTabSelected={(tab: string) => { this.setState({ activeTab: tab }) }}
                         />
                     </RN.View>
                     <Codeblock
@@ -130,9 +128,4 @@ function BoundaryScreen({ self, ret }: { self: any, ret: any }) {
             </SafeAreaView>
         </_ErrorBoundary>
     )
-}
-
-export default () => after("render", ErrorBoundary.prototype, function (this: any, _, ret) {
-    if (!this.state.error) return;
-    return <BoundaryScreen self={this} ret={ret} />
 });

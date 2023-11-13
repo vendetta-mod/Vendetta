@@ -25,7 +25,7 @@ interface Screen {
     render: React.ComponentType<any>;
 }
 
-const useStyles = stylesheet.createStyles({ container: { flex: 1, backgroundColor: semanticColors.BACKGROUND_MOBILE_PRIMARY } });
+const styles = stylesheet.createThemedStyleSheet({ container: { flex: 1, backgroundColor: semanticColors.BACKGROUND_MOBILE_PRIMARY } });
 const formatKey = (key: string, youKeys: boolean) => youKeys ? lodash.snakeCase(key).toUpperCase() : key;
 // If a function is passed, it is called with the screen object, and the return value is mapped. If a string is passed, we map to the value of the property with that name on the screen. Else, just map to the given data.
 // Question: Isn't this overengineered?
@@ -119,7 +119,6 @@ export const getYouData = () => {
         relationships: keyMap(screens, null),
         rendererConfigs: keyMap(screens, (s) => {
             const WrappedComponent = React.memo(({ navigation, route }: any) => {
-                const styles = useStyles();
                 navigation.addListener("focus", () => navigation.setOptions(s.options));
                 return <RN.View style={styles.container}><s.render {...route.params} /></RN.View>
             });
