@@ -356,6 +356,7 @@ interface LoaderIdentity {
 
 interface DiscordStyleSheet {
     [index: string]: any,
+    createStyles: <T extends _RN.StyleSheet.NamedStyles<T>>(sheet: T | (() => T)) => () => T;
     createThemedStyleSheet: typeof import("react-native").StyleSheet.create;
 }
 
@@ -400,6 +401,7 @@ interface VendettaObject {
             moment: typeof _moment;
             chroma: typeof _chroma;
             lodash: typeof _lodash;
+            util: PropIntellisense<"inspect" | "isNullOrUndefined">;
         };
     };
     constants: {

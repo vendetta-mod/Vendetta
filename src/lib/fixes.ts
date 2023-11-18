@@ -11,8 +11,10 @@ function onDispatch({ locale }: { locale: string }) {
     // Theming
     // Based on https://github.com/Aliucord/AliucordRN/blob/main/src/ui/patchTheme.ts
     try {
-        ThemeManager.overrideTheme(ThemeStore?.theme ?? "dark");
-        if (AMOLEDThemeManager && UnsyncedUserSettingsStore.useAMOLEDTheme === 2) AMOLEDThemeManager.setAMOLEDThemeEnabled(true);
+        if (ThemeManager) {
+            ThemeManager.overrideTheme(ThemeStore?.theme ?? "dark");
+            if (AMOLEDThemeManager && UnsyncedUserSettingsStore.useAMOLEDTheme === 2) AMOLEDThemeManager.setAMOLEDThemeEnabled(true);
+        }
     } catch(e) {
         logger.error("Failed to fix theme...", e);
     }
