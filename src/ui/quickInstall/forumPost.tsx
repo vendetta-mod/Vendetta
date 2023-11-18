@@ -39,12 +39,7 @@ export default () => after("default", ForumPostLongPressActionSheet, ([{ thread 
     const url = urls[0];
     if (!url) return;
 
-    /* Assuming that the actions array is at index 1
-       could break in the future, but I doubt Discord
-       will add more to the post action sheet and
-       index 0 will either be quick add reactions or false.
-    */
-    const actions = findInReactTree(res, (t) => t.props?.bottom === true).props.children.props.children[1];
+    const actions = findInReactTree(res, (t) => t?.[0]?.key);
     const ActionsSection = actions[0].type;
 
     actions.unshift(<ActionsSection key="install">

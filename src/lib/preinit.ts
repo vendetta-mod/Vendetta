@@ -1,5 +1,5 @@
 import { initThemes } from "@lib/themes";
-import { instead } from "spitroast";
+import { instead } from "@lib/patcher";
 
 // Hoist required modules
 // This used to be in filters.ts, but things became convoluted
@@ -21,7 +21,7 @@ if (requireNativeComponent) {
         try {
             return orig(...args);
         } catch {
-            return () => null;
+            return args[0];
         }
     })
 }
