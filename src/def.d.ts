@@ -130,6 +130,7 @@ interface ThemeData {
     spec: number;
     semanticColors?: Record<string, (string | false)[]>;
     rawColors?: Record<string, string>;
+    fonts?: Record<string, string>;
     background?: {
         url: string;
         blur?: number;
