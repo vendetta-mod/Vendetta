@@ -29,7 +29,7 @@ export const constants = findByProps("Fonts", "Permissions");
 export const channels = findByProps("getVoiceChannelId");
 export const i18n = findByProps("Messages");
 export const url = findByProps("openURL", "openDeeplink");
-export const toasts = find(m => m.open && m.close && !m.startDrag && !m.init && !m.openReplay && !m.setAlwaysOnTop);
+export const toasts = find(m => m.open && m.close && !m.startDrag && !m.init && !m.openReplay && !m.setAlwaysOnTop && !m.setAccountFlag);
 
 // Compatible with pre-204201 versions since createThemedStyleSheet is undefined.
 export const stylesheet = {
