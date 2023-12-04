@@ -1,47 +1,29 @@
 # Vendetta
-A mod for Discord's mobile apps.
+Gangster edition!
+![1qkd0C3I](https://github.com/Not-Baguette/Vendetta-gangster-win11/assets/94969176/41277ee5-5d0c-4251-8812-8007b1c70bb2)
 
 ## Installing
-Vendetta's codebase is platform-agnostic, but you need a platform-specific loader.
+Vendetta's codebase is fully made out of python and gangsta now!
 
-### Android
-* Root - [VendettaXposed](https://github.com/vendetta-mod/VendettaXposed/releases/latest)
-* Non-root - [VendettaManager](https://github.com/vendetta-mod/VendettaManager/releases/latest)
-    - Manager not working? No problem! Pre-built APKs are provided [here](https://discord.k6.tf/).
-    - The minimum Android version required is 9. It will not work any lower.
+### Win 10/11 Precompiled
+* Go to latest `release` and then download the latest `release.zip`
+* Run the program with all the dependency files with it
 
-### iOS
-* Jailbroken - [VendettaTweak](https://github.com/vendetta-mod/VendettaTweak)
-    - You can get prebuilt `.deb` files from GitHub Actions - we support rootful and rootless jailbreaks!
-* Jailed - You can get IPAs from [the thread](https://discord.com/channels/1015931589865246730/1087295482667208766) in our [Discord server](https://discord.gg/n9QQ4XhhJP) or from our [host](https://discord.k6.tf/ios/).
-    - These IPAs do *not* work with AltStore! You should use [Sideloadly](https://sideloadly.io).
+### Win 10/11 Source code
+* Install it as zip/git clone it
+* install dependencies
+* Open `main.py`
+* Run as normal
+
+### Mobile
+* Check out [Vendetta](https://github.com/vendetta-mod/Vendetta)! A fanmade fork of this repository
+
+## Dependencies
+* pypiwin32
 
 ## Contributing
-1. Install a Vendetta loader with loader config support (any mentioned in the [Installing](#installing) section).
+1. gangsta needs you brothers and sisters, so make sure to spread this version and make it popular!
+2. It's currently in pause in development because all the devs have gotten too gangsta to work on it
 
-2. Go to Settings > General and enable Developer Settings.
-
-3. Clone the repo:
-    ```
-    git clone https://github.com/vendetta-mod/Vendetta
-    ```
-
-4. Install dependencies:
-    ```
-    pnpm i
-    ```
-    <sup>`npm` or `yarn` should also work.</sup>
-
-5. Build Vendetta's code:
-    ```
-    pnpm build
-    ```
-    <sup>`npm` or `yarn` should also work.</sup>
-
-6. In the newly created `dist` directory, run a HTTP server. I recommend [http-server](https://www.npmjs.com/package/http-server).
-
-7. Go to Settings > Developer enabled earlier). Enable `Load from custom url` and input the IP address and port of the server (e.g.  e.g. `http://192.168.1.236:4040`) in the new input box labelled `VENDETTA URL`.
-
-8. Restart Discord. Upon reload, you should notice that your device will download Vendetta's bundled code from your server, rather than GitHub.
-
-9. Make your changes, rebuild, reload, go wild!
+## Note
+This is a completely satire repository, if you're the developer of Vendetta (Maisy and the others) and wish to see this stop, feel free to contact me via discord, I am in your server and is pretty active
