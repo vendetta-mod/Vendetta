@@ -1,7 +1,6 @@
 import { PluginManifest, Plugin } from "@types";
 import { safeFetch } from "@lib/utils";
-import { awaitSyncWrapper, createMMKVBackend, createStorage, wrapSync } from "@lib/storage";
-import { MMKVManager } from "@lib/native";
+import { awaitSyncWrapper, createMMKVBackend, createStorage, purgeStorage, wrapSync } from "@lib/storage";
 import { allSettled } from "@lib/polyfills";
 import logger, { logModule } from "@lib/logger";
 import settings from "@lib/settings";
@@ -117,12 +116,12 @@ export function stopPlugin(id: string, disable = true) {
     disable && (plugin.enabled = false);
 }
 
-export function removePlugin(id: string) {
+export async function removePlugin(id: string) {
     if (!id.endsWith("/")) id += "/";
     const plugin = plugins[id];
     if (plugin.enabled) stopPlugin(id);
-    MMKVManager.removeItem(id);
     delete plugins[id];
+    await purgeStorage(id);
 }
 
 export async function initPlugins() {

@@ -95,6 +95,7 @@ interface InputAlertProps {
     cancelText?: string;
     placeholder?: string;
     initialValue?: string;
+    secureTextEntry?: boolean;
 }
 
 interface Author {
@@ -292,11 +293,13 @@ interface FileManager {
      * @returns Promise that resolves to path of the file once it got written
      */
     writeFile(storageDir: "cache" | "documents", path: string, data: string, encoding: "base64" | "utf8"): Promise<string>;
+    removeFile(storageDir: "cache" | "documents", path: string): Promise<unknown>;
     getConstants: () => {
         /**
          * The path the `documents` storage dir (see {@link writeFile}) represents.
          */
         DocumentsDirPath: string;
+        CacheDirPath: string;
     };
     /**
      * Will apparently cease to exist some time in the future so please use {@link getConstants} instead.
