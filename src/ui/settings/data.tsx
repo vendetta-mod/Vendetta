@@ -14,6 +14,7 @@ import Plugins from "@ui/settings/pages/Plugins";
 import Themes from "@ui/settings/pages/Themes";
 import Developer from "@ui/settings/pages/Developer";
 import { PROXY_PREFIX } from "@/lib/constants";
+import { useProxy } from "@/lib/storage";
 
 interface Screen {
     [index: string]: any;
@@ -126,7 +127,7 @@ export const getYouData = () => {
                 type: "route",
                 title: () => s.title,
                 icon: s.icon ? getAssetIDByName(s.icon) : null,
-                usePredicate: s.shouldRender,
+                usePredicate: s.shouldRender && (() => useProxy(settings) && s.shouldRender?.()),
                 screen: {
                     route: s.key,
                     getComponent: () => WrappedComponent,
