@@ -95,7 +95,6 @@ interface InputAlertProps {
     cancelText?: string;
     placeholder?: string;
     initialValue?: string;
-    secureTextEntry?: boolean;
 }
 
 interface Author {

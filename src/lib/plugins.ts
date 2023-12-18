@@ -1,6 +1,7 @@
 import { PluginManifest, Plugin } from "@types";
 import { safeFetch } from "@lib/utils";
 import { awaitSyncWrapper, createMMKVBackend, createStorage, purgeStorage, wrapSync } from "@lib/storage";
+import { MMKVManager } from "@lib/native";
 import { allSettled } from "@lib/polyfills";
 import logger, { logModule } from "@lib/logger";
 import settings from "@lib/settings";

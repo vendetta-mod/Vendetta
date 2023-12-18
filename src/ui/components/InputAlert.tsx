@@ -1,42 +1,48 @@
 import { InputAlertProps } from "@types";
-import { findByName, findByProps } from "@metro/filters";
+import { findByProps } from "@metro/filters";
+import { Forms, Alert } from "@ui/components";
 
-interface InternalInputAlertProps extends InputAlertProps {
-    onClose?: () => void;
-    onSubmit?: (input: string) => void;
-    isLoading?: boolean;
-}
-
+const { FormInput } = Forms;
 const Alerts = findByProps("openLazy", "close");
-const UserSettingsInputAlert = findByName("UserSettingsInputAlert") as React.ComponentClass<InternalInputAlertProps>;
 
-// TODO: Moving to Discord's UserSettingsInputAlert here has some issues:
-//* - Errors are not cleared upon typing
-//* - The confirmText does not apply
-//* - The confirm button is not disabled when there is an error
+export default function InputAlert({ title, confirmText, confirmColor, onConfirm, cancelText, placeholder, initialValue = "" }: InputAlertProps) {
+    const [value, setValue] = React.useState(initialValue);
+    const [error, setError] = React.useState("");
 
-export default class InputAlert extends UserSettingsInputAlert {
-    constructor(props: InternalInputAlertProps) {
-        super(props);
-        props.secureTextEntry = false;
-        props.onClose = Alerts.close;
-        props.onSubmit = (i: string) => this.onConfirmWrapper(i);
-        this.state = { input: props.initialValue };
-    }
-
-    onConfirmWrapper(input: string) {
-        // @ts-expect-error
-        this.props.isLoading = true;
-
-        const asyncOnConfirm = Promise.resolve(this.props.onConfirm(input));
+    function onConfirmWrapper() {
+        const asyncOnConfirm = Promise.resolve(onConfirm(value))
 
         asyncOnConfirm.then(() => {
             Alerts.close();
         }).catch((e: Error) => {
-            this.setState({ error: e.message });
+            setError(e.message);
         });
-
-        // @ts-expect-error
-        this.props.isLoading = false;
     };
-}
+
+    return (
+        <Alert
+            title={title}
+            confirmText={confirmText}
+            confirmColor={confirmColor}
+            isConfirmButtonDisabled={error.length !== 0}
+            onConfirm={onConfirmWrapper}
+            cancelText={cancelText}
+            onCancel={() => Alerts.close()}
+        >
+            <FormInput
+                placeholder={placeholder}
+                value={value}
+                onChangeText={(v: string) => {
+                    setValue(v);
+                    if (error) setError("");
+                }}
+                returnKeyType="done"
+                onSubmitEditing={onConfirmWrapper}
+                error={error}
+                autoFocus={true}
+                showBorder={true}
+                style={{ paddingVertical: 5, alignSelf: "stretch", paddingHorizontal: 0 }}
+            />
+        </Alert>
+    );
+};
