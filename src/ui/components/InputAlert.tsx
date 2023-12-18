@@ -5,7 +5,7 @@ import { Forms, Alert } from "@ui/components";
 const { FormInput } = Forms;
 const Alerts = findByProps("openLazy", "close");
 
-export default function InputAlert({ title, confirmText, confirmColor, onConfirm, cancelText, placeholder, initialValue = "" }: InputAlertProps) {
+export default function InputAlert({ title, confirmText, confirmColor, onConfirm, cancelText, placeholder, initialValue = "", secureTextEntry }: InputAlertProps) {
     const [value, setValue] = React.useState(initialValue);
     const [error, setError] = React.useState("");
 
@@ -32,16 +32,17 @@ export default function InputAlert({ title, confirmText, confirmColor, onConfirm
             <FormInput
                 placeholder={placeholder}
                 value={value}
-                onChangeText={(v: string) => {
-                    setValue(v);
+                onChange={(v: string | { text: string }) => {
+                    setValue(typeof v === "string" ? v : v.text);
                     if (error) setError("");
                 }}
                 returnKeyType="done"
                 onSubmitEditing={onConfirmWrapper}
-                error={error}
+                error={error || undefined}
                 autoFocus={true}
                 showBorder={true}
                 style={{ paddingVertical: 5, alignSelf: "stretch", paddingHorizontal: 0 }}
+                secureTextEntry={secureTextEntry}
             />
         </Alert>
     );
