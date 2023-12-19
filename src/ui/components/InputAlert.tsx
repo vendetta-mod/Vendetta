@@ -39,10 +39,10 @@ export default function InputAlert({ title, confirmText, confirmColor, onConfirm
                 returnKeyType="done"
                 onSubmitEditing={onConfirmWrapper}
                 error={error || undefined}
+                secureTextEntry={secureTextEntry}
                 autoFocus={true}
                 showBorder={true}
                 style={{ paddingVertical: 5, alignSelf: "stretch", paddingHorizontal: 0 }}
-                secureTextEntry={secureTextEntry}
             />
         </Alert>
     );
