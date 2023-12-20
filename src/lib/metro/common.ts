@@ -5,7 +5,7 @@ import type { StyleSheet } from "react-native";
 
 const ThemeStore = findByStoreName("ThemeStore");
 const colorModule = findByProps("colors", "unsafe_rawColors");
-const colorResolver = colorModule.internal ?? colorModule.meta;
+const colorResolver = colorModule?.internal ?? colorModule?.meta;
 
 // Reimplementation of Discord's createThemedStyleSheet, which was removed since 204201
 // Not exactly a 1:1 reimplementation, but sufficient to keep compatibility with existing plugins
