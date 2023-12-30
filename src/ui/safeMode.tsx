@@ -2,7 +2,7 @@ import { ButtonColors } from "@types";
 import { ReactNative as RN, stylesheet } from "@metro/common";
 import { findByName, findByProps, findByStoreName } from "@metro/filters";
 import { after } from "@lib/patcher";
-import { toggleSafeMode } from "@lib/debug";
+import { getDebugInfo, toggleSafeMode } from "@lib/debug";
 import { DeviceManager } from "@lib/native";
 import { semanticColors } from "@ui/color";
 import { Button, Codeblock, ErrorBoundary as _ErrorBoundary, SafeAreaView } from "@ui/components";
@@ -12,8 +12,6 @@ const ErrorBoundary = findByName("ErrorBoundary");
 
 // Let's just pray they have this.
 const { BadgableTabBar } = findByProps("BadgableTabBar");
-
-const ThemeStore = findByStoreName("ThemeStore");
 
 const { TextStyleSheet } = findByProps("TextStyleSheet");
 const styles = stylesheet.createThemedStyleSheet({
@@ -70,6 +68,8 @@ const tabs: Tab[] = [
 export default () => after("render", ErrorBoundary.prototype, function (this: any, _, ret) {
     if (!this.state.error) return;
 
+    const debugInfo = getDebugInfo();
+
     // Not using setState here as we don't want to cause a re-render, we want this to be set in the initial render
     this.state.activeTab ??= "message";
     const tabData = tabs.find(t => t.id === this.state.activeTab);
@@ -86,7 +86,7 @@ export default () => after("render", ErrorBoundary.prototype, function (this: an
         <_ErrorBoundary>
             <SafeAreaView style={styles.container}>
                 <RN.View style={styles.header}>
-                    <RN.Image style={{ flex: 1, resizeMode: "contain", maxHeight: 96, paddingRight: 4 }} source={ThemeStore.theme === "light" ? ret.props.lightSource : ret.props.darkSource} />
+                    {ret.props.Illustration && <ret.props.Illustration style={{ flex: 1, resizeMode: "contain", maxHeight: 96, paddingRight: 4 }} /> }
                     <RN.View style={{ flex: 2, paddingLeft: 4 }}>
                         <RN.Text style={styles.headerTitle}>{ret.props.title}</RN.Text>
                         <RN.Text style={styles.headerDescription}>{ret.props.body}</RN.Text>
@@ -101,6 +101,15 @@ export default () => after("render", ErrorBoundary.prototype, function (this: an
                             onTabSelected={(tab: string) => { this.setState({ activeTab: tab }) }}
                         />
                     </RN.View>
+                    <Codeblock
+                        selectable
+                        style={{ flexBasis: "auto", marginBottom: 8 }}
+                    >
+                        {[
+                            `Discord: ${debugInfo.discord.build} (${debugInfo.os.name})`,
+                            `Vendetta: ${debugInfo.vendetta.version}`
+                        ].join("\n")}
+                    </Codeblock>
                     <Codeblock
                         selectable
                         style={{ flex: 1, textAlignVertical: "top" }}
