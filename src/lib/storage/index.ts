@@ -3,6 +3,7 @@ import createEmitter from "@lib/emitter";
 
 const emitterSymbol = Symbol.for("vendetta.storage.emitter");
 const syncAwaitSymbol = Symbol.for("vendetta.storage.accessor");
+const storageErrorSymbol = Symbol.for("vendetta.storage.error");
 
 export function createProxy(target: any = {}): { proxy: any; emitter: Emitter } {
     const emitter = createEmitter();
@@ -56,8 +57,12 @@ export function createProxy(target: any = {}): { proxy: any; emitter: Emitter } 
     };
 }
 
-export function useProxy<T>(storage: T): T {
-    const emitter = (storage as any)[emitterSymbol] as Emitter;
+export function useProxy<T>(storage: T & { [key: symbol]: any }): T {
+    if (storage[storageErrorSymbol]) throw storage[storageErrorSymbol];
+
+    const emitter = storage[emitterSymbol] as Emitter;
+
+    if (!emitter) throw new Error("InvalidArgumentExcpetion - storage[emitterSymbol] is " + typeof emitter);
 
     const [, forceUpdate] = React.useReducer((n) => ~n, 0);
 
@@ -89,6 +94,7 @@ export async function createStorage<T>(backend: StorageBackend): Promise<Awaited
 
 export function wrapSync<T extends Promise<any>>(store: T): Awaited<T> {
     let awaited: any = undefined;
+    let error: any = undefined;
 
     const awaitQueue: (() => void)[] = [];
     const awaitInit = (cb: () => void) => (awaited ? cb() : awaitQueue.push(cb));
@@ -96,6 +102,8 @@ export function wrapSync<T extends Promise<any>>(store: T): Awaited<T> {
     store.then((v) => {
         awaited = v;
         awaitQueue.forEach((cb) => cb());
+    }).catch((e) => {
+        error = e;
     });
 
     return new Proxy({} as Awaited<T>, {
@@ -105,6 +113,7 @@ export function wrapSync<T extends Promise<any>>(store: T): Awaited<T> {
                 .map((k) => [k, (t: T, ...a: any[]) => Reflect[k](awaited ?? t, ...a)])
         ),
         get(target, prop, recv) {
+            if (prop === storageErrorSymbol) return error;
             if (prop === syncAwaitSymbol) return awaitInit;
             return Reflect.get(awaited ?? target, prop, recv);
         },
