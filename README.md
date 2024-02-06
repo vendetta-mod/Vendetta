@@ -1,3 +1,6 @@
+> [!IMPORTANT]  
+> As of 06/02/24, Vendetta has been discontinued.
+
 # Vendetta
 A mod for Discord's mobile apps.
 
