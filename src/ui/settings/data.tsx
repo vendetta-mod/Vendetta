@@ -14,6 +14,7 @@ import Plugins from "@ui/settings/pages/Plugins";
 import Themes from "@ui/settings/pages/Themes";
 import Developer from "@ui/settings/pages/Developer";
 import { PROXY_PREFIX } from "@/lib/constants";
+import { useProxy } from "@/lib/storage";
 
 interface Screen {
     [index: string]: any;
@@ -25,22 +26,21 @@ interface Screen {
     render: React.ComponentType<any>;
 }
 
-const styles = stylesheet.createThemedStyleSheet({ container: { flex: 1, backgroundColor: semanticColors.BACKGROUND_MOBILE_PRIMARY } });
-const formatKey = (key: string, youKeys: boolean) => youKeys ? lodash.snakeCase(key).toUpperCase() : key;
+const styles = stylesheet.createThemedStyleSheet({ container: { flex: 1, backgroundColor: semanticColors.BG_BASE_SECONDARY } });
 // If a function is passed, it is called with the screen object, and the return value is mapped. If a string is passed, we map to the value of the property with that name on the screen. Else, just map to the given data.
 // Question: Isn't this overengineered?
 // Answer: Maybe.
 const keyMap = (screens: Screen[], data: string | ((s: Screen) => any) | null) => Object.fromEntries(screens.map(s => [s.key, typeof data === "function" ? data(s) : typeof data === "string" ? s[data] : data]));
 
-export const getScreens = (youKeys = false): Screen[] => [
+export const getScreens = (): Screen[] => [
     {
-        key: formatKey("VendettaSettings", youKeys),
+        key: "VendettaSettings",
         title: "General",
         icon: "settings",
         render: General,
     },
     {
-        key: formatKey("VendettaPlugins", youKeys),
+        key: "VendettaPlugins",
         title: "Plugins",
         icon: "debug",
         options: {
@@ -67,7 +67,7 @@ export const getScreens = (youKeys = false): Screen[] => [
         render: Plugins,
     },
     {
-        key: formatKey("VendettaThemes", youKeys),
+        key: "VendettaThemes",
         title: "Themes",
         icon: "ic_theme_24px",
         // TODO: bad
@@ -78,14 +78,14 @@ export const getScreens = (youKeys = false): Screen[] => [
         render: Themes,
     },
     {
-        key: formatKey("VendettaDeveloper", youKeys),
+        key: "VendettaDeveloper",
         title: "Developer",
         icon: "ic_progress_wrench_24px",
         shouldRender: () => settings.developerSettings ?? false,
         render: Developer,
     },
     {
-        key: formatKey("VendettaCustomPage", youKeys),
+        key: "VendettaCustomPage",
         title: "Vendetta Page",
         shouldRender: () => false,
         render: ({ render: PageView, noErrorBoundary, ...options }: { render: React.ComponentType; noErrorBoundary: boolean } & Record<string, object>) => {
@@ -97,7 +97,7 @@ export const getScreens = (youKeys = false): Screen[] => [
     },
 ];
 
-export const getRenderableScreens = (youKeys = false) => getScreens(youKeys).filter(s => s.shouldRender?.() ?? true);
+export const getRenderableScreens = () => getScreens().filter(s => s.shouldRender?.() ?? true);
 
 export const getPanelsScreens = () => keyMap(getScreens(), (s) => ({
     title: s.title,
@@ -106,14 +106,14 @@ export const getPanelsScreens = () => keyMap(getScreens(), (s) => ({
 }));
 
 export const getYouData = () => {
-    const screens = getScreens(true);
+    const screens = getScreens();
 
     return {
         getLayout: () => ({
             title: "Vendetta",
             label: "Vendetta",
             // We can't use our keyMap function here since `settings` is an array not an object
-            settings: getRenderableScreens(true).map(s => s.key)
+            settings: getRenderableScreens().map(s => s.key)
         }),
         titleConfig: keyMap(screens, "title"),
         relationships: keyMap(screens, null),
@@ -127,10 +127,9 @@ export const getYouData = () => {
                 type: "route",
                 title: () => s.title,
                 icon: s.icon ? getAssetIDByName(s.icon) : null,
+                usePredicate: s.shouldRender && (() => useProxy(settings) && s.shouldRender?.()),
                 screen: {
-                    // TODO: This is bad, we should not re-convert the key casing
-                    // For some context, just using the key here would make the route key be VENDETTA_CUSTOM_PAGE in you tab, which breaks compat with panels UI navigation
-                    route: lodash.chain(s.key).camelCase().upperFirst().value(),
+                    route: s.key,
                     getComponent: () => WrappedComponent,
                 }
             }
