@@ -2,12 +2,19 @@ import { ApplicationCommand, ApplicationCommandType } from "@types";
 import { commands as commandsModule } from "@metro/common";
 import { after } from "@lib/patcher";
 
+import evalCommand from "@lib/commands/eval";
+import debugCommand from "@lib/commands/debug";
+import pluginCommand from "@lib/commands/plugins";
+
 let commands: ApplicationCommand[] = [];
 
 export function patchCommands() {
     const unpatch = after("getBuiltInCommands", commandsModule, ([type], res: ApplicationCommand[]) => {
         if (type === ApplicationCommandType.CHAT) return res.concat(commands);
     });
+
+    // Register core commands
+    [evalCommand, debugCommand, pluginCommand].forEach(registerCommand);
 
     return () => {
         commands = [];
